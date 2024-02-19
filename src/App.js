@@ -67,7 +67,7 @@ function App() {
     // 箭头函数设置入参
     const buttonClick3 = (name) => {console.log("欢迎",name)}
     // 自定义入参+事件参数
-    const buttonClick4 = (name,e) => {console.log("欢迎",name,e)}
+    const buttonClick4 = (name,e) => {console.log("欢迎~",name,e)}
 
 
     return (
