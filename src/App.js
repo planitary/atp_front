@@ -1,121 +1,168 @@
-// import logo from './logo.svg';
-// import './App.css';
-
-// 项目根组件
-// const count = 100;
-// function getName(){
-//     return 'jack';
-// }
-// 列表渲染
+import './App.scss'
+import avatar from './images/bozai.png'
+import avatar2 from './images/IMG_3445.JPG'
+import avatar3 from './images/__original_drawn_by_ama_mitsuki__5af6796539d372d39894afcc25707fa7.png'
 import {useState} from "react";
-import './index.css'
 
-const list = [
-    {id: 1001, name: 'Vue'},
-    {id: 1002, name: 'React'},
-    {id: 1003, name: 'Angular'}
+/**
+ * 评论列表的渲染和操作
+ *
+ * 1. 根据状态渲染评论列表
+ * 2. 删除评论
+ */
+
+// 评论列表数据
+const defaultList = [
+    {
+        // 评论id
+        rpid: 3,
+        // 用户信息
+        user: {
+            uid: '13258165',
+            avatar: avatar2,
+            uname: '周杰伦',
+        },
+        // 评论内容
+        content: '哎哟，不错哦',
+        // 评论时间
+        ctime: '10-18 08:15',
+        like: 88,
+    },
+    {
+        rpid: 2,
+        user: {
+            uid: '36080105',
+            avatar: avatar3,
+            uname: '许嵩',
+        },
+        content: '我寻你千百度 日出到迟暮',
+        ctime: '11-13 11:29',
+        like: 88,
+    },
+    {
+        rpid: 1,
+        user: {
+            uid: '30009257',
+            avatar,
+            uname: '黑马前端',
+        },
+        content: '学前端就来黑马',
+        ctime: '10-19 09:00',
+        like: 66,
+    },
 ]
-const isLogin = false
-
-const articleType = 3
-
-
-
-function getArticleTemplate(){
-    if (articleType === 0){
-        return <div>我是无图文章</div>
-    }else if(articleType === 1){
-        return <div>我是单图文章</div>
-    }
-    else if (articleType === 3){
-        return <div>我是三图文章</div>
-    }
+// 当前登录用户信息
+const user = {
+    // 用户id
+    uid: '30009257',
+    // 用户头像
+    avatar,
+    // 用户昵称
+    uname: '黑马前端',
 }
 
-// 定义组件(首字母大写)
-function Button(){
-    // 业务逻辑
-    return <button>click me !</button>
-}
+/**
+ * 导航 Tab 的渲染和操作
+ *
+ * 1. 渲染导航 Tab 和高亮
+ * 2. 评论列表排序
+ *  最热 => 喜欢数量降序
+ *  最新 => 创建时间降序
+ */
 
-function buttonClick2(){
-    console.log("按钮被点击了2")
-}
+// 导航 Tab 数组
+const tabs = [
+    {type: 'hot', text: '最热'},
+    {type: 'time', text: '最新'},
+]
 
 
-
-function App() {
-    // 数据驱动绑定（useState实现计数器)
-    // useState返回的是一个数组，count表示状态状态变量，setCount表示修改状态变量的方法
-    // 1、调用useState添加一个状态变量,构造函数的值表示计数的初值
-    const [count,setCount] = useState(0)
-    // 2、点击事件回调函数,每次点击时，count+1(setCount会更新新的count值)
-    const handleClick = () => {
-        setCount(count + 1)
-    }
-    // 再来一个exp
-    const [form,setForm] = useState({name:'jack'})
-    const handleChangeName = () => {
-        // ...为展开运算符，方便地将可迭代对象的元素或属性展开，以便更容易地组合、复制或传递参数
-        setForm({
-            ...form,name: 'peter'
-        })
-    }
-
-    // 回调函数并设置形参
-    const buttonClick = (e) => {console.log("按钮被点击了",e)}
-    // 箭头函数设置入参
-    const buttonClick3 = (name) => {console.log("欢迎",name)}
-    // 自定义入参+事件参数
-    const buttonClick4 = (name,e) => {console.log("欢迎~",name,e)}
-
+const App = () => {
+    // 渲染评论列表
+    // 1、使用useState维护列表
+    const [commentList, setCommentList] = useState(defaultList)
 
     return (
-        <div className="App">
-            this is APP
-            {/*{"this is message"}*/}
-            {/*{count}*/}
-            {/*my name is {getName()}*/}
-            {/*today is {new Date().getDate()}*/}
-            {/*<div style={{color: 'red'}}> this is div</div>*/}
+        <div className="app">
+            {/* 导航 Tab */}
+            <div className="reply-navigation">
+                <ul className="nav-bar">
+                    <li className="nav-title">
+                        <span className="nav-title-text">评论</span>
+                        {/* 评论数量 */}
+                        <span className="total-reply">{10}</span>
+                    </li>
+                    <li className="nav-sort">
+                        {/* 高亮类名： active */}
+                        <span className='nav-item'>最新</span>
+                        <span className='nav-item'>最热</span>
+                    </li>
+                </ul>
+            </div>
 
-            {/*    渲染列表,使用匿名函数，=>右侧为返回值，需要哪个字段就用哪个字段进行返回，在进行行的渲染是
-            指定一个key可以增加渲染速度*/}
-            <ul>
-                {list.map(item => (<li key={item.id}>{item.name}</li>))}
-            </ul>
-        {/*    逻辑与*/}
-            {isLogin && <span>this is span when true</span>}
-            <br/>
-        {/*    三元运算符*/}
-            {isLogin ? <span>jack</span> : <span style={{color: 'red'}}>no user!</span>}
+            <div className="reply-wrap">
+                {/* 发表评论 */}
+                <div className="box-normal">
+                    {/* 当前用户头像 */}
+                    <div className="reply-box-avatar">
+                        <div className="bili-avatar">
+                            <img className="bili-avatar-img" src={avatar} alt="用户头像"/>
+                        </div>
+                    </div>
+                    <div className="reply-box-wrap">
+                        {/* 评论框 */}
+                        <textarea
+                            className="reply-box-textarea"
+                            placeholder="发一条友善的评论"
+                        />
+                        {/* 发布按钮 */}
+                        <div className="reply-box-send">
+                            <div className="send-text">发布</div>
+                        </div>
+                    </div>
+                </div>
+                {/* 评论列表 */}
+                <div className="reply-list">
+                    {/* 评论项 */}
+                  {commentList.map(item => (
+                      <div key={item.rpid} className="reply-item">
+                        {/* 头像 */}
+                        <div className="root-reply-avatar">
+                          <div className="bili-avatar">
+                            <img
+                                className="bili-avatar-img"
+                                alt=""
+                                src={item.user.avatar}
+                            />
+                          </div>
+                        </div>
 
-            <br/>
-            {getArticleTemplate()}
+                        <div className="content-wrap">
+                          {/* 用户名 */}
+                          <div className="user-info">
+                            <div className="user-name">{item.user.uname}</div>
+                          </div>
+                          {/* 评论内容 */}
+                          <div className="root-reply">
+                            <span className="reply-content">{item.content}</span>
+                            <div className="reply-info">
+                              {/* 评论时间 */}
+                              <span className="reply-time">{item.ctime}</span>
+                              {/* 评论数量 */}
+                              <span className="reply-time">点赞数:{item.like}</span>
+                              <span className="delete-btn">
+                    删除
+                  </span>
 
-        {/*    事件绑定*/}
-            <button onClick={buttonClick}>click me</button>
-            <button onClick={() => buttonClick3("planitary")}>登录</button>
-        {/*    自定义入参+事件参数*/}
-            <button onClick={(e) => buttonClick4("peter",e)}>登录+事件</button>
-            <br/>
-            <p>组件</p>
-        {/*    自闭和使用组件*/}
-            <Button/>
-        {/*    成对标签使用组件*/}
-            <Button>成对</Button>
-            <br/>
-            <p>一下为数据驱动计数器</p>
-            <button onClick={handleClick}>{count}</button>
-            <button onClick={handleChangeName}>修改表单name:{form.name}</button>
-            <br/>
-            <p>通过css来设置组件样式</p>
-            <span className='foo'>this is span</span>
-
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  ))}
+                </div>
+            </div>
         </div>
-
-
-    );
+    )
 }
 
-export default App;
+export default App
