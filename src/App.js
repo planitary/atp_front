@@ -3,9 +3,11 @@ import avatar from './images/bozai.png'
 import avatar2 from './images/IMG_3445.JPG'
 import avatar3 from './images/__original_drawn_by_ama_mitsuki__5af6796539d372d39894afcc25707fa7.png'
 import avatar4 from './images/o_3d8cd2c44511cb1eafab60ebc1f36dab.jpg'
-import {useState} from "react";
+import {useRef, useState} from "react";
 import _ from 'lodash'
 import classNames from "classnames";
+import {v4 as uuidV4} from 'uuid'
+import dayjs from "dayjs";
 
 /**
  * 评论列表的渲染和操作
@@ -117,6 +119,33 @@ const App = () => {
             setCommentList(_.orderBy(commentList,'ctime','desc'))
         }
     }
+    // 发表评论
+    const [_content,setContent] = useState('')
+    const inputRef = useRef(null)
+    // 评论发布按钮回调函数
+    const submit = () => {
+        // 修改原有评论列表，提交后清空内容
+        setCommentList([
+            ...commentList,
+            {
+                // 生成随机id
+                rpid: uuidV4(),
+                user: {
+                    uid: '347982423',
+                    avatar: avatar4,
+                    uname: '测试人员',
+                },
+                content: _content,
+                ctime: dayjs(new Date()).format("MM-DD HH:mm"), // 格式化时间：月-日 时:分npm
+                like: 49,
+            }
+        ])
+        // 1、清空输入框内容
+        setContent('')
+        // 2、重新聚焦到输入框(domRef)
+        inputRef.current.focus()
+
+    }
 
     return (
         <div className="app">
@@ -125,8 +154,8 @@ const App = () => {
                 <ul className="nav-bar">
                     <li className="nav-title">
                         <span className="nav-title-text">评论</span>
-                        {/* 评论数量 */}
-                        <span className="total-reply">{4}</span>
+                        {/* 评论数量,动态获取 */}
+                        <span className="total-reply">{commentList.length}</span>
                     </li>
                     <li className="nav-sort">
                         {/* 高亮类名： active */}
@@ -156,13 +185,14 @@ const App = () => {
                     </div>
                     <div className="reply-box-wrap">
                         {/* 评论框 */}
-                        <textarea
+                        <textarea value={_content} onChange={(event => setContent(event.target.value))}
+                                  ref={inputRef}
                             className="reply-box-textarea"
                             placeholder="说点什么吧~~"
                         />
                         {/* 发布按钮 */}
                         <div className="reply-box-send">
-                            <div className="send-text">发布</div>
+                            <div className="send-text" onClick={submit}>发布</div>
                         </div>
                     </div>
                 </div>
