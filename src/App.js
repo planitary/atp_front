@@ -10,7 +10,7 @@
 
 // 组件通信-父传子(1、父组件传递数据，子组件标签绑定属性 2、子组件使用props接受数据
 
-import {createContext, useContext, useRef, useState} from "react";
+import {createContext, useContext, useEffect, useRef, useState} from "react";
 
 // 下方的APP是父组件，这里额外定义一个子组件
 function Son(props){
@@ -52,6 +52,9 @@ function B(){
 
 // 上下文对象，组件跨层通信时用到
 const msgCtx = createContext('');
+// 页面渲染完毕后，请求列表（服务端）
+const url = 'http://geek.itheima.net/v1_0/channels'
+const url2 = 'http://localhost:8080/interface/interfaceList'
 
 function App() {
     // 父组件属性
@@ -68,6 +71,41 @@ function App() {
     const showDom = () => {
         console.log(inputRef.current)
     }
+
+    // 拿到数据，完成渲染
+    const [list,setList] = useState([])
+    // 页面加载结束后的请求，用于渲染数据：useEffect
+    useEffect(() => {
+        // 额外操作，获取列表
+        async function getList(){
+            const res = await fetch(url);
+            // json处理
+            const jsonRes = await res.json()
+            console.log(list)
+            setList(jsonRes.data.channels);
+        }
+        getList()
+    },[])
+
+    const[interfaceList,setInterfaceList] = useState([])
+    useEffect(() => {
+        async function getInterfaceList(){
+            const reqBody = {
+                projectId:'42572254526',
+            };
+
+            const res = await fetch(url2,{
+                method: 'POST',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify(reqBody),
+            });
+            const jsonRes = await res.json()
+            console.log(interfaceList)
+            setInterfaceList(jsonRes.items)
+        }
+        getInterfaceList()
+    },[])
+
     return (
         <div>
             <p>将表单状态与react进行绑定，react状态改变，表单内容随之改变</p>
@@ -95,6 +133,21 @@ function App() {
                 topMsg!
                 <A/>
             </msgCtx.Provider>
+            <p>
+                useEffect-页面加载结束后的请求，用于渲染数据
+            </p>
+            <ul>
+                {list.map(item => <li key={item.id}>{item.name}</li>)}
+            </ul>
+
+            <p>
+                测试接口
+            </p>
+            <ul>
+                {interfaceList.map(item => <li key={item.id}>{item.interfaceName}</li>)}
+            </ul>
+
+
         </div>
     );
 }
