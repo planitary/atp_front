@@ -104,6 +104,8 @@ function App() {
             setInterfaceList(jsonRes.items)
         }
         getInterfaceList()
+        // 这里deps的参数表示渲染的时机，当传入空数组，表示只在渲染完毕后执行一次;当不传时表示只在组件初始化&更新时执行;
+        // 当传入特定依赖项时（通常是某个函数）表示只在组件初始化&满足特定依懒项时执行
     },[])
 
     return (
