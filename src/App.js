@@ -3,11 +3,12 @@ import avatar from './images/bozai.png'
 import avatar2 from './images/IMG_3445.JPG'
 import avatar3 from './images/__original_drawn_by_ama_mitsuki__5af6796539d372d39894afcc25707fa7.png'
 import avatar4 from './images/o_3d8cd2c44511cb1eafab60ebc1f36dab.jpg'
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import _ from 'lodash'
 import classNames from "classnames";
 import {v4 as uuidV4} from 'uuid'
 import dayjs from "dayjs";
+import axios from "axios";
 
 /**
  * 评论列表的渲染和操作
@@ -97,7 +98,19 @@ const tabs = [
 const App = () => {
     // 渲染评论列表
     // 1、使用useState维护列表(初始按照最热排序，因为106行指定默认tab为最热)
-    const [commentList, setCommentList] = useState(_.orderBy(defaultList,'like','desc'))
+    // const [commentList, setCommentList] = useState(_.orderBy(defaultList,'like','desc'))
+    // 从接口获取数据进行渲染
+    const [commentList, setCommentList] = useState([])
+    useEffect(() => {
+        // 请求数据
+        async function getList() {
+            // axios请求数据
+           const res = await axios.get(" http://localhost:3004/list")
+            setCommentList(res.data)
+        }
+
+        getList()
+    }, [])
     // 删除评论
     const handleDel = (id) => {
         console.log(id)
@@ -106,21 +119,21 @@ const App = () => {
     }
     // tab切换功能
     // 记录点击的type，遍历整个数组，记录的type命中时则高亮
-    const [type,setType] = useState('hot')
+    const [type, setType] = useState('hot')
     const handleChangeType = (type) => {
         console.log(type)
         setType(type)
         // 基于列表的排序，根据type类型排序，如果是最新(time)，按照时间；如果是最热(hot)，按照点赞数
         // 引入lodash（封装的js库)
-        if (type === 'hot'){
-            setCommentList(_.orderBy(commentList,'like','desc'))
+        if (type === 'hot') {
+            setCommentList(_.orderBy(commentList, 'like', 'desc'))
         }
-        if (type === 'time'){
-            setCommentList(_.orderBy(commentList,'ctime','desc'))
+        if (type === 'time') {
+            setCommentList(_.orderBy(commentList, 'ctime', 'desc'))
         }
     }
     // 发表评论
-    const [_content,setContent] = useState('')
+    const [_content, setContent] = useState('')
     const inputRef = useRef(null)
     // 评论发布按钮回调函数
     const submit = () => {
@@ -167,7 +180,7 @@ const App = () => {
                             // className={`nav-item ${type === item.type && 'active'}`}
                             // 使用classNames简化 classNames(param,key:value)
                             // 参数——静态类名:要修改的类名，key:要修改的css类名 value:条件，为true时执行
-                            className={classNames('nav-item',{active: type === item.type})}
+                            className={classNames('nav-item', {active: type === item.type})}
                             onClick={() => handleChangeType(item.type)}>{item.text}</span>
                         )}
                     </li>
@@ -187,8 +200,8 @@ const App = () => {
                         {/* 评论框 */}
                         <textarea value={_content} onChange={(event => setContent(event.target.value))}
                                   ref={inputRef}
-                            className="reply-box-textarea"
-                            placeholder="说点什么吧~~"
+                                  className="reply-box-textarea"
+                                  placeholder="说点什么吧~~"
                         />
                         {/* 发布按钮 */}
                         <div className="reply-box-send">
@@ -199,44 +212,44 @@ const App = () => {
                 {/* 评论列表 */}
                 <div className="reply-list">
                     {/* 评论项 */}
-                  {commentList.map(item =>
-                      <div key={item.rpid} className="reply-item">
-                        {/* 头像 */}
-                        <div className="root-reply-avatar">
-                          <div className="bili-avatar">
-                            <img
-                                className="bili-avatar-img"
-                                alt=""
-                                src={item.user.avatar}
-                            />
-                          </div>
-                        </div>
+                    {commentList.map(item =>
+                        <div key={item.rpid} className="reply-item">
+                            {/* 头像 */}
+                            <div className="root-reply-avatar">
+                                <div className="bili-avatar">
+                                    <img
+                                        className="bili-avatar-img"
+                                        alt=""
+                                        src={item.user.avatar}
+                                    />
+                                </div>
+                            </div>
 
-                        <div className="content-wrap">
-                          {/* 用户名 */}
-                          <div className="user-info">
-                            <div className="user-name">{item.user.uname}</div>
-                          </div>
-                          {/* 评论内容 */}
-                          <div className="root-reply">
-                            <span className="reply-content">{item.content}</span>
-                            <div className="reply-info">
-                              {/* 评论时间 */}
-                              <span className="reply-time">{item.ctime}</span>
-                              {/* 评论数量 */}
-                              <span className="reply-time">点赞数:{item.like}</span>
-                                {/* 删除显示-条件渲染，拿到当前项id，以此id为条件对评论列表做过滤or直接讲将内容清空*/}
-                                {user.uid === item.user.uid && <span className="delete-btn"
-                                                                     onClick={() => handleDel(item.rpid)}>
+                            <div className="content-wrap">
+                                {/* 用户名 */}
+                                <div className="user-info">
+                                    <div className="user-name">{item.user.uname}</div>
+                                </div>
+                                {/* 评论内容 */}
+                                <div className="root-reply">
+                                    <span className="reply-content">{item.content}</span>
+                                    <div className="reply-info">
+                                        {/* 评论时间 */}
+                                        <span className="reply-time">{item.ctime}</span>
+                                        {/* 评论数量 */}
+                                        <span className="reply-time">点赞数:{item.like}</span>
+                                        {/* 删除显示-条件渲染，拿到当前项id，以此id为条件对评论列表做过滤or直接讲将内容清空*/}
+                                        {user.uid === item.user.uid && <span className="delete-btn"
+                                                                             onClick={() => handleDel(item.rpid)}>
                                     删除
                                 </span>}
 
 
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                  )}
+                    )}
                 </div>
             </div>
         </div>
