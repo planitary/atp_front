@@ -42,9 +42,7 @@ function buttonClick2(){
     console.log("按钮被点击了2")
 }
 
-
-
-function App() {
+const App2 = () => {
     // 数据驱动绑定（useState实现计数器)
     // useState返回的是一个数组，count表示状态状态变量，setCount表示修改状态变量的方法
     // 1、调用useState添加一个状态变量,构造函数的值表示计数的初值
@@ -118,4 +116,4 @@ function App() {
     );
 }
 
-export default App;
+export default App_L2;

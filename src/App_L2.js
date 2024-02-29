@@ -11,6 +11,7 @@
 // 组件通信-父传子(1、父组件传递数据，子组件标签绑定属性 2、子组件使用props接受数据
 
 import {createContext, useContext, useEffect, useRef, useState} from "react";
+import axios from "axios";
 
 // 下方的APP是父组件，这里额外定义一个子组件
 function Son(props){
@@ -56,7 +57,7 @@ const msgCtx = createContext('');
 const url = 'http://geek.itheima.net/v1_0/channels'
 const url2 = 'http://localhost:8080/interface/interfaceList'
 
-function App() {
+function App_L2() {
     // 父组件属性
     const fatherName = 'this is App name'
     // 子传父，子组件将函数返回给父组件，父组件进行调用
@@ -94,13 +95,9 @@ function App() {
                 projectId:'42572254526',
             };
 
-            const res = await fetch(url2,{
-                method: 'POST',
-                headers:{'Content-Type':'application/json'},
-                body: JSON.stringify(reqBody),
-            });
-            const jsonRes = await res.json()
-            console.log(interfaceList)
+            const res = await axios.post(url2,reqBody)
+            const jsonRes = await res.data
+            console.log(jsonRes)
             setInterfaceList(jsonRes.items)
         }
         getInterfaceList()
@@ -154,4 +151,4 @@ function App() {
     );
 }
 
-export default App;
+export default App_L2;
