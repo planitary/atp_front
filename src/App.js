@@ -16,6 +16,7 @@ import axios from "axios";
  * 1. 根据状态渲染评论列表
  * 2. 删除评论(仅能删除自己的)
  */
+// 启动类修改index.js文件加载的组件即可
 
 // 评论列表数据
 const defaultList = [
