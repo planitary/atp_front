@@ -94,23 +94,31 @@ const tabs = [
     {type: 'time', text: '最新'},
 ]
 
+// 自定义封装hook函数
+function useGetList(){
+    const [commentList, setCommentList] = useState([])
+    useEffect(() => {
+        // 请求数据
+        async function getList() {
+            // axios请求数据
+            const res = await axios.get(" http://localhost:3004/list")
+            setCommentList(res.data)
+        }
+
+        getList()
+    }, [])
+    return {
+        commentList,setCommentList
+    }
+}
 
 const App = () => {
     // 渲染评论列表
     // 1、使用useState维护列表(初始按照最热排序，因为106行指定默认tab为最热)
     // const [commentList, setCommentList] = useState(_.orderBy(defaultList,'like','desc'))
     // 从接口获取数据进行渲染
-    const [commentList, setCommentList] = useState([])
-    useEffect(() => {
-        // 请求数据
-        async function getList() {
-            // axios请求数据
-           const res = await axios.get(" http://localhost:3004/list")
-            setCommentList(res.data)
-        }
+    const {commentList,setCommentList} = useGetList()
 
-        getList()
-    }, [])
     // 删除评论
     const handleDel = (id) => {
         console.log(id)

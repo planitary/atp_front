@@ -4,4 +4,4 @@ import App_L2 from "./App_L2";
 
 const root = createRoot(document.querySelector('#root'))
 
-root.render(<App_L2 />)
+root.render(<App />)
