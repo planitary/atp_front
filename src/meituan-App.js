@@ -3,7 +3,7 @@ import Menu from './components/Menu'
 import Cart from './components/Cart'
 import FoodsCategory from './components/FoodsCategory'
 
-import './App.scss'
+import './meituan-App.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {fetchFoodsList} from "./meituan-store/modules/takeaway";
