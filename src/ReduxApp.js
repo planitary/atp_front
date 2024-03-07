@@ -11,6 +11,7 @@ function ReduxApp(){
     useEffect(() => {
         dispatch(fetchList())
     },[dispatch])
+
     return (
         <div className="App">
             <button onClick={() => dispatch(reduceToNum(10))}>reduce to 10 </button>
