@@ -14,7 +14,8 @@
           "price": 90,
           "picture": "https://zqran.gitee.io/images/waimai/8078956697.jpg",
           "description": "",
-          "tag": "318569657"
+          "tag": "318569657",
+          "count": 1
         },
         {
           "id": 7384994864,
@@ -26,7 +27,9 @@
           "price": 39,
           "picture": "https://zqran.gitee.io/images/waimai/7384994864.jpg",
           "description": "",
-          "tag": "318569657"
+          "tag": "318569657",
+          "count": 1
+
         },
         {
           "id": 2305772036,
@@ -38,7 +41,9 @@
           "price": 34.32,
           "picture": "https://zqran.gitee.io/images/waimai/2305772036.jpg",
           "description": "主料：大米、鸡腿、菜心、胡萝卜",
-          "tag": "318569657"
+          "tag": "318569657",
+          "count": 1
+
         },
         {
           "id": 2233861812,
@@ -50,7 +55,9 @@
           "price": 34.32,
           "picture": "https://zqran.gitee.io/images/waimai/2233861812.jpg",
           "description": "酸汤莜面鱼鱼，主料：酸汤、莜面 肉夹馍，主料：白皮饼、猪肉",
-          "tag": "318569657"
+          "tag": "318569657",
+          "count": 1
+
         }
       ]
     },
@@ -68,7 +75,8 @@
           "price": 6,
           "picture": "https://zqran.gitee.io/images/waimai/3823780596.jpg",
           "description": "1串。藤椒味，主料：鸡肉",
-          "tag": "82022594"
+          "tag": "82022594",
+          "count": 1
         },
         {
           "id": 6592009498,
@@ -80,7 +88,8 @@
           "price": 169,
           "picture": "https://zqran.gitee.io/images/waimai/6592009498.jpg",
           "description": "6-8个月草原羔羊肋排，烤到皮脆肉香",
-          "tag": "82022594"
+          "tag": "82022594",
+          "count": 1
         }
       ]
     },
@@ -98,7 +107,9 @@
           "price": 5,
           "picture": "https://zqran.gitee.io/images/waimai/4056954171.jpg",
           "description": "浓浓的稻米清香，软糯Q弹有嚼劲",
-          "tag": "98147100"
+          "tag": "98147100",
+          "count": 1
+
         },
         {
           "id": 740430262,
@@ -110,7 +121,9 @@
           "price": 13,
           "picture": "https://zqran.gitee.io/images/waimai/740430262.jpg",
           "description": "柔软蓬松，葡萄干和蔓越莓酸甜适口",
-          "tag": "98147100"
+          "tag": "98147100",
+          "count": 1
+
         },
         {
           "id": 7466390504,
@@ -122,7 +135,9 @@
           "price": 13,
           "picture": "https://zqran.gitee.io/images/waimai/7466390504.jpg",
           "description": "",
-          "tag": "98147100"
+          "tag": "98147100",
+          "count": 1
+
         }
       ]
     }
