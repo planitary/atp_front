@@ -36,8 +36,12 @@ const foodsStore = createSlice({
         },
         itemMinus(state,action){
             const item = state.cartList.find(item => item.id === action.payload.id)
-            if (item.count === 0){
-                return
+            if (item.count === 1){
+                // 当前菜品数量为1时，再次点击减，将该菜品从数组移除
+                const index = state.cartList.indexOf(item);
+                state.cartList.splice(index,1)
+                // console.log(item)
+                // return
             }
             item.count--
         },
