@@ -9,6 +9,7 @@ const foodsStore = createSlice({
         foodsList: [],
         //  菜单激活active
         activeIndex: 0,
+
     },
     reducers:{
         setFoodsList(state,action){
