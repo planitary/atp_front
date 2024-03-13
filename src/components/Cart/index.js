@@ -4,6 +4,7 @@ import './index.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {itemMinus,itemPlus} from "../../meituan-store/modules/takeaway";
 import {cartClear} from "../../meituan-store/modules/takeaway";
+import {useState} from "react";
 
 const Cart = () => {
     const {cartList} = useSelector(state => state.foods)
@@ -22,16 +23,23 @@ const Cart = () => {
     //     })
     //     return total
     // }
+    // 状体控制，点击蒙层隐藏购物车
+    const [visible,setVisible] = useState(false)
+    function visibleWithTrue(){
+        if (totalCount > 0){
+            setVisible(true)
+        }
+    }
     return (
         <div className="cartContainer">
             {/* 遮罩层 添加visible类名可以显示出来 */}
-            <div
-                className={classNames('cartOverlay')}
+            <div onClick={() => setVisible(false)}
+                className={classNames('cartOverlay', visible && 'visible')}
             />
             <div className="cart">
                 {/* fill 添加fill类名可以切换购物车状态*/}
                 {/* 购物车数量 */}
-                <div className={classNames('icon',totalCount > 0 && 'fill')}>
+                <div  onClick={() => visibleWithTrue()} className={classNames('icon',totalCount > 0 && 'fill')}>
                     {totalCount > 0 && <div className="cartCornerMark">{totalCount}</div>}
                 </div>
                 {/* 购物车价格 */}
@@ -52,7 +60,7 @@ const Cart = () => {
                 )}
             </div>
             {/* 添加visible类名 div会显示出来 */}
-            <div className={classNames('cartPanel','visible')}>
+            <div className={classNames('cartPanel',visible && 'visible')}>
                 <div className="header">
                     <span className="text">购物车</span>
                     <span className="clearCart" onClick={() => dispatch(cartClear())} >
