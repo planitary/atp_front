@@ -9,6 +9,10 @@ import ReduxApp from "./ReduxApp";
 import Meituan_App from "./meituan-App";
 import {RouterProvider} from "react-router-dom";
 import router from "./router";
+import BillApp from "./BillApp";
+import billRouter from "./billRouter";
+// 账单项目，导入定制主题文件
+import './bill_theme.css'
 
 // 入口主函数，在provider中直接注入要启动的组件即可
 const root = createRoot(document.querySelector('#root'))
@@ -20,5 +24,7 @@ root.render(
     //     <Meituan_App/>
     // </Provider>
     // 路由项目用这个
-    <RouterProvider router={router}/>
+    // <RouterProvider router={router}/>
+    // 记账本项目
+    <RouterProvider router={billRouter}/>
     )
