@@ -29,9 +29,11 @@ const Month = () => {
     // 计算
     const res = useMemo(() => {
         // 支出
-        const pay = currentMonthList.filter(item => item.money < 0).reduce((a, b) => a + b.money, 0)
+        console.log("currentMonthList:" ,currentMonthList)
+        // 避免currentMonthList为undefined的时候调用filter报错，当数组为undefined时，赋值为空数组
+        const pay = (currentMonthList || []).filter(item => item.money < 0).reduce((a, b) => a + b.money, 0)
         // 收入
-        const income = currentMonthList.filter(item => item.money > 0).reduce((a, b) => a + b.money, 0)
+        const income = (currentMonthList || []).filter(item => item.money > 0).reduce((a, b) => a + b.money, 0)
         // 结余 total
         return {pay, income, total: pay + income}
     }, [currentMonthList])
@@ -55,7 +57,16 @@ const Month = () => {
         setCurrentMonthList(monthRes[parseDate])
     }
 
-    // 当前月
+    // 当前月份的数据按日分组
+    const dailyRes = useMemo(() => {
+        if (typeof currentMonthList === 'undefined'){
+            setCurrentMonthList([])
+        }
+        const groupByDay = _.groupBy(currentMonthList, (item) => dayjs(item.date).format("YYYY-MM-DD"));
+        // 日期是一个key，通过Object.keys拿到每一项的日期
+        const dailyKey = Object.keys(groupByDay)
+        return {groupByDay, dailyKey}
+    }, [currentMonthList])
 
     return (
         <div className="monthlyBill">
@@ -101,7 +112,9 @@ const Month = () => {
                     />
                 </div>
                 {/*    单日列表统计*/}
-                <DailyBill/>
+                {dailyRes.dailyKey.map(key => {
+                    return <DailyBill key={key} date={key} dailyList={dailyRes.groupByDay[key]}/>
+                })}
             </div>
         </div>
     )
