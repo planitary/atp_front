@@ -1,9 +1,10 @@
 import {NavBar, DatePicker} from "antd-mobile";
 import './index.scss'
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import dayjs from "dayjs";
 import {useSelector} from "react-redux";
 import _ from "lodash";
+import DailyBill from "./DayBill";
 
 
 const Month = () => {
@@ -28,12 +29,22 @@ const Month = () => {
     // 计算
     const res = useMemo(() => {
         // 支出
-        const pay = currentMonthList.filter(item => item.money < 0).reduce((a,b) => a + b.money,0)
+        const pay = currentMonthList.filter(item => item.money < 0).reduce((a, b) => a + b.money, 0)
         // 收入
-        const income = currentMonthList.filter(item => item.money > 0).reduce((a,b) => a + b.money,0)
+        const income = currentMonthList.filter(item => item.money > 0).reduce((a, b) => a + b.money, 0)
         // 结余 total
-        return {pay,income,total: pay + income}
-    },[currentMonthList])
+        return {pay, income, total: pay + income}
+    }, [currentMonthList])
+
+    // 钩子函数，初始化页面，已进入页面就将当前月份的统计数据渲染到页面
+    useEffect(() => {
+        // 当前时间
+        const currentDate = dayjs().format("YYYY年 | MM月");
+        // 边界值，由于monthRes的取值来自异步，一开始为空
+        if (monthRes[currentDate]) {
+            setCurrentMonthList(monthRes[currentDate]);
+        }
+    }, [monthRes])
 
     const onConfirm = (date) => {
         setDateVisible(false)
@@ -43,6 +54,8 @@ const Month = () => {
         const parseDate = dayjs(date).format("YYYY年 | MM月")
         setCurrentMonthList(monthRes[parseDate])
     }
+
+    // 当前月
 
     return (
         <div className="monthlyBill">
@@ -87,6 +100,8 @@ const Month = () => {
                         max={new Date()}
                     />
                 </div>
+                {/*    单日列表统计*/}
+                <DailyBill/>
             </div>
         </div>
     )

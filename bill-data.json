@@ -9,6 +9,27 @@
     },
     {
       "type": "pay",
+      "money": -199,
+      "date": "2024-03-01 10:36:42",
+      "useFor": "drinks",
+      "id": 1
+    },
+    {
+      "type": "income",
+      "money": 1799,
+      "date": "2024-03-02 10:36:42",
+      "useFor": "drinks",
+      "id": 1
+    },
+    {
+      "type": "date",
+      "money": -207,
+      "date": "2024-03-17 10:36:42",
+      "useFor": "drinks",
+      "id": 1
+    },
+    {
+      "type": "pay",
       "money": -88,
       "date": "2022-10-24 10:37:51",
       "useFor": "longdistance",
