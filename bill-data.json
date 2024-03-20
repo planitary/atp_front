@@ -18,21 +18,21 @@
       "type": "income",
       "money": 1799,
       "date": "2024-03-02 10:36:42",
-      "useFor": "drinks",
+      "useFor": "salary",
       "id": 1
     },
     {
-      "type": "date",
+      "type": "pay",
       "money": -207,
       "date": "2024-03-17 10:36:42",
-      "useFor": "drinks",
+      "useFor": "snap",
       "id": 1
     },
     {
-      "type": "date",
+      "type": "pay",
       "money": -10.38,
       "date": "2024-03-17 22:36:42",
-      "useFor": "drinks",
+      "useFor": "food",
       "id": 1
     },
     {

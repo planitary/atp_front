@@ -4,7 +4,7 @@ import App_L2 from "./App_L2";
 import {Provider} from "react-redux";
 // import store from "./store";
 // 美团项目需要重新引入store
-// import store from "./meituan-store",
+// import store from "./meituan-store";
 import ReduxApp from "./ReduxApp";
 import Meituan_App from "./meituan-App";
 import {RouterProvider} from "react-router-dom";
