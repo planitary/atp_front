@@ -3,6 +3,7 @@ import './index.scss'
 import dayjs from "dayjs";
 import {billListData, billTypeToName} from "../../../BillContents";
 import {useState} from "react";
+import Icon from "../../Components/Icon"
 
 const DailyBill = ({date, dailyList}) => {
     // 控制列表的显示
@@ -48,6 +49,8 @@ const DailyBill = ({date, dailyList}) => {
                 {dailyList.map(item => {
                     return (
                         <div className="bill" key={item.id}>
+                            {/*渲染图标*/}
+                            <Icon type={item.useFor}/>
                             <div className="detail">
                                 <div className="billType">{billTypeToName[item.useFor]}</div>
                             </div>
