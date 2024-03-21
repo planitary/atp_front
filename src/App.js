@@ -1,8 +1,8 @@
 import './App.scss'
-import avatar from './images/bozai.png'
-import avatar2 from './images/IMG_3445.JPG'
-import avatar3 from './images/__original_drawn_by_ama_mitsuki__5af6796539d372d39894afcc25707fa7.png'
-import avatar4 from './images/o_3d8cd2c44511cb1eafab60ebc1f36dab.jpg'
+import avatar from './Test/images/bozai.png'
+import avatar2 from './Test/images/IMG_3445.JPG'
+import avatar3 from './Test/images/__original_drawn_by_ama_mitsuki__5af6796539d372d39894afcc25707fa7.png'
+import avatar4 from './Test/images/o_3d8cd2c44511cb1eafab60ebc1f36dab.jpg'
 import {useEffect, useRef, useState} from "react";
 import _ from 'lodash'
 import classNames from "classnames";

@@ -1,8 +1,8 @@
 import {useSelector,useDispatch} from "react-redux";
 // 导入actionCreator
-import {increment,decrement,addToNum,reduceToNum} from "./store/modules/counterStore";
+import {increment,decrement,addToNum,reduceToNum} from "./Test/store/modules/counterStore";
 import {useEffect} from "react";
-import {fetchList} from "./store/modules/channelStore";
+import {fetchList} from "./Test/store/modules/channelStore";
 function ReduxApp(){
     const {count} = useSelector(state => state.counter)
     const {channelList} = useSelector(state => state.channel)

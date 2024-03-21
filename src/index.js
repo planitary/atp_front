@@ -8,12 +8,12 @@ import {Provider} from "react-redux";
 import ReduxApp from "./ReduxApp";
 import Meituan_App from "./meituan-App";
 import {RouterProvider} from "react-router-dom";
-import router from "./router";
+import router from "./Test/router";
 import BillApp from "./BillApp";
-import billRouter from "./billRouter";
+import billRouter from "./Test/billRouter";
 // 账单项目，导入定制主题文件
 import './bill_theme.css'
-import billStore from "./billStore";
+import billStore from "./Test/billStore";
 
 // 入口主函数，在provider中直接注入要启动的组件即可
 const root = createRoot(document.querySelector('#root'))
