@@ -1,12 +1,12 @@
-import NavBar from './Test/components/NavBar'
-import Menu from './Test/components/Menu'
-import Cart from './Test/components/Cart'
-import FoodsCategory from './Test/components/FoodsCategory'
+import NavBar from './components/NavBar'
+import Menu from './components/Menu'
+import Cart from './components/Cart'
+import FoodsCategory from './components/FoodsCategory'
 
 import './meituan-App.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {fetchFoodsList} from "./Test/meituan-store/modules/takeaway";
+import {fetchFoodsList} from "./meituan-store/modules/takeaway";
 
 // 静态模拟数据
 // const foodsList = [

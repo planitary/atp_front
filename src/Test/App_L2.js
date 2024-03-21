@@ -1,5 +1,5 @@
 // import logo from './logo.svg';
-// import './App.css';
+// import './PlatformApp.css';
 
 // 受控绑定表单
 // 1、声明一个react状态
@@ -59,7 +59,7 @@ const url2 = 'http://localhost:8080/interface/interfaceList'
 
 function App_L2() {
     // 父组件属性
-    const fatherName = 'this is App name'
+    const fatherName = 'this is PlatformApp name'
     // 子传父，子组件将函数返回给父组件，父组件进行调用
     const [msg,setMsg] = useState('');
 

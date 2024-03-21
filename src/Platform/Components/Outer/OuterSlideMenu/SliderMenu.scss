@@ -1,0 +1,11 @@
+.ant-layout-sider-dark{
+  height: 100vh;
+  //overflow-y: scroll;
+  width: 1000px;
+}
+
+.ant-layout-sider-menu{
+  height: 100vh;
+  border-right: 0;
+  overflow: auto;
+}
