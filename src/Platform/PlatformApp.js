@@ -7,6 +7,10 @@ const items1 = ['1', '2', '3',].map((key) => ({
     key,
     label: `nav ${key}`,
 }));
+const title = ['自动化测试','UI测试','系统管理','帮助'].map((key) => ({
+    key,
+    label: `${key}`,
+}));
 
 const PlatformApp = () => {
     const {
@@ -24,10 +28,10 @@ const PlatformApp = () => {
                 <Menu
                     theme="dark"
                     mode="horizontal"
-                    defaultSelectedKeys={['2']}
-                    items={items1}
+                    defaultSelectedKeys={['自动化测试']}
+                    items={title}
                     style={{
-                        flex: 1,
+                        flex: 10,
                         minWidth: 0,
                     }}
                 />
