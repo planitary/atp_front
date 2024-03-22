@@ -1,0 +1,19 @@
+.ant-layout-outer-header{
+  display: flex;
+  align-items: center;
+  position: sticky;
+  // 固定头部菜单
+  top: 0;
+  z-index: 1;
+}
+.ant-menu.ant-menu-dark .ant-menu-item-selected{
+  background-color: #0089ea;
+}
+.ant-menu.ant-menu-dark .ant-menu-item-selected:hover{
+  background-color: #0089ea;
+
+}
+
+.demo-logo{
+  width: 50px;
+}

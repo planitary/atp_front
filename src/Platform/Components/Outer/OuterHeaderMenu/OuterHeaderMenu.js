@@ -1,75 +1,32 @@
 import React, { useState } from 'react';
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
-const items = [
-    {
-        label: 'Navigation One',
-        key: 'mail',
-        icon: <MailOutlined />,
-    },
-    {
-        label: 'Navigation Two',
-        key: 'app',
-        icon: <AppstoreOutlined />,
-        disabled: true,
-    },
-    {
-        label: 'Navigation Three - Submenu',
-        key: 'SubMenu',
-        icon: <SettingOutlined />,
-        children: [
-            {
-                type: 'group',
-                label: 'Item 1',
-                children: [
-                    {
-                        label: 'Option 1',
-                        key: 'setting:1',
-                    },
-                    {
-                        label: 'Option 2',
-                        key: 'setting:2',
-                    },
-                ],
-            },
-            {
-                type: 'group',
-                label: 'Item 2',
-                children: [
-                    {
-                        label: 'Option 3',
-                        key: 'setting:3',
-                    },
-                    {
-                        label: 'Option 4',
-                        key: 'setting:4',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        label: (
-            <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-                Navigation Four - Link
-            </a>
-        ),
-        key: 'alipay',
-    },
-];
+import {Layout, Menu} from 'antd';
+import "./OuterHeaderMenu.scss"
+
+const {Header} = Layout
+const title = ['自动化测试','UI测试','系统管理','帮助'].map((key) => ({
+    key,
+    label: `${key}`,
+}));
+
+
 const OuterHeaderMenu = () => {
-    const [current, setCurrent] = useState('mail');
-    const onClick = (e) => {
-        console.log('click ', e);
-        setCurrent(e.key);
-    };
-    return <Menu
-        onClick={onClick}
-        selectedKeys={[current]}
-        mode="horizontal"
-        items={items}
-        theme="dark"
-        style={{flex:1,minWidth: 0}}
-    />;
+    return (
+        <Header className="ant-layout-outer-header">
+            <div className="demo-logo" />
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={['自动化测试']}
+                items={title}
+                style={{
+                    flex: 10,
+                    minWidth: 0,
+
+                }}
+            />
+        </Header>
+    )
 };
+
 export default OuterHeaderMenu;

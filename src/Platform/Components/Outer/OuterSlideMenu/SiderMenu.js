@@ -9,7 +9,7 @@ import {
     PieChartOutlined, UserOutlined,
 } from '@ant-design/icons';
 import {Button, Menu} from 'antd';
-import "./SliderMenu.scss"
+import "./SiderMenu.scss"
 import Sider from "antd/es/layout/Sider";
 
 function getItem(label, key, icon, children, type) {
@@ -37,7 +37,7 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
         }),
     };
 });
-const SliderMenu = () => {
+const SiderMenu = () => {
     return (
         <Sider className="ant-layout-sider-nested"
         >
@@ -50,4 +50,4 @@ const SliderMenu = () => {
         </Sider>
     );
 };
-export default SliderMenu;
+export default SiderMenu;

@@ -1,7 +1,8 @@
 import React from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import SliderMenu from "./Components/Outer/OuterSlideMenu/SliderMenu";
+import SiderMenu from "./Components/Outer/OuterSlideMenu/SiderMenu";
+import OuterHeaderMenu from "./Components/Outer/OuterHeaderMenu/OuterHeaderMenu";
 const { Header, Content } = Layout;
 const items1 = ['1', '2', '3',].map((key) => ({
     key,
@@ -18,26 +19,9 @@ const PlatformApp = () => {
     } = theme.useToken();
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <Header
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                }}
-            >
-                <div className="demo-logo" />
-                <Menu
-                    theme="dark"
-                    mode="horizontal"
-                    defaultSelectedKeys={['自动化测试']}
-                    items={title}
-                    style={{
-                        flex: 10,
-                        minWidth: 0,
-                    }}
-                />
-            </Header>
+            <OuterHeaderMenu/>
             <Layout>
-                <SliderMenu/>
+                <SiderMenu/>
                 <Layout style={{padding: '0 20px 20px'}}>
                     <Breadcrumb
                         style={{
