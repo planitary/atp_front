@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import {Layout, Menu} from 'antd';
 import "./OuterHeaderMenu.scss"
 
@@ -22,7 +21,7 @@ const OuterHeaderMenu = ({selectedKey,onSelect}) => {
                 theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={['自动化测试']}
-                selectedKeys={[selectedKey]}
+                selectedKeys={selectedKey}
                 items={title}
                 onClick={handleTopMenuClick}
                 style={{

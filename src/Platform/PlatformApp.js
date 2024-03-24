@@ -11,7 +11,7 @@ const PlatformApp = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     // 父组件，管理顶部菜单栏的选中和侧边菜单栏值的切换
-    const [selectedKey,setSelectedKey] = useState("");
+    const [selectedKey,setSelectedKey] = useState("自动化测试");
     const handleTopMenuClick = (key) => {
         setSelectedKey(key)
     }
