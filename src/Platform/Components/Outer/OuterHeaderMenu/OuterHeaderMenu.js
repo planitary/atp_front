@@ -10,7 +10,11 @@ const title = ['自动化测试','UI测试','系统管理','帮助'].map((key) =
 }));
 
 
-const OuterHeaderMenu = () => {
+const OuterHeaderMenu = ({selectedKey,onSelect}) => {
+    // 根据顶部菜单，动态改变侧边菜单的值
+    const handleTopMenuClick = (e) => {
+        onSelect(e.key);
+    }
     return (
         <Header className="ant-layout-outer-header">
             <div className="demo-logo" />
@@ -18,7 +22,9 @@ const OuterHeaderMenu = () => {
                 theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={['自动化测试']}
+                selectedKeys={[selectedKey]}
                 items={title}
+                onClick={handleTopMenuClick}
                 style={{
                     flex: 10,
                     minWidth: 0,

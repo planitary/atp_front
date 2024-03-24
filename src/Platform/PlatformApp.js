@@ -1,27 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import SiderMenu from "./Components/Outer/OuterSlideMenu/SiderMenu";
 import OuterHeaderMenu from "./Components/Outer/OuterHeaderMenu/OuterHeaderMenu";
 const { Header, Content } = Layout;
-const items1 = ['1', '2', '3',].map((key) => ({
-    key,
-    label: `nav ${key}`,
-}));
-const title = ['自动化测试','UI测试','系统管理','帮助'].map((key) => ({
-    key,
-    label: `${key}`,
-}));
+
 
 const PlatformApp = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+    // 父组件，管理顶部菜单栏的选中和侧边菜单栏值的切换
+    const [selectedKey,setSelectedKey] = useState("");
+    const handleTopMenuClick = (key) => {
+        setSelectedKey(key)
+    }
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <OuterHeaderMenu/>
+            <OuterHeaderMenu selectedKey={selectedKey} onSelect={handleTopMenuClick}/>
             <Layout>
-                <SiderMenu/>
+                <SiderMenu selectedKey={selectedKey}/>
                 <Layout style={{padding: '0 20px 20px'}}>
                     <Breadcrumb
                         style={{
