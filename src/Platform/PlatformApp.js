@@ -3,6 +3,7 @@ import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import SiderMenu from "./Components/Outer/OuterSlideMenu/SiderMenu";
 import OuterHeaderMenu from "./Components/Outer/OuterHeaderMenu/OuterHeaderMenu";
+import ProjectList from "./Components/Outer/Content/Project/ProjectList";
 const { Header, Content } = Layout;
 
 
@@ -39,7 +40,7 @@ const PlatformApp = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        Content
+                        <ProjectList/>
                     </Content>
                 </Layout>
             </Layout>

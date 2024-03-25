@@ -4,6 +4,7 @@ import {Button, Menu} from 'antd';
 import "./SiderMenu.scss"
 import Sider from "antd/es/layout/Sider";
 import {AutoTestNavTitle, UITestNavTitle} from "../Common/SideMenus";
+import {useNavigate} from "react-router-dom";
 
 
 // 侧边菜单的所有key
@@ -18,7 +19,11 @@ const displayTitle = (key) => {
     }
 }
 const SiderMenu = ({selectedKey}) => {
-
+    // const navigate = useNavigate()
+    // const switchRoute = (path) => {
+    //     console.log(path)
+    //     navigate(path)
+    // }
 
     const [openKeys, setOpenKeys] = useState(['sub1']);
     // 菜单栏的展开与收缩
@@ -37,9 +42,9 @@ const SiderMenu = ({selectedKey}) => {
                   mode="inline"
                   selectedKeys={[selectedKey]}
                   onOpenChange={onOpenChange}
-                  triggerSubMenuAction={"hover"}
                   openKeys={openKeys}
                   items={displayTitle(selectedKey)}
+                  // onChange={switchRoute}
             />
 
         </Sider>
