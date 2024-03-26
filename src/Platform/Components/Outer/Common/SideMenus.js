@@ -14,8 +14,8 @@ function getItem(label, key, icon, children, type) {
 // 自动化测试
 const AutoTestNavTitle = [
     getItem('项目', 'sub1', <ApartmentOutlined/>, [
-        getItem('新建项目', 'p1'),
-        getItem('项目列表', 'p2'),
+        getItem('新建项目', '/addNewProject'),
+        getItem('项目列表', '/projectList'),
     ]),
     getItem('接口', 'sub2', <ApiOutlined/>, [
         getItem('新建接口', 'a1'),
@@ -43,5 +43,5 @@ const SideMenus = () => {
 
 }
 
-export {AutoTestNavTitle,UITestNavTitle}
+export {AutoTestNavTitle, UITestNavTitle}
 export default SideMenus

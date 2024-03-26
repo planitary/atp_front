@@ -1,15 +1,20 @@
 import {createBrowserRouter} from "react-router-dom";
-import PlatformApp from "../../../PlatformApp";
+import PlatformApp from "../../Main/PlatformApp";
+import ProjectList from "../Content/Project/ProjectList";
+import Layout from "../../Layout/Layout";
 
 const OuterRouter = createBrowserRouter([
     {
-        path: '/ATPlatform',
+        path: '/',
         element: <PlatformApp/>,
         children:[
             {
-                path: '/automationTest/project/projectList'
+                path: '/platform/projectList',
+                element: <ProjectList/>,
             }
 
         ]
     }
 ])
+
+export default OuterRouter

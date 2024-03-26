@@ -25,6 +25,11 @@ const GetPagination = () => {
     return pagination
 }
 
+const modTime = (data) => {
+    data.map((item) => (
+        data = dayjs(item.items.createTime).format("YYYY-MM-DD HH:mm:ss")
+    ))
+}
 
 const GetProjectList = (setLoading) => {
     return async (dispatch) => {
@@ -37,6 +42,9 @@ const GetProjectList = (setLoading) => {
 
         const url = "http://localhost:8080/project/projectList";
         const res = await axios.post(url, {pagination, reqBody});
+
+        modTime(Array.isArray(res.data) ? res.data:[])
+        console.log(res.data)
         dispatch(setProjectList(res.data))
         setLoading = false
     }

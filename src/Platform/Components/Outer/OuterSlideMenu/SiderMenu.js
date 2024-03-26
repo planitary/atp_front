@@ -19,11 +19,7 @@ const displayTitle = (key) => {
     }
 }
 const SiderMenu = ({selectedKey}) => {
-    // const navigate = useNavigate()
-    // const switchRoute = (path) => {
-    //     console.log(path)
-    //     navigate(path)
-    // }
+
 
     const [openKeys, setOpenKeys] = useState(['sub1']);
     // 菜单栏的展开与收缩
@@ -35,17 +31,26 @@ const SiderMenu = ({selectedKey}) => {
             setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
         }
     };
+
+    const navigate = useNavigate();
+
+    // 路由控制
+    const switchRoute = (key) => {
+        console.log('跳转路由:',key)
+        navigate(`/platform${key.key}`)
+    }
     return (
         <Sider className="ant-layout-sider-nested"
         >
             <Menu className="ant-layout-sider-menu"
                   mode="inline"
-                  selectedKeys={[selectedKey]}
+                  // selectedKeys={[selectedKey]}
                   onOpenChange={onOpenChange}
                   openKeys={openKeys}
                   items={displayTitle(selectedKey)}
-                  // onChange={switchRoute}
+                  onSelect={switchRoute}
             />
+
 
         </Sider>
     );
