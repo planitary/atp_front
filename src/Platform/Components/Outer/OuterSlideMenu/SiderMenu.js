@@ -33,10 +33,13 @@ const SiderMenu = ({selectedKey}) => {
     };
 
     const navigate = useNavigate();
+    const [currentKey,setCurrentKey] = useState("");
 
     // 路由控制
     const switchRoute = (key) => {
         console.log('跳转路由:',key)
+        console.log(key.key)
+        setCurrentKey(key.key)
         navigate(`/platform${key.key}`)
     }
     return (
@@ -44,7 +47,7 @@ const SiderMenu = ({selectedKey}) => {
         >
             <Menu className="ant-layout-sider-menu"
                   mode="inline"
-                  // selectedKeys={[selectedKey]}
+                  selectedKeys={[currentKey]}
                   onOpenChange={onOpenChange}
                   openKeys={openKeys}
                   items={displayTitle(selectedKey)}

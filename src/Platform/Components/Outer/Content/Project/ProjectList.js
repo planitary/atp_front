@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import {Space, Table} from 'antd';
 import qs from 'qs';
 import {useDispatch, useSelector} from "react-redux";
 import {GetPagination, GetProjectList, getProjectList} from "./Store/Modules/ProjectStore";
@@ -33,6 +33,16 @@ const columns = [
     {
         title: '创建人',
         dataIndex: 'createUser',
+    },
+    {
+        title: '操作',
+        key: 'operation',
+        render: () => (
+            <Space size="middle">
+                <a>编辑</a>
+                <a style={{"color":"red"}}>删除</a>
+            </Space>
+        )
     }
 ];
 const getRandomuserParams = (params) => ({
@@ -59,7 +69,6 @@ const ProjectList = () => {
     const rowData = projectListData.projectList.items
     // const data = projectListData.map((item) => item.items)
     // 结果转化为数组
-    const datas = Array.isArray(rowData) ? rowData:[]
     // console.log(datas.map((data) => data.id))
     return (
         <Table
