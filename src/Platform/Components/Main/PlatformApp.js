@@ -5,6 +5,7 @@ import SiderMenu from "../Outer/OuterSlideMenu/SiderMenu";
 import OuterHeaderMenu from "../Outer/OuterHeaderMenu/OuterHeaderMenu";
 import ProjectList from "../Outer/Content/Project/ProjectList";
 import {Route, Routes} from "react-router-dom";
+import Page from "../Pagination/Page";
 
 const {Header, Content} = Layout;
 

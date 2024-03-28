@@ -17,7 +17,7 @@ const projectStore = createSlice({
 
 const {setProjectList} = projectStore.actions;
 const pagination = {
-    pageNo: 1,
+    pageNo: 2,
     pageSize: 10,
 }
 
@@ -31,22 +31,23 @@ const modTime = (data) => {
     ))
 }
 
-const GetProjectList = (setLoading) => {
+const GetProjectList = (page, size, projectId = '', projectUrl = '', projectName = '') => {
     return async (dispatch) => {
-        setLoading = true
         const reqBody = {
-            projectId: '',
-            projectUrl: '',
-            projectName: '',
+            pageNo: page,
+            pageSize: size,
+            projectName: projectName,
+            projectUrl: projectUrl,
+            projectId: projectId
+            // 查询参数
         };
 
         const url = "http://localhost:8080/project/projectList";
-        const res = await axios.post(url, {pagination, reqBody});
+        const res = await axios.post(url, reqBody);
 
-        modTime(Array.isArray(res.data) ? res.data:[])
+        modTime(Array.isArray(res.data) ? res.data : [])
         console.log(res.data)
         dispatch(setProjectList(res.data))
-        setLoading = false
     }
 }
 
