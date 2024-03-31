@@ -1,15 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space} from 'antd';
+import {Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Tooltip} from 'antd';
 import {useDispatch} from "react-redux";
-import {GetProjectDetail} from "../Store/Modules/ProjectStore";
 import axios from "axios";
 
 const {Option} = Select;
 
 
-const DetailDrawer = ({drawerVisible, editData, handleOpen, handleClose}) => {
-    console.log(editData.projectUrl)
+const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
+    console.log(editData.projectUrl, editData.projectLevel)
+    // 标签动态映射(文本)
+    const getTagText = (level) => {
+        switch (level) {
+            case '1':
+                return '最高';
+            case '2':
+                return '高';
+            case '3':
+                return '中';
+            case '4':
+                return '低';
+            default :
+                return '中'
+        }
+    }
     // const projectInfo = {
     //     projectId: editData.projectId
     // }
@@ -21,6 +35,7 @@ const DetailDrawer = ({drawerVisible, editData, handleOpen, handleClose}) => {
                 mask={true}
                 onClose={handleClose}
                 open={drawerVisible}
+                destroyOnClose={true}
                 styles={{
                     body: {
                         paddingBottom: 80,
@@ -72,35 +87,38 @@ const DetailDrawer = ({drawerVisible, editData, handleOpen, handleClose}) => {
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
+                                name="group"
+                                label="项目所属组"
+                                rules={[
+                                    {
+                                        required: false,
+                                    },
+                                ]}
+                                tooltip="若不选择任何组别，则项目被默认归为Admin组"
+                                initialValue={editData.projectGroup}
+                            >
+                                <Select placeholder="请选择一个组别">
+                                    <Option value="cornerstone">Cornerstone</Option>
+                                    <Option value="hermes">Hermes</Option>
+                                    <Option value="admin">Admin</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
                                 name="owner"
-                                label="Owner"
+                                label="负责人"
                                 rules={[
                                     {
-                                        required: true,
-                                        message: 'Please select an owner',
+                                        required: false,
                                     },
                                 ]}
+                                initialValue={editData.projectOwner}
                             >
-                                <Select placeholder="Please select an owner">
-                                    <Option value="xiao">Xiaoxiao Fu</Option>
-                                    <Option value="mao">Maomao Zhou</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="type"
-                                label="Type"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please choose the type',
-                                    },
-                                ]}
-                            >
-                                <Select placeholder="Please choose the type">
-                                    <Option value="private">Private</Option>
-                                    <Option value="public">Public</Option>
+                                <Select placeholder="请为项目指定负责人">
+                                    <Option value="Noah">Noah</Option>
+                                    <Option value="Zane">Zane</Option>
+                                    <Option value="Blade">Blade</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -108,54 +126,35 @@ const DetailDrawer = ({drawerVisible, editData, handleOpen, handleClose}) => {
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="approver"
-                                label="Approver"
+                                name="level"
+                                label="项目级别"
                                 rules={[
                                     {
-                                        required: true,
-                                        message: 'Please choose the approver',
+                                        required: false,
                                     },
                                 ]}
+                                initialValue={getTagText(editData.projectLevel)}
                             >
-                                <Select placeholder="Please choose the approver">
-                                    <Option value="jack">Jack Ma</Option>
-                                    <Option value="tom">Tom Liu</Option>
+                                <Select placeholder="请确定项目级别">
+                                    <Option value="highest">最高</Option>
+                                    <Option value="high">高</Option>
+                                    <Option value="middle">中</Option>
+                                    <Option value="low">低</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="dateTime"
-                                label="DateTime"
+                                name="remark"
+                                label="备注"
                                 rules={[
                                     {
-                                        required: true,
-                                        message: 'Please choose the dateTime',
+                                        required: false,
                                     },
                                 ]}
+                                initialValue={editData.remark}
                             >
-                                <DatePicker.RangePicker
-                                    style={{
-                                        width: '100%',
-                                    }}
-                                    getPopupContainer={(trigger) => trigger.parentElement}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
-                                name="description"
-                                label="Description"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'please enter url description',
-                                    },
-                                ]}
-                            >
-                                <Input.TextArea rows={4} placeholder="please enter url description"/>
+                                <Input/>
                             </Form.Item>
                         </Col>
                     </Row>
