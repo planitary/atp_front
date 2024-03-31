@@ -2,20 +2,22 @@ import {createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 import {useState} from "react";
 import dayjs from "dayjs";
+import projectDo from "../ProjectDo";
 
 const projectStore = createSlice({
     name: 'project',
     initialState: {
-        projectList: []
+        projectList: [],
     },
+
     reducers: {
         setProjectList(state, action) {
             state.projectList = action.payload
-        }
+        },
     }
 })
 
-const {setProjectList} = projectStore.actions;
+const {setProjectList,fillProjectInfo} = projectStore.actions;
 const pagination = {
     pageNo: 2,
     pageSize: 10,
@@ -48,6 +50,18 @@ const GetProjectList = (page, size, projectId = '', projectUrl = '', projectName
         modTime(Array.isArray(res.data) ? res.data : [])
         console.log(res.data)
         dispatch(setProjectList(res.data))
+    }
+}
+
+const GetProjectDetail = (projectId) => {
+    return async (dispatch) => {
+        const reqBody = {
+            "projectId":projectId
+        }
+        const url = "http://localhost:8080/project/getProjectDetail";
+        const res = await axios.post(url,reqBody);
+        console.log("detail:",res.data)
+        dispatch(fillProjectInfo(res.data))
     }
 }
 

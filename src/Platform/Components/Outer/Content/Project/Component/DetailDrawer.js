@@ -1,11 +1,18 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PlusOutlined} from '@ant-design/icons';
 import {Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space} from 'antd';
+import {useDispatch} from "react-redux";
+import {GetProjectDetail} from "../Store/Modules/ProjectStore";
+import axios from "axios";
 
 const {Option} = Select;
 
 
-const DetailDrawer = ({drawerVisible,editData,handleOpen,handleClose}) => {
+const DetailDrawer = ({drawerVisible, editData, handleOpen, handleClose}) => {
+    console.log(editData.projectUrl)
+    // const projectInfo = {
+    //     projectId: editData.projectId
+    // }
     return (
         <>
             <Drawer
@@ -28,7 +35,7 @@ const DetailDrawer = ({drawerVisible,editData,handleOpen,handleClose}) => {
                     </Space>
                 }
             >
-                <Form layout="vertical" hideRequiredMark>
+                <Form layout="vertical">
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
@@ -37,31 +44,27 @@ const DetailDrawer = ({drawerVisible,editData,handleOpen,handleClose}) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: '项目名称',
+                                        message: '请输入项目名称',
                                     },
                                 ]}
+                                initialValue={editData.projectName}
                             >
-                                <Input placeholder="填写接口名称"/>
+                                <Input/>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
                                 name="url"
-                                label="Url"
+                                label="项目接口前缀"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter url',
+                                        message: '请输入项目接口前缀',
                                     },
                                 ]}
+                                initialValue={editData.projectUrl}
                             >
                                 <Input
-                                    style={{
-                                        width: '100%',
-                                    }}
-                                    addonBefore="http://"
-                                    addonAfter=".com"
-                                    placeholder="Please enter url"
                                 />
                             </Form.Item>
                         </Col>

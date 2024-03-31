@@ -7,22 +7,24 @@ import _ from "lodash";
 import dayjs from "dayjs";
 import Page from "../../../Pagination/Page";
 import DetailDrawer from "./Component/DetailDrawer";
+import axios from "axios";
 
 const ProjectList = () => {
     const columns = [
         {
             title: '项目名',
             dataIndex: 'projectName',
-            width: '20%',
+            width: '15%',
         },
         {
             title: '项目前缀',
             dataIndex: 'projectUrl',
-            width: '20%',
+            width: '10%',
         },
         {
             title: '备注',
-            dataIndex: 'remark'
+            dataIndex: 'remark',
+            width: '15%'
         },
         {
             title: '创建时间',
@@ -34,9 +36,17 @@ const ProjectList = () => {
             dataIndex: 'updateTime',
             width: '15%'
         },
+        // {
+        //     title: '创建人',
+        //     dataIndex: 'createUser',
+        // },
         {
-            title: '创建人',
-            dataIndex: 'createUser',
+            title: '所属组',
+            dataIndex: 'projectGroup',
+        },
+        {
+            title: '负责人',
+            dataIndex: 'projectOwner'
         },
         {
             title: '操作',
@@ -49,8 +59,17 @@ const ProjectList = () => {
             )
         }
     ];
+
     // 加载状态
     const [loading, setLoading] = useState(false);
+    // 项目详情
+    const [projectInfo, setProjectInfo] = useState({
+        projectId: "",
+        projectName: "",
+        projectUrl: "",
+        remark: "",
+        version: 0
+    })
     // 分页状态
     // const [pagination,setPagination] = useState({})
     // 抽屉控制器
@@ -66,8 +85,18 @@ const ProjectList = () => {
 
     }, [dispatch])
 
-    // 编辑按钮回调
-    const handleEditClick = () => {
+    // 编辑按钮回调(调用接口获取详情)
+    const handleEditClick = async (record) => {
+        const reqBody = {
+            "projectId": record.projectId
+        }
+        const url = "http://localhost:8080/project/getProjectDetail";
+        try {
+            const res = await axios.post(url, reqBody);
+            setProjectInfo(res.data.data)
+        } catch (error) {
+            console.error("Error:", error);
+        }
         setDrawerVisible(true)
     }
 
@@ -88,6 +117,11 @@ const ProjectList = () => {
     // 编辑当前行
     const currentId = (record) => {
         return record.id
+    }
+
+    // 获得当前行的projctId
+    const currentProjectId = (record) => {
+        return record.projectId
     }
 
     // 从回调中拿到数据渲染列表
@@ -117,7 +151,7 @@ const ProjectList = () => {
             />
 
             <DetailDrawer
-                editData={editData}
+                editData={projectInfo}
                 drawerVisible={drawerVisible}
                 handleClose={handleCloseClick}
             />
