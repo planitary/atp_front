@@ -1,14 +1,70 @@
 import React, {useEffect, useState} from 'react';
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Tooltip} from 'antd';
+import {Button, Col, DatePicker, Drawer, Form, Input, message, Row, Select, Space, Tooltip} from 'antd';
 import {useDispatch} from "react-redux";
 import axios from "axios";
+import {updateProject} from "../../../../API/Api";
 
 const {Option} = Select;
 
 
 const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
-    console.log(editData.projectUrl, editData.projectLevel)
+    // console.log(editData)
+    const project = {...editData}
+    const [form] = Form.useForm();
+    if (editData.projectLevel === '1') {
+        project.projectLevel = '最高';
+    }
+    if (editData.projectLevel === '2') {
+        project.projectLevel = '高';
+    }
+    if (editData.projectLevel === '3') {
+        project.projectLevel = '中';
+    }
+    if (editData.projectLevel === '4') {
+        project.projectLevel = '低';
+    }
+
+    // 填充表单字段值（注意由于form倍useForm管理,所以通常的设置默认值的方法不管用)
+    form.setFieldsValue(project);
+
+    // 点击确认调用接口
+    const handleConfirmClick = async () => {
+        try {
+            await form.validateFields()
+            // message.success("success",value);
+            const value = form.getFieldsValue();
+            console.log("value:", value);
+            editData.projectGroup = value.group;
+            if (value.projectLevel === 'highest') {
+                editData.projectLevel = "1"
+            }
+            if (value.projectLevel === 'high') {
+                editData.projectLevel = "2"
+            }
+            if (value.projectLevel === 'middle') {
+                editData.projectLevel = "3"
+            }
+            if (value.projectLevel === 'low') {
+                editData.projectLevel = "4"
+            }
+            editData.projectName = value.projectName;
+            editData.projectOwner = value.projectOwner;
+            editData.remark = value.remark;
+            editData.projectUrl = value.projectUrl;
+            updateProject(editData).then(res => {
+                console.log(res.data)
+                if (res.data.code === '0'){
+                    message.success('编辑成功!');
+                    handleClose();
+                }
+
+            })
+        } catch (error) {
+            message.error("请填写必填项");
+        }
+    }
+
     // 标签动态映射(文本)
     const getTagText = (level) => {
         switch (level) {
@@ -27,6 +83,8 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
     // const projectInfo = {
     //     projectId: editData.projectId
     // }
+
+
     return (
         <>
             <Drawer
@@ -44,40 +102,40 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                 extra={
                     <Space>
                         <Button onClick={handleClose}>取消</Button>
-                        <Button onClick={handleClose} type="primary">
+                        <Button onClick={handleConfirmClick} type="primary">
                             确认
                         </Button>
                     </Space>
                 }
             >
-                <Form layout="vertical">
+                <Form layout="vertical" form={form}>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 name="projectName"
                                 label="项目名称"
+                                hasFeedback
                                 rules={[
                                     {
                                         required: true,
                                         message: '请输入项目名称',
                                     },
                                 ]}
-                                initialValue={editData.projectName}
                             >
                                 <Input/>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="url"
+                                name="projectUrl"
                                 label="项目接口前缀"
+                                hasFeedback
                                 rules={[
                                     {
                                         required: true,
                                         message: '请输入项目接口前缀',
                                     },
                                 ]}
-                                initialValue={editData.projectUrl}
                             >
                                 <Input
                                 />
@@ -87,7 +145,7 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="group"
+                                name="projectGroup"
                                 label="项目所属组"
                                 rules={[
                                     {
@@ -95,7 +153,6 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                                     },
                                 ]}
                                 tooltip="若不选择任何组别，则项目被默认归为Admin组"
-                                initialValue={editData.projectGroup}
                             >
                                 <Select placeholder="请选择一个组别">
                                     <Option value="cornerstone">Cornerstone</Option>
@@ -106,14 +163,13 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="owner"
+                                name="projectOwner"
                                 label="负责人"
                                 rules={[
                                     {
                                         required: false,
                                     },
                                 ]}
-                                initialValue={editData.projectOwner}
                             >
                                 <Select placeholder="请为项目指定负责人">
                                     <Option value="Noah">Noah</Option>
@@ -126,14 +182,13 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="level"
+                                name="projectLevel"
                                 label="项目级别"
                                 rules={[
                                     {
                                         required: false,
                                     },
                                 ]}
-                                initialValue={getTagText(editData.projectLevel)}
                             >
                                 <Select placeholder="请确定项目级别">
                                     <Option value="highest">最高</Option>
@@ -152,7 +207,6 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                                         required: false,
                                     },
                                 ]}
-                                initialValue={editData.remark}
                             >
                                 <Input/>
                             </Form.Item>

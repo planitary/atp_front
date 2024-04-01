@@ -7,6 +7,7 @@ import _ from "lodash";
 import dayjs from "dayjs";
 import Page from "../../../Pagination/Page";
 import DetailDrawer from "./Component/DetailDrawer";
+import ProjectDo from "./Store/ProjectDo"
 import axios from "axios";
 
 const ProjectList = () => {
@@ -108,7 +109,9 @@ const ProjectList = () => {
         const url = "http://localhost:8080/project/getProjectDetail";
         try {
             const res = await axios.post(url, reqBody);
+            console.log(res.data.data)
             setProjectInfo(res.data.data)
+
         } catch (error) {
             console.error("Error:", error);
         }
