@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Pagination, Space, Table, Tag} from 'antd';
+import {Button, Pagination, Space, Table, Tag,message} from 'antd';
 import qs from 'qs';
 import {useDispatch, useSelector} from "react-redux";
 import {GetPagination, GetProjectList} from "./Store/Modules/ProjectStore";
@@ -9,6 +9,8 @@ import Page from "../../../Pagination/Page";
 import DetailDrawer from "./Component/DetailDrawer";
 import ProjectDo from "./Store/ProjectDo"
 import axios from "axios";
+import MessageInfo from "./Component/MessageInfo";
+import {deleteProject} from "../../../API/Api";
 
 const ProjectList = () => {
     const columns = [
@@ -18,7 +20,7 @@ const ProjectList = () => {
             width: '15%',
         },
         {
-            title: '项目前缀',
+            title: '项目接口前缀',
             dataIndex: 'projectUrl',
             width: '10%',
         },
@@ -67,11 +69,13 @@ const ProjectList = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <a onClick={() => handleEditClick(record)}>编辑</a>
-                    <a style={{"color": "red"}}>删除</a>
+                    <a onClick={() => handleDeleteClick(record)} style={{"color": "red"}}>删除</a>
                 </Space>
             )
         }
     ];
+
+
 
     // 加载状态
     const [loading, setLoading] = useState(false);
@@ -93,6 +97,7 @@ const ProjectList = () => {
     // 暂存数据值用于抽屉表单的回显
     const [editData, setEditData] = useState(null)
 
+    const [currentProjectId,setCurrentProjectId] = useState("")
     const dispatch = useDispatch()
 
     // 钩子函数，渲染完页面就访问一次列表页
@@ -116,6 +121,33 @@ const ProjectList = () => {
             console.error("Error:", error);
         }
         setDrawerVisible(true)
+    }
+
+    // 删除按钮
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = () => {
+        setIsModalOpen(false);
+        deleteProject(currentProjectId).then(res => {
+            if (res.data.code === '0'){
+                message.success(res.data.data);
+            }else {
+                message.error(res.data.errMsg)
+            }
+        })
+        dispatch(GetProjectList(1,10));
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    // 删除按钮的回调
+    const handleDeleteClick = async (record) => {
+        showModal();
+        setCurrentProjectId(record.projectId)
     }
 
     // 标签动态映射(颜色)
@@ -149,11 +181,18 @@ const ProjectList = () => {
         }
     }
 
+    // 外部点击×或者取消的关闭回调
+    const handleCloseOut = () => {
+        setDrawerVisible(false);
+        setEditData(null);
+    }
 
     // 抽屉关闭事件回调
     const handleCloseClick = () => {
         setDrawerVisible(false);
         setEditData(null);
+        // 关闭后重新请求列表
+        dispatch(GetProjectList(1, 10));
     }
 
     // 分页回调
@@ -168,9 +207,9 @@ const ProjectList = () => {
     const currentId = (record) => {
         return record.id
     }
-    // 获得当前行的level
-    const currentProjectLevel = (record) => {
-        return record.projectLevel
+    // 获得当前行的Id
+    const currentProjecId = (record) => {
+        return record.projectId
     }
 
     // 从回调中拿到数据渲染列表
@@ -203,7 +242,13 @@ const ProjectList = () => {
             <DetailDrawer
                 editData={projectInfo}
                 drawerVisible={drawerVisible}
-                handleClose={handleCloseClick}
+                handleCloseIn={handleCloseClick}
+                handleCloseOut={handleCloseOut}
+            />
+            <MessageInfo
+                modalStatus={isModalOpen}
+                handleOk={handleOk}
+                handleCancel={handleCancel}
             />
         </>
     );

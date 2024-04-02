@@ -8,25 +8,47 @@ import {updateProject} from "../../../../API/Api";
 const {Option} = Select;
 
 
-const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
+
+const DetailDrawer = ({drawerVisible, editData, handleCloseIn,handleCloseOut}) => {
+
+
+
+    // 标签动态映射(文本)
+    const getTagText = (level) => {
+        switch (level) {
+            case '1':
+                return '最高';
+            case '2':
+                return '高';
+            case '3':
+                return '中';
+            case '4':
+                return '低';
+            default :
+                return '中'
+        }
+    }
     // console.log(editData)
     const project = {...editData}
+    project.projectLevel = getTagText(editData.projectLevel)
     const [form] = Form.useForm();
-    if (editData.projectLevel === '1') {
-        project.projectLevel = '最高';
-    }
-    if (editData.projectLevel === '2') {
-        project.projectLevel = '高';
-    }
-    if (editData.projectLevel === '3') {
-        project.projectLevel = '中';
-    }
-    if (editData.projectLevel === '4') {
-        project.projectLevel = '低';
-    }
+    // if (editData.projectLevel === '1') {
+    //     project.projectLevel = '最高';
+    // }
+    // if (editData.projectLevel === '2') {
+    //     project.projectLevel = '高';
+    // }
+    // if (editData.projectLevel === '3') {
+    //     project.projectLevel = '中';
+    // }
+    // if (editData.projectLevel === '4') {
+    //     project.projectLevel = '低';
+    // }
 
     // 填充表单字段值（注意由于form倍useForm管理,所以通常的设置默认值的方法不管用)
     form.setFieldsValue(project);
+
+
 
     // 点击确认调用接口
     const handleConfirmClick = async () => {
@@ -35,7 +57,7 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
             // message.success("success",value);
             const value = form.getFieldsValue();
             console.log("value:", value);
-            editData.projectGroup = value.group;
+            editData.projectGroup = value.projectGroup;
             if (value.projectLevel === 'highest') {
                 editData.projectLevel = "1"
             }
@@ -53,10 +75,11 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
             editData.remark = value.remark;
             editData.projectUrl = value.projectUrl;
             updateProject(editData).then(res => {
-                console.log(res.data)
-                if (res.data.code === '0'){
+                if (res.data.code === '0') {
                     message.success('编辑成功!');
-                    handleClose();
+                    handleCloseIn();
+                } else {
+                    message.error(res.data.errMsg)
                 }
 
             })
@@ -65,21 +88,7 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
         }
     }
 
-    // 标签动态映射(文本)
-    const getTagText = (level) => {
-        switch (level) {
-            case '1':
-                return '最高';
-            case '2':
-                return '高';
-            case '3':
-                return '中';
-            case '4':
-                return '低';
-            default :
-                return '中'
-        }
-    }
+
     // const projectInfo = {
     //     projectId: editData.projectId
     // }
@@ -91,7 +100,7 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                 title="编辑项目"
                 width={500}
                 mask={true}
-                onClose={handleClose}
+                onClose={handleCloseOut}
                 open={drawerVisible}
                 destroyOnClose={true}
                 styles={{
@@ -101,7 +110,7 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                 }}
                 extra={
                     <Space>
-                        <Button onClick={handleClose}>取消</Button>
+                        <Button onClick={handleCloseOut}>取消</Button>
                         <Button onClick={handleConfirmClick} type="primary">
                             确认
                         </Button>
@@ -136,6 +145,8 @@ const DetailDrawer = ({drawerVisible, editData, handleClose}) => {
                                         message: '请输入项目接口前缀',
                                     },
                                 ]}
+                                tooltip="前缀指紧跟一级域名后的二三级域名,例如，在www.test.com/cornerstone/test/data/add中项目前缀指/cornerstone/test"
+
                             >
                                 <Input
                                 />
