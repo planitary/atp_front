@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Pagination, Space, Table, Tag,message} from 'antd';
+import {Button, Pagination, Space, Table, Tag, message, Modal} from 'antd';
 import qs from 'qs';
 import {useDispatch, useSelector} from "react-redux";
 import {GetPagination, GetProjectList} from "./Store/Modules/ProjectStore";
@@ -11,6 +11,8 @@ import ProjectDo from "./Store/ProjectDo"
 import axios from "axios";
 import MessageInfo from "./Component/MessageInfo";
 import {deleteProject} from "../../../API/Api";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
+const {confirm} = Modal;
 
 const ProjectList = () => {
     const columns = [
@@ -92,12 +94,13 @@ const ProjectList = () => {
     })
     // 分页状态
     // const [pagination,setPagination] = useState({})
+
+    // 当前页码
+    const [currentPage,setCurrentPage] = useState(-1);
     // 抽屉控制器
     const [drawerVisible, setDrawerVisible] = useState(false);
     // 暂存数据值用于抽屉表单的回显
-    const [editData, setEditData] = useState(null)
 
-    const [currentProjectId,setCurrentProjectId] = useState("")
     const dispatch = useDispatch()
 
     // 钩子函数，渲染完页面就访问一次列表页
@@ -123,31 +126,30 @@ const ProjectList = () => {
         setDrawerVisible(true)
     }
 
-    // 删除按钮
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-    const handleOk = () => {
-        setIsModalOpen(false);
-        deleteProject(currentProjectId).then(res => {
+    const handleOk = (projectId) => {
+        // setIsModalOpen(false);
+        deleteProject(projectId).then(res => {
             if (res.data.code === '0'){
                 message.success(res.data.data);
+                dispatch(GetProjectList(currentPage,10));
             }else {
                 message.error(res.data.errMsg)
             }
         })
-        dispatch(GetProjectList(1,10));
-    };
-    const handleCancel = () => {
-        setIsModalOpen(false);
     };
 
     // 删除按钮的回调
-    const handleDeleteClick = async (record) => {
-        showModal();
-        setCurrentProjectId(record.projectId)
+    const handleDeleteClick = (record) => {
+        const currentProjectId = getCurrentProjectId(record)
+        confirm({
+            title: '删除项目',
+            icon: <ExclamationCircleOutlined />,
+            content:'确认要删除当前项目么?',
+            okText: '确认',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk: () => handleOk(currentProjectId)
+        })
     }
 
     // 标签动态映射(颜色)
@@ -184,23 +186,23 @@ const ProjectList = () => {
     // 外部点击×或者取消的关闭回调
     const handleCloseOut = () => {
         setDrawerVisible(false);
-        setEditData(null);
     }
 
     // 抽屉关闭事件回调
     const handleCloseClick = () => {
         setDrawerVisible(false);
-        setEditData(null);
         // 关闭后重新请求列表
-        dispatch(GetProjectList(1, 10));
+        dispatch(GetProjectList(currentPage, 10));
     }
 
     // 分页回调
     const handlePagination = (currentPage) => {
         // 更新
-        console.log("currentPage", currentPage)
+        setCurrentPage(currentPage);
         // 根据当前页码，发起新的回调
-        dispatch(GetProjectList(currentPage))
+        dispatch(GetProjectList(currentPage)).then(
+            setLoading(false)
+        )
     }
 
     // 编辑当前行
@@ -208,7 +210,7 @@ const ProjectList = () => {
         return record.id
     }
     // 获得当前行的Id
-    const currentProjecId = (record) => {
+    const getCurrentProjectId = (record) => {
         return record.projectId
     }
 
@@ -221,7 +223,7 @@ const ProjectList = () => {
     // console.log(datas.map((data) => data.id))
     // console.log("resData", resData)
     // console.log("resData", resData)
-
+    console.log("currentPage:",currentPage)
     return (
         <>
             <Table
@@ -230,6 +232,7 @@ const ProjectList = () => {
                 dataSource={rowData}
                 pagination={{
                     pageSize: resData.pageSize,
+                    current: currentPage,
                     total: resData.totalCounts,
                     showTotal: (total) => `共 ${total} 条`,
                     onChange: handlePagination
@@ -245,11 +248,11 @@ const ProjectList = () => {
                 handleCloseIn={handleCloseClick}
                 handleCloseOut={handleCloseOut}
             />
-            <MessageInfo
-                modalStatus={isModalOpen}
-                handleOk={handleOk}
-                handleCancel={handleCancel}
-            />
+            {/*<MessageInfo*/}
+            {/*    modalStatus={isModalOpen}*/}
+            {/*    handleOk={handleOk}*/}
+            {/*    handleCancel={handleCancel}*/}
+            {/*/>*/}
         </>
     );
 };

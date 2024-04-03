@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Col, DatePicker, Drawer, Form, Input, message, Row, Select, Space, Tooltip} from 'antd';
+import {Alert, Button, Col, DatePicker, Drawer, Form, Input, message, Row, Select, Space, Tooltip} from 'antd';
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import {updateProject} from "../../../../API/Api";
@@ -8,9 +8,7 @@ import {updateProject} from "../../../../API/Api";
 const {Option} = Select;
 
 
-
-const DetailDrawer = ({drawerVisible, editData, handleCloseIn,handleCloseOut}) => {
-
+const DetailDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOut}) => {
 
 
     // 标签动态映射(文本)
@@ -49,7 +47,6 @@ const DetailDrawer = ({drawerVisible, editData, handleCloseIn,handleCloseOut}) =
     form.setFieldsValue(project);
 
 
-
     // 点击确认调用接口
     const handleConfirmClick = async () => {
         try {
@@ -57,7 +54,12 @@ const DetailDrawer = ({drawerVisible, editData, handleCloseIn,handleCloseOut}) =
             // message.success("success",value);
             const value = form.getFieldsValue();
             console.log("value:", value);
-            editData.projectGroup = value.projectGroup;
+            if (value.projectGroup === null){
+                editData.projectGroup = "";
+            }
+            else {
+                editData.projectGroup = value.projectGroup;
+            }
             if (value.projectLevel === 'highest') {
                 editData.projectLevel = "1"
             }
@@ -77,6 +79,7 @@ const DetailDrawer = ({drawerVisible, editData, handleCloseIn,handleCloseOut}) =
             updateProject(editData).then(res => {
                 if (res.data.code === '0') {
                     message.success('编辑成功!');
+
                     handleCloseIn();
                 } else {
                     message.error(res.data.errMsg)
