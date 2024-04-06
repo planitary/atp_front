@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons';
-import {Breadcrumb, Layout, Menu, theme} from 'antd';
+import {LaptopOutlined, NotificationOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
+import {Breadcrumb, Button, Divider, Layout, Menu, theme} from 'antd';
 import SiderMenu from "../Outer/OuterSlideMenu/SiderMenu";
 import OuterHeaderMenu from "../Outer/OuterHeaderMenu/OuterHeaderMenu";
 import ProjectList from "../Outer/Content/Project/ProjectList";
 import {Route, Routes} from "react-router-dom";
-import Page from "../Pagination/Page";
+import "./Platform.scss"
 
 const {Header, Content} = Layout;
 
@@ -35,6 +35,12 @@ const PlatformApp = () => {
                         <Breadcrumb.Item>List</Breadcrumb.Item>
                         <Breadcrumb.Item>App</Breadcrumb.Item>
                     </Breadcrumb>
+                    <div className={"middle-layout"}>
+                        <span className={"middle-add-button"}>
+                            <Button
+                                type={"primary"} icon={<PlusOutlined/>}>新增项目</Button>
+                        </span>
+                    </div>
 
                     <Content
                         style={{
