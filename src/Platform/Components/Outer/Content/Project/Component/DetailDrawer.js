@@ -54,32 +54,21 @@ const DetailDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOut}) 
             // message.success("success",value);
             const value = form.getFieldsValue();
             console.log("value:", value);
-            if (value.projectGroup === null){
+            if (value.projectGroup === null) {
                 editData.projectGroup = "";
             }
             else {
                 editData.projectGroup = value.projectGroup;
             }
-            if (value.projectLevel === 'highest') {
-                editData.projectLevel = "1"
-            }
-            if (value.projectLevel === 'high') {
-                editData.projectLevel = "2"
-            }
-            if (value.projectLevel === 'middle') {
-                editData.projectLevel = "3"
-            }
-            if (value.projectLevel === 'low') {
-                editData.projectLevel = "4"
-            }
+
             editData.projectName = value.projectName;
+            editData.projectLevel = value.projectLevel;
             editData.projectOwner = value.projectOwner;
             editData.remark = value.remark;
             editData.projectUrl = value.projectUrl;
             updateProject(editData).then(res => {
                 if (res.data.code === '0') {
                     message.success('编辑成功!');
-
                     handleCloseIn();
                 } else {
                     message.error(res.data.errMsg)

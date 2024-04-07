@@ -26,6 +26,17 @@ async function updateProject(projectInfo) {
     return res;
 }
 
+async function addProject(project){
+    const url = "http://localhost:8080/project/addProject"
+    let res = "";
+    try {
+        res = await axios.post(url,project);
+    }catch (error){
+        res = error.response;
+    }
+    return res
+}
+
 async function deleteProject(projectId){
     const url = "http://localhost:8080/project/deleteProject"
     const reqBody = {
@@ -40,4 +51,4 @@ async function deleteProject(projectId){
     return res;
 }
 
-export {updateProject,deleteProject}
+export {updateProject,deleteProject,addProject}

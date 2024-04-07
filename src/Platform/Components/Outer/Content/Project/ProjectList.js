@@ -96,7 +96,7 @@ const ProjectList = () => {
     // const [pagination,setPagination] = useState({})
 
     // 当前页码
-    const [currentPage,setCurrentPage] = useState(-1);
+    const [currentPage,setCurrentPage] = useState(1);
     // 抽屉控制器
     const [drawerVisible, setDrawerVisible] = useState(false);
     // 暂存数据值用于抽屉表单的回显

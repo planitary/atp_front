@@ -6,6 +6,8 @@ import OuterHeaderMenu from "../Outer/OuterHeaderMenu/OuterHeaderMenu";
 import ProjectList from "../Outer/Content/Project/ProjectList";
 import {Route, Routes} from "react-router-dom";
 import "./Platform.scss"
+import CollectionCreateForm from "../Outer/Content/Project/Component/CollectionCreateForm";
+import CollectionCreateFormModal from "../Outer/Content/Project/Component/CollectionCreateForm";
 
 const {Header, Content} = Layout;
 
@@ -18,6 +20,18 @@ const PlatformApp = () => {
     const [selectedKey, setSelectedKey] = useState("自动化测试");
     const handleTopMenuClick = (key) => {
         setSelectedKey(key)
+    }
+    // 表单赋值
+    const [formValue,setFormvalues] = useState();
+    // 表单控制
+    const [formOpen,setFormOpen] = useState(false);
+    const onCreate = (values) => {
+        console.log("表单赋值:",values);
+        setFormvalues(values);
+        setFormOpen(false);
+    }
+    const onCancel = () => {
+        setFormOpen(false)
     }
     return (
         <Layout style={{minHeight: '100vh'}}>
@@ -38,9 +52,16 @@ const PlatformApp = () => {
                     <div className={"middle-layout"}>
                         <span className={"middle-add-button"}>
                             <Button
-                                type={"primary"} icon={<PlusOutlined/>}>新增项目</Button>
+                                type="primary"
+                                icon={<PlusOutlined/>}
+                            onClick={() => setFormOpen(true)}>新增项目</Button>
                         </span>
                     </div>
+                    <CollectionCreateFormModal
+                    open={formOpen}
+                    onCreate={onCreate}
+                    onCancel={onCancel}>
+                    </CollectionCreateFormModal>
 
                     <Content
                         style={{
