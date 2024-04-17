@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {Button, Pagination, Space, Table, Tag, message, Modal} from 'antd';
 import qs from 'qs';
 import {useDispatch, useSelector} from "react-redux";
-import {GetPagination, GetProjectList} from "./Store/Modules/ProjectStore";
+import {GetPagination, GetProjectList} from "../../Store/Modules/ProjectStore";
 import _ from "lodash";
 import dayjs from "dayjs";
 import Page from "../../../Pagination/Page";
 import DetailDrawer from "./Component/DetailDrawer";
-import ProjectDo from "./Store/ProjectDo"
+import ProjectDo from "./ProjectDo"
 import axios from "axios";
 import MessageInfo from "./Component/MessageInfo";
 import {deleteProject} from "../../../API/Api";

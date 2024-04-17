@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Button, Col, Form, Input, message, Modal, Row, Select} from 'antd';
 import {addProject} from "../../../../API/Api";
 import {useDispatch} from "react-redux";
-import {GetProjectList} from "../Store/Modules/ProjectStore";
+import {GetProjectList} from "../../../Store/Modules/ProjectStore";
 
 const {Option} = Select
 

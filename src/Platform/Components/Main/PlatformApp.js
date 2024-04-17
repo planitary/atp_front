@@ -22,18 +22,6 @@ const PlatformApp = () => {
     const handleTopMenuClick = (key) => {
         setSelectedKey(key)
     }
-    // 表单赋值
-    const [formValue,setFormvalues] = useState();
-    // 表单控制
-    const [formOpen,setFormOpen] = useState(false);
-    const onCreate = (values) => {
-        console.log("表单赋值:",values);
-        setFormvalues(values);
-        setFormOpen(false);
-    }
-    const onCancel = () => {
-        setFormOpen(false)
-    }
     return (
         <Layout style={{minHeight: '100vh'}}>
             <OuterHeaderMenu selectedKey={selectedKey} onSelect={handleTopMenuClick}/>

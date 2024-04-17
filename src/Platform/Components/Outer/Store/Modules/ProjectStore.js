@@ -2,22 +2,28 @@ import {createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 import {useState} from "react";
 import dayjs from "dayjs";
-import projectDo from "../ProjectDo";
+import projectDo from "../../Content/Project/ProjectDo";
 
 const projectStore = createSlice({
     name: 'project',
     initialState: {
+        // 项目列表
         projectList: [],
+        // 接口列表
+        interfaceList: [],
     },
 
     reducers: {
         setProjectList(state, action) {
             state.projectList = action.payload
         },
+        setInterfaceList(state,action){
+            state.interfaceList = action.payload
+        }
     }
 })
 
-const {setProjectList,fillProjectInfo} = projectStore.actions;
+const {setProjectList,fillProjectInfo,setInterfaceList} = projectStore.actions;
 const pagination = {
     pageNo: 2,
     pageSize: 10,
@@ -53,6 +59,23 @@ const GetProjectList = (page, size, projectId = '', projectUrl = '', projectName
     }
 }
 
+const GetInterfaceList = (page,size,projectId = '',interfaceUrl = '',interfaceName = '') => {
+    return async (dispatch) => {
+        const reqBody = {
+            pageNo: page,
+            pageSize: size,
+            projectId: projectId,
+            interfaceName: interfaceName,
+            interfaceUrl: interfaceUrl
+        };
+        const url = "http://localhost:8080/interface/interfaceList"
+        const res = await axios.post(url,reqBody);
+        modTime(Array.isArray(res.data) ? res.data : [])
+        console.log(res.data)
+        dispatch(setInterfaceList(res.data))
+    }
+}
+
 const GetProjectDetail = (projectId) => {
     return async (dispatch) => {
         const reqBody = {
@@ -65,6 +88,6 @@ const GetProjectDetail = (projectId) => {
     }
 }
 
-export {GetProjectList, GetPagination}
-const projectReducer = projectStore.reducer;
-export default projectReducer;
+export {GetProjectList, GetPagination,GetInterfaceList}
+const reducer = projectStore.reducer;
+export default reducer;

@@ -1,14 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Pagination, Space, Table, Tag, message, Modal} from 'antd';
-import qs from 'qs';
 import {useDispatch, useSelector} from "react-redux";
-import _ from "lodash";
-import dayjs from "dayjs";
-import Page from "../../../Pagination/Page";
 import axios from "axios";
 import {deleteProject} from "../../../API/Api";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
-import {GetInterfaceList} from "./Store/Modules/IntetfaceStore";
+import {GetInterfaceList} from "../../Store/Modules/ProjectStore";
 const {confirm} = Modal;
 
 const InterfaceList = () => {
@@ -212,8 +208,9 @@ const InterfaceList = () => {
     }
 
     // 从回调中拿到数据渲染列表
-    const projectListData = useSelector(state => state.projectList)
-    const resData = projectListData.projectList
+    const interfaceListData = useSelector(state => state.interfaceList)
+    console.log(interfaceListData)
+    const resData = interfaceListData.interfaceList
     const rowData = resData.items
     // const data = projectListData.map((item) => item.items)
     // 结果转化为数组

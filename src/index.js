@@ -2,7 +2,7 @@ import {createRoot} from "react-dom/client";
 import {Provider} from "react-redux";
 import PlatformApp from "./Platform/Components/Main/PlatformApp";
 import {RouterProvider} from "react-router-dom";
-import projectStore from "./Platform/Components/Outer/Content/Project/Store";
+import projectStore from "./Platform/Components/Outer/Store";
 import OuterRouter from "./Platform/Components/Outer/Router";
 
 const root = createRoot(document.querySelector('#root'))
