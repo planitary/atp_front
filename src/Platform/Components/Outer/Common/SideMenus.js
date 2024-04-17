@@ -19,7 +19,7 @@ const AutoTestNavTitle = [
     ]),
     getItem('接口', 'sub2', <ApiOutlined/>, [
         getItem('新建接口', 'a1'),
-        getItem('接口列表', 'a2'),
+        getItem('接口列表', '/interfaceList'),
         getItem('接口调用', 'a3'),
         getItem('调用记录', 'a4'),
     ]),

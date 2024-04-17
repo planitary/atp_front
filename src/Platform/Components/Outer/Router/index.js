@@ -2,6 +2,7 @@ import {createBrowserRouter} from "react-router-dom";
 import PlatformApp from "../../Main/PlatformApp";
 import ProjectList from "../Content/Project/ProjectList";
 import Layout from "../../Layout/Layout";
+import InterfaceList from "../Content/Interface/InterfaceList";
 
 const OuterRouter = createBrowserRouter([
     {
@@ -11,6 +12,10 @@ const OuterRouter = createBrowserRouter([
             {
                 path: '/platform/projectList',
                 element: <ProjectList/>,
+            },
+            {
+                path: '/platform/interfaceList',
+                element: <InterfaceList/>
             }
 
         ]

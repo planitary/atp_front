@@ -2,34 +2,25 @@ import React, {useEffect, useState} from 'react';
 import {Button, Pagination, Space, Table, Tag, message, Modal} from 'antd';
 import qs from 'qs';
 import {useDispatch, useSelector} from "react-redux";
-import {GetPagination, GetProjectList} from "./Store/Modules/ProjectStore";
 import _ from "lodash";
 import dayjs from "dayjs";
 import Page from "../../../Pagination/Page";
-import DetailDrawer from "./Component/DetailDrawer";
-import ProjectDo from "./Store/ProjectDo"
 import axios from "axios";
-import MessageInfo from "./Component/MessageInfo";
 import {deleteProject} from "../../../API/Api";
-import {ExclamationCircleOutlined, PlusOutlined} from "@ant-design/icons";
-import CollectionCreateFormModal from "./Component/CollectionCreateForm";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
+import {GetInterfaceList} from "./Store/Modules/IntetfaceStore";
 const {confirm} = Modal;
 
-const ProjectList = () => {
+const InterfaceList = () => {
     const columns = [
         {
-            title: '项目名',
-            dataIndex: 'projectName',
-            width: '15%',
-        },
-        {
-            title: '项目接口前缀',
-            dataIndex: 'projectUrl',
+            title: '接口名',
+            dataIndex: 'interfaceName',
             width: '10%',
         },
         {
-            title: '备注',
-            dataIndex: 'remark',
+            title: '接口地址',
+            dataIndex: 'interfaceUrl',
             width: '12%'
         },
 
@@ -38,24 +29,24 @@ const ProjectList = () => {
         //     dataIndex: 'createUser',
         // },
         {
-            title: '所属组',
-            dataIndex: 'projectGroup',
+            title: '所属项目',
+            dataIndex: 'projectName',
         },
         {
-            title: '负责人',
-            dataIndex: 'projectOwner'
+            title: '项目前缀url',
+            dataIndex: 'projectUrl'
         },
-        {
-            title: '项目级别',
-            dataIndex: 'projectLevel',
-            render: (_, record) => (
-                <>
-                    <Tag color={getTagColor(record.projectLevel)} bordered={false}>
-                        {getTagText(record.projectLevel)}
-                    </Tag>
-                </>
-            )
-        },
+        // {
+        //     title: '项目级别',
+        //     dataIndex: 'projectLevel',
+        //     render: (_, record) => (
+        //         <>
+        //             <Tag color={getTagColor(record.projectLevel)} bordered={false}>
+        //                 {getTagText(record.projectLevel)}
+        //             </Tag>
+        //         </>
+        //     )
+        // },
         {
             title: '创建时间',
             dataIndex: 'createTime',
@@ -65,6 +56,11 @@ const ProjectList = () => {
             title: '更新时间',
             dataIndex: 'updateTime',
             width: '15%'
+        },
+        {
+            title: '创建人',
+            dataIndex: 'createUser',
+            width: '10%'
         },
         {
             title: '操作',
@@ -106,7 +102,7 @@ const ProjectList = () => {
 
     // 钩子函数，渲染完页面就访问一次列表页
     useEffect(() => {
-        dispatch(GetProjectList(1, 10))
+        dispatch(GetInterfaceList(1, 10))
 
     }, [dispatch])
 
@@ -132,7 +128,7 @@ const ProjectList = () => {
         deleteProject(projectId).then(res => {
             if (res.data.code === '0'){
                 message.success(res.data.data);
-                dispatch(GetProjectList(currentPage,10));
+                dispatch(GetInterfaceList(currentPage,10));
             }else {
                 message.error(res.data.errMsg)
             }
@@ -193,7 +189,7 @@ const ProjectList = () => {
     const handleCloseClick = () => {
         setDrawerVisible(false);
         // 关闭后重新请求列表
-        dispatch(GetProjectList(currentPage, 10));
+        dispatch(GetInterfaceList(currentPage, 10));
     }
 
     // 分页回调
@@ -201,7 +197,7 @@ const ProjectList = () => {
         // 更新
         setCurrentPage(currentPage);
         // 根据当前页码，发起新的回调
-        dispatch(GetProjectList(currentPage)).then(
+        dispatch(GetInterfaceList(currentPage)).then(
             setLoading(false)
         )
     }
@@ -215,19 +211,6 @@ const ProjectList = () => {
         return record.projectId
     }
 
-    // 新增表单赋值
-    const [formValue,setFormvalues] = useState();
-    // 新增表单控制
-    const [formOpen,setFormOpen] = useState(false);
-    const onCreate = (values) => {
-        console.log("表单赋值:",values);
-        setFormvalues(values);
-        setFormOpen(false);
-    }
-    const onCancel = () => {
-        setFormOpen(false)
-    }
-
     // 从回调中拿到数据渲染列表
     const projectListData = useSelector(state => state.projectList)
     const resData = projectListData.projectList
@@ -239,22 +222,7 @@ const ProjectList = () => {
     // console.log("resData", resData)
     console.log("currentPage:",currentPage)
     return (
-
         <>
-            <div className={"middle-layout"}>
-                        <span className={"middle-add-button"}>
-                            <Button
-                                type="primary"
-                                icon={<PlusOutlined/>}
-                                onClick={() => setFormOpen(true)}
-                                >新增项目</Button>
-                        </span>
-            </div>
-            <CollectionCreateFormModal
-                open={formOpen}
-                onCreate={onCreate}
-                onCancel={onCancel}>
-            </CollectionCreateFormModal>
             <Table
                 columns={columns}
                 rowKey={currentId}
@@ -271,12 +239,12 @@ const ProjectList = () => {
                 // onChange={handleTableChange}
             />
 
-            <DetailDrawer
-                editData={projectInfo}
-                drawerVisible={drawerVisible}
-                handleCloseIn={handleCloseClick}
-                handleCloseOut={handleCloseOut}
-            />
+            {/*<DetailDrawer*/}
+            {/*    editData={projectInfo}*/}
+            {/*    drawerVisible={drawerVisible}*/}
+            {/*    handleCloseIn={handleCloseClick}*/}
+            {/*    handleCloseOut={handleCloseOut}*/}
+            {/*/>*/}
             {/*<MessageInfo*/}
             {/*    modalStatus={isModalOpen}*/}
             {/*    handleOk={handleOk}*/}
@@ -285,4 +253,4 @@ const ProjectList = () => {
         </>
     );
 };
-export default ProjectList;
+export default InterfaceList;

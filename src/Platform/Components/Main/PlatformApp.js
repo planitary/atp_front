@@ -8,6 +8,7 @@ import {Route, Routes} from "react-router-dom";
 import "./Platform.scss"
 import CollectionCreateForm from "../Outer/Content/Project/Component/CollectionCreateForm";
 import CollectionCreateFormModal from "../Outer/Content/Project/Component/CollectionCreateForm";
+import InterfaceList from "../Outer/Content/Interface/InterfaceList";
 
 const {Header, Content} = Layout;
 
@@ -49,19 +50,7 @@ const PlatformApp = () => {
                         <Breadcrumb.Item>List</Breadcrumb.Item>
                         <Breadcrumb.Item>App</Breadcrumb.Item>
                     </Breadcrumb>
-                    <div className={"middle-layout"}>
-                        <span className={"middle-add-button"}>
-                            <Button
-                                type="primary"
-                                icon={<PlusOutlined/>}
-                            onClick={() => setFormOpen(true)}>新增项目</Button>
-                        </span>
-                    </div>
-                    <CollectionCreateFormModal
-                    open={formOpen}
-                    onCreate={onCreate}
-                    onCancel={onCancel}>
-                    </CollectionCreateFormModal>
+
 
                     <Content
                         style={{
@@ -75,7 +64,9 @@ const PlatformApp = () => {
 
                         <Routes>
                             <Route exact path="/platform/projectList" element={<ProjectList/>}/>
+                            <Route exact path="/platform/interfaceList" element={<InterfaceList/>}/>
                         </Routes>
+
                     </Content>
         </Layout>
 </Layout>
