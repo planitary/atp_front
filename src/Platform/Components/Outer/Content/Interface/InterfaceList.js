@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Pagination, Space, Table, Tag, message, Modal} from 'antd';
+import {Button, Pagination, Space, Table, Tag, message, Modal, Tooltip} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import {deleteProject} from "../../../API/Api";
-import {ExclamationCircleOutlined} from "@ant-design/icons";
+import {ExclamationCircleOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import {GetInterfaceList} from "../../Store/Modules/ProjectStore";
+import "./InterfaceList.scss"
+import ProjectSelector from "./Component/ProjectSelector";
+
 const {confirm} = Modal;
 
 const InterfaceList = () => {
@@ -30,7 +33,29 @@ const InterfaceList = () => {
         },
         {
             title: '项目前缀url',
-            dataIndex: 'projectUrl'
+            dataIndex: 'projectUrl',
+        },
+        {
+            title: (
+                <div>
+                    请求体参数
+
+                    <Tooltip title="鼠标悬浮在单元格内可查看详情">
+                        <InfoCircleOutlined className="interface-title-icon"/>
+
+                    </Tooltip>
+                </div>
+            ),
+            dataIndex: 'requestBody',
+            width: '15%',
+            ellipsis: {
+                showTitle: false,
+            },
+            render: (requestBody) => (
+                <Tooltip placement="topLeft" title={requestBody}>
+                    {requestBody}
+                </Tooltip>
+            )
         },
         // {
         //     title: '项目级别',
@@ -56,7 +81,7 @@ const InterfaceList = () => {
         {
             title: '创建人',
             dataIndex: 'createUser',
-            width: '10%'
+            width: '8%'
         },
         {
             title: '操作',
@@ -69,7 +94,6 @@ const InterfaceList = () => {
             )
         }
     ];
-
 
 
     // 加载状态
@@ -89,7 +113,7 @@ const InterfaceList = () => {
     // const [pagination,setPagination] = useState({})
 
     // 当前页码
-    const [currentPage,setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
     // 抽屉控制器
     const [drawerVisible, setDrawerVisible] = useState(false);
     // 暂存数据值用于抽屉表单的回显
@@ -122,10 +146,10 @@ const InterfaceList = () => {
     const handleOk = (projectId) => {
         // setIsModalOpen(false);
         deleteProject(projectId).then(res => {
-            if (res.data.code === '0'){
+            if (res.data.code === '0') {
                 message.success(res.data.data);
-                dispatch(GetInterfaceList(currentPage,10));
-            }else {
+                dispatch(GetInterfaceList(currentPage, 10));
+            } else {
                 message.error(res.data.errMsg)
             }
         })
@@ -136,8 +160,8 @@ const InterfaceList = () => {
         const currentProjectId = getCurrentProjectId(record)
         confirm({
             title: '删除项目',
-            icon: <ExclamationCircleOutlined />,
-            content:'确认要删除当前项目么?',
+            icon: <ExclamationCircleOutlined/>,
+            content: '确认要删除当前项目么?',
             okText: '确认',
             okType: 'danger',
             cancelText: '取消',
@@ -217,9 +241,15 @@ const InterfaceList = () => {
     // console.log(datas.map((data) => data.id))
     // console.log("resData", resData)
     // console.log("resData", resData)
-    console.log("currentPage:",currentPage)
+    console.log("currentPage:", currentPage)
     return (
         <>
+            <div>
+              <span>
+                  <ProjectSelector/>
+
+              </span>
+            </div>
             <Table
                 columns={columns}
                 rowKey={currentId}
