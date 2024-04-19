@@ -2,9 +2,14 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Select, Spin } from 'antd';
 import debounce from 'lodash/debounce';
 import '../InterfaceList.scss'
-function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
+import axios from "axios";
+import {value} from "lodash/seq";
+import {useSelector} from "react-redux";
+import {Option} from "antd/es/mentions";
+
+function DebounceSelect({ fetchOptions, defaultValue,debounceTimeout = 800, ...props }) {
     const [fetching, setFetching] = useState(false);
-    const [options, setOptions] = useState([]);
+    const [options, setOptions] = useState([{label: 1,value:2},{}]);
     const fetchRef = useRef(0);
     const debounceFetcher = useMemo(() => {
         const loadOptions = (value) => {
@@ -28,6 +33,7 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
             className="interface-top-selector"
             labelInValue
             filterOption={false}
+
             onSearch={debounceFetcher}
             notFoundContent={fetching ? <Spin size="small" /> : null}
             {...props}
@@ -36,27 +42,38 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
     );
 }
 
+
+
 // Usage of DebounceSelect
 
-async function fetchUserList(username) {
-    console.log('fetching user', username);
-    return fetch('https://randomuser.me/api/?results=5')
-        .then((response) => response.json())
-        .then((body) =>
-            body.results.map((user) => ({
-                label: `${user.name.first} ${user.name.last}`,
-                value: user.login.username,
-            })),
-        );
+async function fetchUserList(projectName) {
+    console.log('fetching user', projectName);
+    const reqBody = {
+        pageNo: 1,
+        pageSize: 10,
+        projectName: projectName
+    };
+    const url = "http://localhost:8080/project/projectList";
+    try {
+        const res = await axios.post(url,reqBody);
+        return res.data.items.map((project) => ({
+            label: `${project.projectName}`,
+            value: `${project.projectId},`
+        }));
+    }catch (error){
+        console.error("fetching projectList error!")
+        return [];
+    }
 }
-const ProjectSelector = () => {
+const ProjectSelector = ({defaultValue}) => {
     const [value, setValue] = useState([]);
     return (
         <DebounceSelect
             mode="multiple"
             value={value}
-            placeholder="选择项目名"
+            placeholder="搜索并选择项目名"
             fetchOptions={fetchUserList}
+            defaultValue={defaultValue}
             onChange={(newValue) => {
                 setValue(newValue);
             }}

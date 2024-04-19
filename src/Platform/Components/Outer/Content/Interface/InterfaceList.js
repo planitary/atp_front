@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import {deleteProject} from "../../../API/Api";
 import {ExclamationCircleOutlined, InfoCircleOutlined} from "@ant-design/icons";
-import {GetInterfaceList} from "../../Store/Modules/ProjectStore";
+import {GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
 
@@ -123,7 +123,7 @@ const InterfaceList = () => {
     // 钩子函数，渲染完页面就访问一次列表页
     useEffect(() => {
         dispatch(GetInterfaceList(1, 10))
-
+        dispatch((GetProjectList(1,5)))
     }, [dispatch])
 
     // 编辑按钮回调(调用接口获取详情)
@@ -169,37 +169,15 @@ const InterfaceList = () => {
         })
     }
 
-    // 标签动态映射(颜色)
-    const getTagColor = (level) => {
-        switch (level) {
-            case '1':
-                return 'red';
-            case '2':
-                return 'orange';
-            case '3':
-                return 'blue';
-            case '4':
-                return 'lime';
-            default:
-                return "blue"
-        }
-    }
-    // 标签动态映射(文本)
-    const getTagText = (level) => {
-        switch (level) {
-            case '1':
-                return '最高';
-            case '2':
-                return '高';
-            case '3':
-                return '中';
-            case '4':
-                return '低';
-            default :
-                return '中'
-        }
-    }
-
+    // 搜索筛选框默认填充值
+    const filledOptionsList = useSelector(state => state.projectList)
+    const filledOptions = filledOptionsList.projectList.items
+    // console.log("filledOptions", filledOptions)
+    // const filledMap = filledOptions.map(item => ({
+    //     label: `${item.projectName}`,
+    //     value: `${item.projectId}`,
+    // }))
+    // console.log("filledMap",filledMap)
     // 外部点击×或者取消的关闭回调
     const handleCloseOut = () => {
         setDrawerVisible(false);
@@ -242,11 +220,13 @@ const InterfaceList = () => {
     // console.log("resData", resData)
     // console.log("resData", resData)
     console.log("currentPage:", currentPage)
+
+
     return (
         <>
             <div>
               <span>
-                  <ProjectSelector/>
+                  <ProjectSelector defaultValue={filledOptions}/>
 
               </span>
             </div>
