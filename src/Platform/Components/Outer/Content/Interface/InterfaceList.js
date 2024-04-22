@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Button, Pagination, Space, Table, Tag, message, Modal, Tooltip} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
-import {deleteProject} from "../../../API/Api";
-import {ExclamationCircleOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import {deleteProject, findInterfaceList} from "../../../API/Api";
+import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
@@ -57,17 +57,7 @@ const InterfaceList = () => {
                 </Tooltip>
             )
         },
-        // {
-        //     title: '项目级别',
-        //     dataIndex: 'projectLevel',
-        //     render: (_, record) => (
-        //         <>
-        //             <Tag color={getTagColor(record.projectLevel)} bordered={false}>
-        //                 {getTagText(record.projectLevel)}
-        //             </Tag>
-        //         </>
-        //     )
-        // },
+
         {
             title: '创建时间',
             dataIndex: 'createTime',
@@ -122,8 +112,8 @@ const InterfaceList = () => {
 
     // 钩子函数，渲染完页面就访问一次列表页
     useEffect(() => {
+        dispatch((GetProjectList(1, 5)))
         dispatch(GetInterfaceList(1, 10))
-        dispatch((GetProjectList(1,5)))
     }, [dispatch])
 
     // 编辑按钮回调(调用接口获取详情)
@@ -169,26 +159,6 @@ const InterfaceList = () => {
         })
     }
 
-    // 搜索筛选框默认填充值
-    const filledOptionsList = useSelector(state => state.projectList)
-    const filledOptions = filledOptionsList.projectList.items
-    // console.log("filledOptions", filledOptions)
-    // const filledMap = filledOptions.map(item => ({
-    //     label: `${item.projectName}`,
-    //     value: `${item.projectId}`,
-    // }))
-    // console.log("filledMap",filledMap)
-    // 外部点击×或者取消的关闭回调
-    const handleCloseOut = () => {
-        setDrawerVisible(false);
-    }
-
-    // 抽屉关闭事件回调
-    const handleCloseClick = () => {
-        setDrawerVisible(false);
-        // 关闭后重新请求列表
-        dispatch(GetInterfaceList(currentPage, 10));
-    }
 
     // 分页回调
     const handlePagination = (currentPage) => {
@@ -211,25 +181,51 @@ const InterfaceList = () => {
 
     // 从回调中拿到数据渲染列表
     const interfaceListData = useSelector(state => state.interfaceList)
-    console.log(interfaceListData)
     const resData = interfaceListData.interfaceList
-    const rowData = resData.items
-    // const data = projectListData.map((item) => item.items)
-    // 结果转化为数组
-    // console.log(datas.map((data) => data.id))
-    // console.log("resData", resData)
-    // console.log("resData", resData)
+    let rowData = resData.items
+    console.log("1",rowData)
     console.log("currentPage:", currentPage)
 
+    // 搜索筛选框默认填充值
+    const filledOptionsList = useSelector(state => state.projectList)
+    const filledOptions = filledOptionsList.projectList.items
+
+    // 搜索筛选框默认值
+    let filledMap = [];
+    const getDefaultMap = (filledOptions) => {
+        return filledOptions.map((item) => ({
+            label: `${item.projectName}`,
+            value: `${item.projectId}`,
+        }));
+    }
+
+    if (filledOptions !== undefined) {
+        filledMap = getDefaultMap(filledOptions);
+    }// 使用函数返回值填充 filledMap 数组
+
+
+    const getInterfaceByFilter = () => {
+        findInterfaceList().then(res => {
+            if (res.data.code === '200'){
+                rowData = res.data.items
+                console.log("rowData",rowData)
+            }
+        })
+    }
 
     return (
         <>
-            <div>
-              <span>
-                  <ProjectSelector defaultValue={filledOptions}/>
-
+            {filledMap.length !== 0 && <div>
+                <span>
+                    <ProjectSelector defaultValue={filledMap}/>
               </span>
-            </div>
+                <span>
+                    <Button
+                        type="primary"
+                        onClick={() => getInterfaceByFilter()}
+                    >查询</Button>
+                </span>
+            </div>}
             <Table
                 columns={columns}
                 rowKey={currentId}

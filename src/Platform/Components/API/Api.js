@@ -51,4 +51,18 @@ async function deleteProject(projectId){
     return res;
 }
 
-export {updateProject,deleteProject,addProject}
+async function findInterfaceList(){
+    const url = "http://localhost:8080/interface/interfaceList"
+    const reqBody = {
+        projectIds: ["6065028530065030","42572254526"]
+    }
+    let res = "";
+    try {
+        res = await axios.post(url,reqBody);
+    }catch (error){
+        res = error.response
+    }
+    return res;
+}
+
+export {updateProject,deleteProject,addProject,findInterfaceList}

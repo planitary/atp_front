@@ -9,7 +9,7 @@ import {Option} from "antd/es/mentions";
 
 function DebounceSelect({ fetchOptions, defaultValue,debounceTimeout = 800, ...props }) {
     const [fetching, setFetching] = useState(false);
-    const [options, setOptions] = useState([{label: 1,value:2},{}]);
+    const [options, setOptions] = useState(defaultValue);
     const fetchRef = useRef(0);
     const debounceFetcher = useMemo(() => {
         const loadOptions = (value) => {
