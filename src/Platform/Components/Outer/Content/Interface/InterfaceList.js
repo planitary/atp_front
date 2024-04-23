@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import {deleteProject, findInterfaceList} from "../../../API/Api";
 import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
-import {GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
+import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
 
@@ -88,6 +88,10 @@ const InterfaceList = () => {
 
     // 加载状态
     const [loading, setLoading] = useState(false);
+
+    // 分页标记（表示当前渲染的数据是正常分页还是筛选查询）
+    const [isFilter,setIsFilter] = useState(false);
+
     // 项目详情
     const [projectInfo, setProjectInfo] = useState({
         projectId: "",
@@ -165,9 +169,13 @@ const InterfaceList = () => {
         // 更新
         setCurrentPage(currentPage);
         // 根据当前页码，发起新的回调
+        if (!isFilter){
         dispatch(GetInterfaceList(currentPage)).then(
             setLoading(false)
-        )
+        )}
+        else {
+            dispatch(FindInterfaceByFilter(currentPage)).then(setLoading(false))
+        }
     }
 
     // 编辑当前行
@@ -182,8 +190,7 @@ const InterfaceList = () => {
     // 从回调中拿到数据渲染列表
     const interfaceListData = useSelector(state => state.interfaceList)
     const resData = interfaceListData.interfaceList
-    let rowData = resData.items
-    console.log("1",rowData)
+    const rowData = resData.items;
     console.log("currentPage:", currentPage)
 
     // 搜索筛选框默认填充值
@@ -204,13 +211,12 @@ const InterfaceList = () => {
     }// 使用函数返回值填充 filledMap 数组
 
 
-    const getInterfaceByFilter = () => {
-        findInterfaceList().then(res => {
-            if (res.data.code === '200'){
-                rowData = res.data.items
-                console.log("rowData",rowData)
-            }
-        })
+    // 查询按钮的确认事件
+    const handleButtonClick = () => {
+        dispatch(FindInterfaceByFilter(currentPage)).then(() => {
+            setIsFilter(true)
+        });
+
     }
 
     return (
@@ -222,7 +228,7 @@ const InterfaceList = () => {
                 <span>
                     <Button
                         type="primary"
-                        onClick={() => getInterfaceByFilter()}
+                        onClick={() => handleButtonClick()}
                     >查询</Button>
                 </span>
             </div>}

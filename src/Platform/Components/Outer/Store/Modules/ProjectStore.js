@@ -76,18 +76,29 @@ const GetInterfaceList = (page,size,projectId = '',interfaceUrl = '',interfaceNa
     }
 }
 
-const GetProjectDetail = (projectId) => {
+const FindInterfaceByFilter = (page,size,projectId = '',interfaceUrl = '',interfaceName = '') => {
     return async (dispatch) => {
+        const url = "http://localhost:8080/interface/interfaceList"
         const reqBody = {
-            "projectId":projectId
+            pageNo: page,
+            pageSize: size,
+            projectId: projectId,
+            interfaceName: interfaceName,
+            interfaceUrl: interfaceUrl,
+            projectIds: ["6065028530065030", "42572254526"]
         }
-        const url = "http://localhost:8080/project/getProjectDetail";
-        const res = await axios.post(url,reqBody);
-        console.log("detail:",res.data)
-        dispatch(fillProjectInfo(res.data))
+        let res = "";
+        try {
+            res = await axios.post(url, reqBody);
+            dispatch(setInterfaceList(res.data))
+        } catch (error) {
+            res = error.response
+            console.error("error with req!",res)
+        }
     }
 }
 
-export {GetProjectList, GetPagination,GetInterfaceList}
+
+export {GetProjectList, GetPagination,GetInterfaceList,FindInterfaceByFilter}
 const reducer = projectStore.reducer;
 export default reducer;
