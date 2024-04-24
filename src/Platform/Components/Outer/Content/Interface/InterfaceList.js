@@ -7,6 +7,7 @@ import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-
 import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
+import Input from "antd/es/input/Input";
 
 const {confirm} = Modal;
 
@@ -90,7 +91,7 @@ const InterfaceList = () => {
     const [loading, setLoading] = useState(false);
 
     // 分页标记（表示当前渲染的数据是正常分页还是筛选查询）
-    const [isFilter,setIsFilter] = useState(false);
+    const [isFilter, setIsFilter] = useState(false);
 
     // 项目详情
     const [projectInfo, setProjectInfo] = useState({
@@ -169,11 +170,11 @@ const InterfaceList = () => {
         // 更新
         setCurrentPage(currentPage);
         // 根据当前页码，发起新的回调
-        if (!isFilter){
-        dispatch(GetInterfaceList(currentPage)).then(
-            setLoading(false)
-        )}
-        else {
+        if (!isFilter) {
+            dispatch(GetInterfaceList(currentPage)).then(
+                setLoading(false)
+            )
+        } else {
             dispatch(FindInterfaceByFilter(currentPage)).then(setLoading(false))
         }
     }
@@ -197,7 +198,7 @@ const InterfaceList = () => {
     const filledOptionsList = useSelector(state => state.projectList)
     const filledOptions = filledOptionsList.projectList.items
 
-    // 搜索筛选框默认值
+    // 搜索筛选框默认值,传递一个对象
     let filledMap = [];
     const getDefaultMap = (filledOptions) => {
         return filledOptions.map((item) => ({
@@ -206,32 +207,90 @@ const InterfaceList = () => {
         }));
     }
 
+
     if (filledOptions !== undefined) {
         filledMap = getDefaultMap(filledOptions);
     }// 使用函数返回值填充 filledMap 数组
 
+    const findDTO = {
+        interfaceUrl: "",
+        interfaceName: "",
+        projectId: "",
+        projectIds: []
+    }
 
+    const [interfaceFindDTO,setInterfaceFindDTO] = useState(findDTO)
+    // 接口所属项目名筛选框的状态值
+    const [projectIds,setProjectIds] = useState([])
+
+    // 监听接口名称的输入值
+    const interfaceNameHandleChange = (e) =>{
+        setInterfaceFindDTO({
+            ...interfaceFindDTO,        // 保留其他属性
+            interfaceName: e.target.value
+        })
+    }
+    // 监听接口url的输入值
+    const interfaceUrlHandleChange = (e) => {
+        setInterfaceFindDTO({
+            ...interfaceFindDTO,
+            interfaceUrl: e.target.value
+        })
+    }
+
+    // 监听筛选框的变化值，并拿到value
+    useEffect(() => {
+        console.log("projectId:",projectIds)
+    },[projectIds]);
+
+    const handleSelectorChange = (values) => {
+        const tempValues = values.map((value) => value.value)
+        setProjectIds(tempValues)
+    }
+
+    const getProjectIds = () => {
+        if (projectIds.length !== 0) {
+            return projectIds
+        }
+    }
     // 查询按钮的确认事件
+    //todo:这里实际的传参是过滤条件，需要额外封装一下，其中，项目Id的列表目前写死
     const handleButtonClick = () => {
+        console.log(projectIds)
+        setInterfaceFindDTO({
+            ...interfaceFindDTO,
+            projectIds: getProjectIds()
+        })
+        console.log("dto:",interfaceFindDTO)
         dispatch(FindInterfaceByFilter(currentPage)).then(() => {
             setIsFilter(true)
         });
-
     }
+
+
 
     return (
         <>
-            {filledMap.length !== 0 && <div>
-                <span>
-                    <ProjectSelector defaultValue={filledMap}/>
-              </span>
-                <span>
-                    <Button
-                        type="primary"
-                        onClick={() => handleButtonClick()}
-                    >查询</Button>
-                </span>
-            </div>}
+            <div style={{display: "flex", alignItems: "center"}}>
+                <Input id="interfaceName" placeholder="请输入接口名" allowClear style={{width: "20%"}}
+                onBlur={interfaceNameHandleChange}/>
+                <Input id="interfaceUrl" placeholder="请输入接口地址" allowClear style={{width: "25%", marginLeft: "30px"}}
+                onBlur={interfaceUrlHandleChange}/>
+                {filledMap.length !== 0 && (
+                    <div style={{width: "25%", marginLeft: "30px"}}>
+                        <ProjectSelector defaultValue={filledMap} onChange={handleSelectorChange}/>
+                    </div>
+                )}
+            </div>
+
+            <div style={{marginBottom: "10px"}}>
+                <Button type={"default"} className={"interface-top-clear-button"}>重置</Button>
+
+                <Button type="primary" onClick={() => handleButtonClick()} className="interface-top-confirm-button">
+                    查询
+                </Button>
+            </div>
+
             <Table
                 columns={columns}
                 rowKey={currentId}

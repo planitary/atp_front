@@ -30,10 +30,8 @@ function DebounceSelect({ fetchOptions, defaultValue,debounceTimeout = 800, ...p
     }, [fetchOptions, debounceTimeout]);
     return (
         <Select
-            className="interface-top-selector"
             labelInValue
             filterOption={false}
-
             onSearch={debounceFetcher}
             notFoundContent={fetching ? <Spin size="small" /> : null}
             {...props}
@@ -65,8 +63,12 @@ async function fetchUserList(projectName) {
         return [];
     }
 }
-const ProjectSelector = ({defaultValue}) => {
+const ProjectSelector = ({defaultValue,onChange}) => {
     const [value, setValue] = useState([]);
+    const handleChange = (values) => {
+        setValue(values);
+        onChange(values);       // 传递给父组件的回调函数，供父组件取值
+    }
     return (
         <DebounceSelect
             mode="multiple"
@@ -74,9 +76,7 @@ const ProjectSelector = ({defaultValue}) => {
             placeholder="搜索并选择项目名"
             fetchOptions={fetchUserList}
             defaultValue={defaultValue}
-            onChange={(newValue) => {
-                setValue(newValue);
-            }}
+            onChange={handleChange}
             style={{
                 width: '100%',
             }}

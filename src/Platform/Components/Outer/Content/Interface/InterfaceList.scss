@@ -4,5 +4,18 @@
 
 .interface-top-selector .ant-select-selector{
   width: 35%;
-  float: right;
+  margin-left: 10px;
+}
+
+.interface-top-input  .ant-input-affix-wrapper .css-dev-only-do-not-override-djtmh8 .ant-input-outlined{
+  width: 35%;
+}
+
+.interface-top-confirm-button{
+  left: 89%;
+}
+
+.interface-top-clear-button{
+  left: 88%;
+  margin-right: 10px;
 }
