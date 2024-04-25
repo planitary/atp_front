@@ -59,14 +59,16 @@ const GetProjectList = (page, size, projectId = '', projectUrl = '', projectName
     }
 }
 
-const GetInterfaceList = (page,size,projectId = '',interfaceUrl = '',interfaceName = '') => {
+const GetInterfaceList = (page,size,projectIds = [],projectId = '',interfaceUrl = '',interfaceName = '') => {
     return async (dispatch) => {
         const reqBody = {
             pageNo: page,
             pageSize: size,
             projectId: projectId,
             interfaceName: interfaceName,
-            interfaceUrl: interfaceUrl
+            interfaceUrl: interfaceUrl,
+            projectIds: projectIds
+
         };
         const url = "http://localhost:8080/interface/interfaceList"
         const res = await axios.post(url,reqBody);
@@ -76,7 +78,7 @@ const GetInterfaceList = (page,size,projectId = '',interfaceUrl = '',interfaceNa
     }
 }
 
-const FindInterfaceByFilter = (page,size,projectId = '',interfaceUrl = '',interfaceName = '') => {
+const FindInterfaceByFilter = (page,size,projectIds = [],interfaceUrl = '',interfaceName = '',projectId = '') => {
     return async (dispatch) => {
         const url = "http://localhost:8080/interface/interfaceList"
         const reqBody = {
@@ -85,7 +87,7 @@ const FindInterfaceByFilter = (page,size,projectId = '',interfaceUrl = '',interf
             projectId: projectId,
             interfaceName: interfaceName,
             interfaceUrl: interfaceUrl,
-            projectIds: ["6065028530065030", "42572254526"]
+            projectIds: projectIds
         }
         let res = "";
         try {

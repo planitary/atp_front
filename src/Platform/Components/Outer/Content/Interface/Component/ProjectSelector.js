@@ -45,7 +45,7 @@ function DebounceSelect({ fetchOptions, defaultValue,debounceTimeout = 800, ...p
 // Usage of DebounceSelect
 
 async function fetchUserList(projectName) {
-    console.log('fetching user', projectName);
+    console.log('fetching list', projectName);
     const reqBody = {
         pageNo: 1,
         pageSize: 10,
@@ -56,7 +56,7 @@ async function fetchUserList(projectName) {
         const res = await axios.post(url,reqBody);
         return res.data.items.map((project) => ({
             label: `${project.projectName}`,
-            value: `${project.projectId},`
+            value: `${project.projectId}`
         }));
     }catch (error){
         console.error("fetching projectList error!")

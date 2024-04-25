@@ -175,7 +175,8 @@ const InterfaceList = () => {
                 setLoading(false)
             )
         } else {
-            dispatch(FindInterfaceByFilter(currentPage)).then(setLoading(false))
+            dispatch(FindInterfaceByFilter(currentPage,10,interfaceFindDTO.projectIds,
+                interfaceFindDTO.interfaceUrl,interfaceFindDTO.interfaceName)).then(setLoading(false))
         }
     }
 
@@ -229,6 +230,7 @@ const InterfaceList = () => {
             ...interfaceFindDTO,        // 保留其他属性
             interfaceName: e.target.value
         })
+        // interfaceFindDTO.interfaceName = e.target.value
     }
     // 监听接口url的输入值
     const interfaceUrlHandleChange = (e) => {
@@ -236,6 +238,7 @@ const InterfaceList = () => {
             ...interfaceFindDTO,
             interfaceUrl: e.target.value
         })
+        // interfaceFindDTO.interfaceUrl = e.target.value
     }
 
     // 监听筛选框的变化值，并拿到value
@@ -244,6 +247,7 @@ const InterfaceList = () => {
     },[projectIds]);
 
     const handleSelectorChange = (values) => {
+        console.log(values)
         const tempValues = values.map((value) => value.value)
         setProjectIds(tempValues)
     }
@@ -257,12 +261,14 @@ const InterfaceList = () => {
     //todo:这里实际的传参是过滤条件，需要额外封装一下，其中，项目Id的列表目前写死
     const handleButtonClick = () => {
         console.log(projectIds)
-        setInterfaceFindDTO({
-            ...interfaceFindDTO,
-            projectIds: getProjectIds()
-        })
+        // setInterfaceFindDTO({
+        //     ...interfaceFindDTO,
+        //     projectIds: getProjectIds()
+        // })
+        interfaceFindDTO.projectIds = getProjectIds();
         console.log("dto:",interfaceFindDTO)
-        dispatch(FindInterfaceByFilter(currentPage)).then(() => {
+        dispatch(FindInterfaceByFilter(currentPage,10,interfaceFindDTO.projectIds,
+            interfaceFindDTO.interfaceUrl,interfaceFindDTO.interfaceName)).then(() => {
             setIsFilter(true)
         });
     }
