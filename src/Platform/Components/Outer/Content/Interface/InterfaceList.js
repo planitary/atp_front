@@ -228,7 +228,7 @@ const InterfaceList = () => {
     const [interfaceNameFocus, setInterfaceNameFocus] = useState(false);
     const [interfaceUrlFocus, setInterfaceUrlFocus] = useState(false);
     // selector聚焦状态
-    const [selectorFocus,setSelectorFocus] = useState(false);
+    const [selectorFocus, setSelectorFocus] = useState(false);
 
     const onFocusHandler = (e) => {
         if (e.target.id === "interfaceName") {
@@ -259,6 +259,7 @@ const InterfaceList = () => {
         // interfaceFindDTO.interfaceUrl = e.target.value
     }
 
+    // 筛选框聚焦与失焦
     const selectorFocusHandle = () => {
         setSelectorFocus(true)
     }
@@ -320,7 +321,7 @@ const InterfaceList = () => {
                            onBlur={interfaceUrlHandleChange}/>
                 </div>
                 <div className="selector-wrapper">
-                    <label htmlFor={"selector"} className={selectorFocus  ? 'active' : ''}>搜索并选择项目名</label>
+                    <label htmlFor={"selector"} className={selectorFocus ? 'active' : ''}>搜索并选择项目名</label>
                     {filledMap.length !== 0 && (
                         <ProjectSelector defaultValue={filledMap} onChange={handleSelectorChange}
                                          onBlur={selectorOnBlurHandle} onFocus={selectorFocusHandle}/>
