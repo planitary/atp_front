@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Pagination, Space, Table, Tag, message, Modal, Tooltip} from 'antd';
+import {Button, Pagination, Input, Space, Table, Tag, message, Modal, Tooltip} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import {deleteProject, findInterfaceList} from "../../../API/Api";
@@ -7,7 +7,6 @@ import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-
 import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
-import Input from "antd/es/input/Input";
 
 const {confirm} = Modal;
 
@@ -89,6 +88,7 @@ const InterfaceList = () => {
 
     // 加载状态
     const [loading, setLoading] = useState(false);
+
 
     // 分页标记（表示当前渲染的数据是正常分页还是筛选查询）
     const [isFilter, setIsFilter] = useState(false);
@@ -175,8 +175,8 @@ const InterfaceList = () => {
                 setLoading(false)
             )
         } else {
-            dispatch(FindInterfaceByFilter(currentPage,10,interfaceFindDTO.projectIds,
-                interfaceFindDTO.interfaceUrl,interfaceFindDTO.interfaceName)).then(setLoading(false))
+            dispatch(FindInterfaceByFilter(currentPage, 10, interfaceFindDTO.projectIds,
+                interfaceFindDTO.interfaceUrl, interfaceFindDTO.interfaceName)).then(setLoading(false))
         }
     }
 
@@ -220,20 +220,38 @@ const InterfaceList = () => {
         projectIds: []
     }
 
-    const [interfaceFindDTO,setInterfaceFindDTO] = useState(findDTO)
+    const [interfaceFindDTO, setInterfaceFindDTO] = useState(findDTO)
     // 接口所属项目名筛选框的状态值
-    const [projectIds,setProjectIds] = useState([])
+    const [projectIds, setProjectIds] = useState([])
+
+    // 输入框聚焦状态
+    const [interfaceNameFocus, setInterfaceNameFocus] = useState(false);
+    const [interfaceUrlFocus, setInterfaceUrlFocus] = useState(false);
+    // selector聚焦状态
+    const [selectorFocus,setSelectorFocus] = useState(false);
+
+    const onFocusHandler = (e) => {
+        if (e.target.id === "interfaceName") {
+            setInterfaceNameFocus(true)
+        }
+        if (e.target.id === "interfaceUrl") {
+            setInterfaceUrlFocus(true)
+        }
+    }
 
     // 监听接口名称的输入值
-    const interfaceNameHandleChange = (e) =>{
+    const interfaceNameHandleChange = (e) => {
+        setInterfaceNameFocus(false)
         setInterfaceFindDTO({
             ...interfaceFindDTO,        // 保留其他属性
             interfaceName: e.target.value
         })
         // interfaceFindDTO.interfaceName = e.target.value
     }
+
     // 监听接口url的输入值
     const interfaceUrlHandleChange = (e) => {
+        setInterfaceUrlFocus(false)
         setInterfaceFindDTO({
             ...interfaceFindDTO,
             interfaceUrl: e.target.value
@@ -241,10 +259,18 @@ const InterfaceList = () => {
         // interfaceFindDTO.interfaceUrl = e.target.value
     }
 
+    const selectorFocusHandle = () => {
+        setSelectorFocus(true)
+    }
+
+    const selectorOnBlurHandle = () => {
+        setSelectorFocus(false)
+    }
+
     // 监听筛选框的变化值，并拿到value
     useEffect(() => {
-        console.log("projectId:",projectIds)
-    },[projectIds]);
+        console.log("projectId:", projectIds)
+    }, [projectIds]);
 
     const handleSelectorChange = (values) => {
         console.log(values)
@@ -266,27 +292,40 @@ const InterfaceList = () => {
         //     projectIds: getProjectIds()
         // })
         interfaceFindDTO.projectIds = getProjectIds();
-        console.log("dto:",interfaceFindDTO)
-        dispatch(FindInterfaceByFilter(currentPage,10,interfaceFindDTO.projectIds,
-            interfaceFindDTO.interfaceUrl,interfaceFindDTO.interfaceName)).then(() => {
+        console.log("dto:", interfaceFindDTO)
+        dispatch(FindInterfaceByFilter(currentPage, 10, interfaceFindDTO.projectIds,
+            interfaceFindDTO.interfaceUrl, interfaceFindDTO.interfaceName)).then(() => {
             setIsFilter(true)
         });
     }
 
 
-
     return (
         <>
-            <div style={{display: "flex", alignItems: "center"}}>
-                <Input id="interfaceName" placeholder="请输入接口名" allowClear style={{width: "20%"}}
-                onBlur={interfaceNameHandleChange}/>
-                <Input id="interfaceUrl" placeholder="请输入接口地址" allowClear style={{width: "25%", marginLeft: "30px"}}
-                onBlur={interfaceUrlHandleChange}/>
-                {filledMap.length !== 0 && (
-                    <div style={{width: "25%", marginLeft: "30px"}}>
-                        <ProjectSelector defaultValue={filledMap} onChange={handleSelectorChange}/>
-                    </div>
-                )}
+            <div className="container">
+                <div className="interface-name-wrapper">
+                    <label htmlFor="interfaceName" className={interfaceNameFocus ? 'active' : ''}>请输入接口名</label>
+                    <Input id="interfaceName"
+                           onFocus={onFocusHandler}
+                           placeholder={interfaceNameFocus ? '' : "请输入接口名"}
+                           allowClear
+                           onBlur={interfaceNameHandleChange}/>
+                </div>
+                <div className="interface-url-wrapper">
+                    <label htmlFor={"interfaceUrl"} className={interfaceUrlFocus ? 'active' : ''}>请输入接口地址</label>
+                    <Input id="interfaceUrl"
+                           onFocus={onFocusHandler}
+                           placeholder={interfaceUrlFocus ? '' : "请输入接口地址"}
+                           allowClear
+                           onBlur={interfaceUrlHandleChange}/>
+                </div>
+                <div className="selector-wrapper">
+                    <label htmlFor={"selector"} className={selectorFocus  ? 'active' : ''}>搜索并选择项目名</label>
+                    {filledMap.length !== 0 && (
+                        <ProjectSelector defaultValue={filledMap} onChange={handleSelectorChange}
+                                         onBlur={selectorOnBlurHandle} onFocus={selectorFocusHandle}/>
+                    )}
+                </div>
             </div>
 
             <div style={{marginBottom: "10px"}}>

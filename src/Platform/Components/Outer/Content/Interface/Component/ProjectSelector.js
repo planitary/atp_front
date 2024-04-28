@@ -63,7 +63,7 @@ async function fetchUserList(projectName) {
         return [];
     }
 }
-const ProjectSelector = ({defaultValue,onChange}) => {
+const ProjectSelector = ({defaultValue,onChange,onBlur,onFocus}) => {
     const [value, setValue] = useState([]);
     const handleChange = (values) => {
         setValue(values);
@@ -77,6 +77,8 @@ const ProjectSelector = ({defaultValue,onChange}) => {
             fetchOptions={fetchUserList}
             defaultValue={defaultValue}
             onChange={handleChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
             style={{
                 width: '100%',
             }}
