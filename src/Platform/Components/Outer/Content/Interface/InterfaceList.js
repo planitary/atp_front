@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button, Pagination, Input, Space, Table, Tag, message, Modal, Tooltip} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
@@ -7,6 +7,10 @@ import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-
 import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
+import {Selector} from "antd-mobile";
+
+import TestSelector from "./Component/testSelector";
+import AddInterfaceDrawer from "./Component/AddInterfaceDrawer";
 
 const {confirm} = Modal;
 
@@ -94,15 +98,14 @@ const InterfaceList = () => {
     const [isFilter, setIsFilter] = useState(false);
 
     // 项目详情
-    const [projectInfo, setProjectInfo] = useState({
+    const [interfaceInfo, setInterfaceInfo] = useState({
+        interfaceId: "",
+        interfaceName: "",
+        interfaceUrl: "",
+        requestBody: "",
         projectId: "",
-        projectName: "",
-        projectUrl: "",
-        remark: "",
-        projectGroup: "",
-        projectOwner: "",
-        projectLevel: "",
-        version: 0
+        createUser: "",
+        remark: ""
     })
     // 分页状态
     // const [pagination,setPagination] = useState({})
@@ -114,7 +117,7 @@ const InterfaceList = () => {
     // 暂存数据值用于抽屉表单的回显
 
     const dispatch = useDispatch()
-
+    let projectList = []
     // 钩子函数，渲染完页面就访问一次列表页
     useEffect(() => {
         dispatch((GetProjectList(1, 5)))
@@ -124,13 +127,13 @@ const InterfaceList = () => {
     // 编辑按钮回调(调用接口获取详情)
     const handleEditClick = async (record) => {
         const reqBody = {
-            "projectId": record.projectId
+            "interfaceId": record.interfaceId
         }
-        const url = "http://localhost:8080/project/getProjectDetail";
+        const url = "http://localhost:8080/interface/getInterfaceDetail";
         try {
             const res = await axios.post(url, reqBody);
             console.log(res.data.data)
-            setProjectInfo(res.data.data)
+            setInterfaceInfo(res.data.data)
 
         } catch (error) {
             console.error("Error:", error);
@@ -259,6 +262,19 @@ const InterfaceList = () => {
         // interfaceFindDTO.interfaceUrl = e.target.value
     }
 
+    // 抽屉关闭事件回调
+    const handleCloseClick = () => {
+        setDrawerVisible(false);
+        // 关闭后重新请求列表
+        dispatch(GetProjectList(currentPage, 10));
+    }
+
+    // 外部点击×或者取消的关闭回调
+    const handleCloseOut = () => {
+        setDrawerVisible(false);
+    }
+
+
     // 筛选框聚焦与失焦
     const selectorFocusHandle = () => {
         setSelectorFocus(true)
@@ -285,7 +301,6 @@ const InterfaceList = () => {
         }
     }
     // 查询按钮的确认事件
-    //todo:这里实际的传参是过滤条件，需要额外封装一下，其中，项目Id的列表目前写死
     const handleButtonClick = () => {
         console.log(projectIds)
         // setInterfaceFindDTO({
@@ -300,6 +315,25 @@ const InterfaceList = () => {
         });
     }
 
+    const [interfaceNameValue,setInterfaceNameValue] = useState('');
+    const [interfaceUrlValue,setInterfaceUrlValue] = useState('');
+
+    // 重置按钮清空事件
+    const clearButtonHandle = () => {
+        setInterfaceNameFocus(false)
+        setInterfaceUrlFocus(false)
+        setSelectorFocus(false)
+        setInterfaceFindDTO(findDTO)
+        setInterfaceNameValue('');
+        setInterfaceUrlValue('');
+    }
+
+    const [selectedValue,setSelectedValue] = useState(null);
+
+    const handleClearSelection = () => {
+        setSelectedValue(null);
+    }
+
 
     return (
         <>
@@ -307,7 +341,9 @@ const InterfaceList = () => {
                 <div className="interface-name-wrapper">
                     <label htmlFor="interfaceName" className={interfaceNameFocus ? 'active' : ''}>请输入接口名</label>
                     <Input id="interfaceName"
+                           value={interfaceNameValue}
                            onFocus={onFocusHandler}
+                           onChange={e => setInterfaceNameValue(e.target.value)}
                            placeholder={interfaceNameFocus ? '' : "请输入接口名"}
                            allowClear
                            onBlur={interfaceNameHandleChange}/>
@@ -315,6 +351,8 @@ const InterfaceList = () => {
                 <div className="interface-url-wrapper">
                     <label htmlFor={"interfaceUrl"} className={interfaceUrlFocus ? 'active' : ''}>请输入接口地址</label>
                     <Input id="interfaceUrl"
+                           value={interfaceUrlValue}
+                           onChange={e => setInterfaceUrlValue(e.target.value)}
                            onFocus={onFocusHandler}
                            placeholder={interfaceUrlFocus ? '' : "请输入接口地址"}
                            allowClear
@@ -324,13 +362,15 @@ const InterfaceList = () => {
                     <label htmlFor={"selector"} className={selectorFocus ? 'active' : ''}>搜索并选择项目名</label>
                     {filledMap.length !== 0 && (
                         <ProjectSelector defaultValue={filledMap} onChange={handleSelectorChange}
-                                         onBlur={selectorOnBlurHandle} onFocus={selectorFocusHandle}/>
+                                         onBlur={selectorOnBlurHandle} onFocus={selectorFocusHandle}
+                        mode={'multiple'}/>
                     )}
                 </div>
             </div>
 
             <div style={{marginBottom: "10px"}}>
-                <Button type={"default"} className={"interface-top-clear-button"}>重置</Button>
+                <Button type={"default"} onClick={() => clearButtonHandle()}
+                        className={"interface-top-clear-button"}>重置</Button>
 
                 <Button type="primary" onClick={() => handleButtonClick()} className="interface-top-confirm-button">
                     查询
@@ -353,12 +393,12 @@ const InterfaceList = () => {
                 // onChange={handleTableChange}
             />
 
-            {/*<DetailDrawer*/}
-            {/*    editData={projectInfo}*/}
-            {/*    drawerVisible={drawerVisible}*/}
-            {/*    handleCloseIn={handleCloseClick}*/}
-            {/*    handleCloseOut={handleCloseOut}*/}
-            {/*/>*/}
+            <AddInterfaceDrawer
+                editData={interfaceInfo}
+                drawerVisible={drawerVisible}
+                handleCloseIn={handleCloseClick}
+                handleCloseOut={handleCloseOut}
+            />
             {/*<MessageInfo*/}
             {/*    modalStatus={isModalOpen}*/}
             {/*    handleOk={handleOk}*/}

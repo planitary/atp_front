@@ -63,7 +63,7 @@ async function fetchUserList(projectName) {
         return [];
     }
 }
-const ProjectSelector = ({defaultValue,onChange,onBlur,onFocus}) => {
+const ProjectSelector = ({defaultValue,onChange,onBlur,onFocus,mode}) => {
     const [value, setValue] = useState([]);
     const handleChange = (values) => {
         setValue(values);
@@ -71,7 +71,7 @@ const ProjectSelector = ({defaultValue,onChange,onBlur,onFocus}) => {
     }
     return (
         <DebounceSelect
-            mode="multiple"
+            mode={mode}
             value={value}
             placeholder="搜索并选择项目名"
             fetchOptions={fetchUserList}
