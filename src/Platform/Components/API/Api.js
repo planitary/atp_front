@@ -12,6 +12,7 @@ const projectInfo = {
 }
 
 
+// 更新接口
 async function updateProject(projectInfo) {
     const url = 'http://localhost:8080/project/updateProject'
     console.log("projectInfo",projectInfo);
@@ -25,6 +26,10 @@ async function updateProject(projectInfo) {
     }
     return res;
 }
+
+
+
+
 
 async function addProject(project){
     const url = "http://localhost:8080/project/addProject"

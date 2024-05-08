@@ -12,8 +12,9 @@ const {TextArea} = Input
 const AddInterfaceDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOut}) => {
 
 
-    // console.log(editData)
     const interfaceInfo = {...editData}
+    const updateDTO = {...interfaceInfo}
+    console.log(interfaceInfo)
     const [form] = Form.useForm();
 
     // 填充表单字段值（注意由于form被useForm管理,所以通常的设置默认值的方法不管用)
@@ -27,18 +28,14 @@ const AddInterfaceDrawer = ({drawerVisible, editData, handleCloseIn, handleClose
             // message.success("success",value);
             const value = form.getFieldsValue();
             console.log("value:", value);
-            if (value.projectGroup === null) {
-                editData.projectGroup = "";
-            } else {
-                editData.projectGroup = value.projectGroup;
-            }
 
-            editData.projectName = value.projectName;
-            editData.projectLevel = value.projectLevel;
-            editData.projectOwner = value.projectOwner;
-            editData.remark = value.remark;
-            editData.projectUrl = value.projectUrl;
-            updateProject(editData).then(res => {
+            updateDTO.remark = value.remark;
+            updateDTO.createUser = value.createUser;
+            updateDTO.interfaceName = value.interfaceName;
+            updateDTO.interfaceUrl = value.interfaceName;
+            updateDTO.requestBody = value.requestBody;
+
+            updateProject(updateDTO).then(res => {
                 if (res.data.code === '0') {
                     message.success('编辑成功!');
                     handleCloseIn();
@@ -120,7 +117,7 @@ const AddInterfaceDrawer = ({drawerVisible, editData, handleCloseIn, handleClose
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="projectId"
+                                name="projectName"
                                 label="接口所属项目"
                                 rules={[
                                     {
@@ -129,17 +126,7 @@ const AddInterfaceDrawer = ({drawerVisible, editData, handleCloseIn, handleClose
                                 ]}
                             >
                                 <Select
-                                    options={[
-                                        {
-                                            label: 'cornerstone',
-                                            value: 'cornerstone',
-                                        },
-                                        {
-                                            label: 'prism',
-                                            value: 'prism',
-                                        },
-
-                                    ]}
+                                    disabled={true}
                                 />
                             </Form.Item>
                         </Col>

@@ -1,15 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Button, Pagination, Input, Space, Table, Tag, message, Modal, Tooltip} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Button, Input, message, Modal, Space, Table, Tooltip} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
-import {deleteProject, findInterfaceList} from "../../../API/Api";
-import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {deleteProject} from "../../../API/Api";
+import {ExclamationCircleOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
-import {Selector} from "antd-mobile";
-
-import TestSelector from "./Component/testSelector";
 import AddInterfaceDrawer from "./Component/AddInterfaceDrawer";
 
 const {confirm} = Modal;
@@ -105,7 +102,8 @@ const InterfaceList = () => {
         requestBody: "",
         projectId: "",
         createUser: "",
-        remark: ""
+        remark: "",
+        projectName:""
     })
     // 分页状态
     // const [pagination,setPagination] = useState({})
@@ -129,12 +127,21 @@ const InterfaceList = () => {
         const reqBody = {
             "interfaceId": record.interfaceId
         }
+        const reqBody2 = {
+            "projectId": record.projectId
+        }
         const url = "http://localhost:8080/interface/getInterfaceDetail";
+        const url2 = "http://localhost:8080/project/getProjectById";
         try {
-            const res = await axios.post(url, reqBody);
-            console.log(res.data.data)
+            let res = await axios.post(url, reqBody);
+            const res2 = await axios.post(url2,reqBody2);
+            if (res.data && res.data.data) {
+                res.data.data = {
+                    ...res.data.data,
+                    projectName: res2.data.data.projectName
+                };
+            }
             setInterfaceInfo(res.data.data)
-
         } catch (error) {
             console.error("Error:", error);
         }
@@ -223,6 +230,7 @@ const InterfaceList = () => {
         projectIds: []
     }
 
+    // 筛选框的搜索
     const [interfaceFindDTO, setInterfaceFindDTO] = useState(findDTO)
     // 接口所属项目名筛选框的状态值
     const [projectIds, setProjectIds] = useState([])
