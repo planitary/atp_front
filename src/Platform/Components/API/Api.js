@@ -12,7 +12,7 @@ const projectInfo = {
 }
 
 
-// 更新接口
+// 更新项目
 async function updateProject(projectInfo) {
     const url = 'http://localhost:8080/project/updateProject'
     console.log("projectInfo",projectInfo);
@@ -27,7 +27,19 @@ async function updateProject(projectInfo) {
     return res;
 }
 
-
+// 更新接口
+async function updateInterface(interfaceDto){
+    const url = 'http://localhost:8080/interface/updateInterfaceV2'
+    let res = "";
+    try {
+        res = await axios.post(url,interfaceDto);
+        console.log("res:",res.data);
+    }catch (error){
+        res = error.response
+        console.log("error:",res);
+    }
+    return res;
+}
 
 
 
@@ -36,6 +48,17 @@ async function addProject(project){
     let res = "";
     try {
         res = await axios.post(url,project);
+    }catch (error){
+        res = error.response;
+    }
+    return res
+}
+
+async function addInterface(interfaceDTO){
+    const url = "http://localhost:8080/interface/addInterface"
+    let res = "";
+    try {
+        res = await axios.post(url,interfaceDTO);
     }catch (error){
         res = error.response;
     }
@@ -70,4 +93,4 @@ async function findInterfaceList(){
     return res;
 }
 
-export {updateProject,deleteProject,addProject,findInterfaceList}
+export {updateProject,deleteProject,addProject,findInterfaceList,updateInterface,addInterface}

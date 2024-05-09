@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Col, Drawer, Form, Input, message, Row, Select, Space} from 'antd';
 import {useDispatch} from "react-redux";
 import axios from "axios";
-import {updateProject} from "../../../../API/Api";
+import {updateInterface, updateProject} from "../../../../API/Api";
 import ProjectSelector from "./ProjectSelector";
 import {Selector} from "antd-mobile";
 
@@ -32,10 +32,10 @@ const AddInterfaceDrawer = ({drawerVisible, editData, handleCloseIn, handleClose
             updateDTO.remark = value.remark;
             updateDTO.createUser = value.createUser;
             updateDTO.interfaceName = value.interfaceName;
-            updateDTO.interfaceUrl = value.interfaceName;
+            updateDTO.interfaceUrl = value.interfaceUrl;
             updateDTO.requestBody = value.requestBody;
 
-            updateProject(updateDTO).then(res => {
+            updateInterface(updateDTO).then(res => {
                 if (res.data.code === '0') {
                     message.success('编辑成功!');
                     handleCloseIn();

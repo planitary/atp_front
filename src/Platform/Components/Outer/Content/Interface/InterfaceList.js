@@ -3,11 +3,14 @@ import {Button, Input, message, Modal, Space, Table, Tooltip} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import {deleteProject} from "../../../API/Api";
-import {ExclamationCircleOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
 import ProjectSelector from "./Component/ProjectSelector";
 import AddInterfaceDrawer from "./Component/AddInterfaceDrawer";
+import CollectionCreateFormModal from "../Project/Component/CollectionCreateForm";
+import CollectionCreateFormInterface from "./Component/CollectionCreateFormInterface";
+import CollectionCreateFormInterfaceModal from "./Component/CollectionCreateFormInterface";
 
 const {confirm} = Modal;
 
@@ -103,7 +106,7 @@ const InterfaceList = () => {
         projectId: "",
         createUser: "",
         remark: "",
-        projectName:""
+        projectName: ""
     })
     // 分页状态
     // const [pagination,setPagination] = useState({})
@@ -134,7 +137,7 @@ const InterfaceList = () => {
         const url2 = "http://localhost:8080/project/getProjectById";
         try {
             let res = await axios.post(url, reqBody);
-            const res2 = await axios.post(url2,reqBody2);
+            const res2 = await axios.post(url2, reqBody2);
             if (res.data && res.data.data) {
                 res.data.data = {
                     ...res.data.data,
@@ -274,7 +277,7 @@ const InterfaceList = () => {
     const handleCloseClick = () => {
         setDrawerVisible(false);
         // 关闭后重新请求列表
-        dispatch(GetProjectList(currentPage, 10));
+        dispatch(GetInterfaceList(currentPage, 10));
     }
 
     // 外部点击×或者取消的关闭回调
@@ -308,6 +311,21 @@ const InterfaceList = () => {
             return projectIds
         }
     }
+
+    // 新增表单赋值
+    const [formValue, setFormvalues] = useState();
+    // 新增表单控制
+    const [formOpen, setFormOpen] = useState(false);
+    const onCreate = (values) => {
+        console.log("表单赋值:", values);
+        setFormvalues(values);
+        setFormOpen(false);
+    }
+
+    // 新增表单关闭
+    const onCancel = () => {
+        setFormOpen(false)
+    }
     // 查询按钮的确认事件
     const handleButtonClick = () => {
         console.log(projectIds)
@@ -323,8 +341,8 @@ const InterfaceList = () => {
         });
     }
 
-    const [interfaceNameValue,setInterfaceNameValue] = useState('');
-    const [interfaceUrlValue,setInterfaceUrlValue] = useState('');
+    const [interfaceNameValue, setInterfaceNameValue] = useState('');
+    const [interfaceUrlValue, setInterfaceUrlValue] = useState('');
 
     // 重置按钮清空事件
     const clearButtonHandle = () => {
@@ -336,7 +354,7 @@ const InterfaceList = () => {
         setInterfaceUrlValue('');
     }
 
-    const [selectedValue,setSelectedValue] = useState(null);
+    const [selectedValue, setSelectedValue] = useState(null);
 
     const handleClearSelection = () => {
         setSelectedValue(null);
@@ -345,6 +363,7 @@ const InterfaceList = () => {
 
     return (
         <>
+
             <div className="container">
                 <div className="interface-name-wrapper">
                     <label htmlFor="interfaceName" className={interfaceNameFocus ? 'active' : ''}>请输入接口名</label>
@@ -371,7 +390,7 @@ const InterfaceList = () => {
                     {filledMap.length !== 0 && (
                         <ProjectSelector defaultValue={filledMap} onChange={handleSelectorChange}
                                          onBlur={selectorOnBlurHandle} onFocus={selectorFocusHandle}
-                        mode={'multiple'}/>
+                                         mode={'multiple'}/>
                     )}
                 </div>
             </div>
@@ -383,7 +402,17 @@ const InterfaceList = () => {
                 <Button type="primary" onClick={() => handleButtonClick()} className="interface-top-confirm-button">
                     查询
                 </Button>
+                <Button className={"interface-top-add-button"}
+                        type="primary"
+                        icon={<PlusOutlined/>}
+                        onClick={() => setFormOpen(true)}
+                >新增接口</Button>
             </div>
+            <CollectionCreateFormInterfaceModal
+                open={formOpen}
+                onCreate={onCreate}
+                onCancel={onCancel}>
+            </CollectionCreateFormInterfaceModal>
 
             <Table
                 columns={columns}
@@ -400,6 +429,7 @@ const InterfaceList = () => {
                 loading={loading}
                 // onChange={handleTableChange}
             />
+
 
             <AddInterfaceDrawer
                 editData={interfaceInfo}
