@@ -3,7 +3,7 @@ import {Layout, Menu} from 'antd';
 import "./OuterHeaderMenu.scss"
 
 const {Header} = Layout
-const title = ['自动化测试','UI测试','系统管理','帮助'].map((key) => ({
+const title = ['自动化测试','UI测试','地址传送门','帮助'].map((key) => ({
     key,
     label: `${key}`,
 }));
