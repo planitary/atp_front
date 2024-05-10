@@ -63,7 +63,7 @@ async function fetchUserList(projectName) {
         return [];
     }
 }
-const ProjectSelector = ({defaultValue,onChange,onBlur,onFocus,mode}) => {
+const ProjectSelectorMultiple = ({defaultValue,onChange,onBlur,onFocus,mode}) => {
     const [value, setValue] = useState([]);
     const handleChange = (values) => {
         setValue(values);
@@ -85,4 +85,4 @@ const ProjectSelector = ({defaultValue,onChange,onBlur,onFocus,mode}) => {
         />
     );
 };
-export default ProjectSelector;
+export default ProjectSelectorMultiple;

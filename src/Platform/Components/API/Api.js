@@ -93,4 +93,23 @@ async function findInterfaceList(){
     return res;
 }
 
-export {updateProject,deleteProject,addProject,findInterfaceList,updateInterface,addInterface}
+async function getProject(projectLikeName,projectUrl,projectId){
+    const reqBody = {
+        pageNo: 1,
+        pageSize: 20,
+        projectName: projectLikeName,
+        projectUrl: projectUrl,
+        projectId: projectId
+        // 查询参数
+    };
+    const url = "http://localhost:8080/project/projectList";
+    let res = "";
+    try {
+        res = await axios.post(url,reqBody);
+    }catch (error){
+        res = error.response
+    }
+    return res;
+}
+
+export {updateProject,deleteProject,addProject,findInterfaceList,updateInterface,addInterface,getProject}

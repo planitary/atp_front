@@ -6,7 +6,7 @@ import {deleteProject} from "../../../API/Api";
 import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
-import ProjectSelector from "./Component/ProjectSelector";
+import ProjectSelectorMultiple from "./Component/ProjectSelectorMultiple";
 import AddInterfaceDrawer from "./Component/AddInterfaceDrawer";
 import CollectionCreateFormModal from "../Project/Component/CollectionCreateForm";
 import CollectionCreateFormInterface from "./Component/CollectionCreateFormInterface";
@@ -388,9 +388,9 @@ const InterfaceList = () => {
                 <div className="selector-wrapper">
                     <label htmlFor={"selector"} className={selectorFocus ? 'active' : ''}>搜索并选择项目名</label>
                     {filledMap.length !== 0 && (
-                        <ProjectSelector defaultValue={filledMap} onChange={handleSelectorChange}
-                                         onBlur={selectorOnBlurHandle} onFocus={selectorFocusHandle}
-                                         mode={'multiple'}/>
+                        <ProjectSelectorMultiple defaultValue={filledMap} onChange={handleSelectorChange}
+                                                 onBlur={selectorOnBlurHandle} onFocus={selectorFocusHandle}
+                                                 mode={'multiple'}/>
                     )}
                 </div>
             </div>

@@ -3,7 +3,7 @@ import {Button, Col, Drawer, Form, Input, message, Row, Select, Space} from 'ant
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import {updateInterface, updateProject} from "../../../../API/Api";
-import ProjectSelector from "./ProjectSelector";
+import ProjectSelectorMultiple from "./ProjectSelectorMultiple";
 import {Selector} from "antd-mobile";
 
 const {TextArea} = Input
