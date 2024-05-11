@@ -4,6 +4,7 @@ import {Breadcrumb, Button, Divider, Layout, Menu, theme} from 'antd';
 import SiderMenu from "../Outer/OuterSlideMenu/SiderMenu";
 import OuterHeaderMenu from "../Outer/OuterHeaderMenu/OuterHeaderMenu";
 import ProjectList from "../Outer/Content/Project/ProjectList";
+import CaseSetList from "../Outer/Content/Caseset/CaseSetList"
 import {Route, Routes} from "react-router-dom";
 import "./Platform.scss"
 import CollectionCreateForm from "../Outer/Content/Project/Component/CollectionCreateForm";
@@ -53,6 +54,7 @@ const PlatformApp = () => {
                         <Routes>
                             <Route exact path="/platform/projectList" element={<ProjectList/>}/>
                             <Route exact path="/platform/interfaceList" element={<InterfaceList/>}/>
+                            <Route exact path="/platform/casesetList" element={<CaseSetList/>}/>
                         </Routes>
 
                     </Content>

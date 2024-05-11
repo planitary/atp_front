@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 
 
 // 侧边菜单的所有key
-const rootSubMenuKeys = ["sub1", 'sub2', 'sub3', 'sub4'];
+const rootSubMenuKeys = ["ATSub1", 'ATSub2', 'ATSub3','UTSub1', 'UTSub2'];
 // 侧边菜单动态展示控制
 const displayTitle = (key) => {
     if (key === '自动化测试') {
@@ -21,7 +21,7 @@ const displayTitle = (key) => {
 const SiderMenu = ({selectedKey}) => {
 
 
-    const [openKeys, setOpenKeys] = useState(['sub1']);
+    const [openKeys, setOpenKeys] = useState(['ATSub1']);
     // 菜单栏的展开与收缩
     const onOpenChange = (keys) => {
         const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
