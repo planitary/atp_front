@@ -78,6 +78,9 @@ const GetInterfaceList = (page,size,projectIds = [],projectId = '',interfaceUrl 
     }
 }
 
+// const GetCasesetList(page,size,setName:[String],interfaceIds)
+
+
 const FindInterfaceByFilter = (page,size,projectIds = [],interfaceUrl = '',interfaceName = '',projectId = '') => {
     return async (dispatch) => {
         const url = "http://localhost:8080/interface/interfaceList"

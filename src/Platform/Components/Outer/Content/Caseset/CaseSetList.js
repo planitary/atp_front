@@ -18,12 +18,12 @@ const CaseSetList = () => {
             width: '10%',
         },
         {
-            title: '所屬項目',
+            title: '所属项目',
             dataIndex: 'projectId',
             width: '10%',
         },
         {
-            title: '權重',
+            title: '权重',
             dataIndex: 'weight',
             width: '8%'
         },
@@ -33,7 +33,7 @@ const CaseSetList = () => {
         //     dataIndex: 'createUser',
         // },
         {
-            title: '參數提取列表',
+            title: '参數提取列表',
             dataIndex: 'parameterList',
         },
         {

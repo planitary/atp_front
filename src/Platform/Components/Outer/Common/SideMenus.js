@@ -25,8 +25,8 @@ const AutoTestNavTitle = [
         getItem('调用记录', 'a4'),
     ]),
     getItem('测试集合','ATSub3',<FolderOutlined />,[
-        getItem('測試集合列表','/casesetList'),
-        getItem('集合維護站','c2')
+        getItem('测试集合列表','/casesetList'),
+        getItem('集合维护站','c2')
     ])
 ]
 // UI测试
