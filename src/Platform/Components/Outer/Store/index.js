@@ -5,7 +5,8 @@ const projectStore = configureStore({
     reducer:{
         // 在这里添加监听的reducer
         projectList: reducer,
-        interfaceList: reducer
+        interfaceList: reducer,
+        caseSetList: reducer
     }
 })
 

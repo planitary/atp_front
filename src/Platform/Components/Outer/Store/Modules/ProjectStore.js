@@ -11,6 +11,8 @@ const projectStore = createSlice({
         projectList: [],
         // 接口列表
         interfaceList: [],
+        // 集合列表
+        caseSetList: [],
     },
 
     reducers: {
@@ -19,11 +21,14 @@ const projectStore = createSlice({
         },
         setInterfaceList(state,action){
             state.interfaceList = action.payload
+        },
+        setCaseSetList(state,action){
+            state.caseSetList = action.payload
         }
     }
 })
 
-const {setProjectList,fillProjectInfo,setInterfaceList} = projectStore.actions;
+const {setProjectList,setInterfaceList,setCaseSetList} = projectStore.actions;
 const pagination = {
     pageNo: 2,
     pageSize: 10,
@@ -78,7 +83,22 @@ const GetInterfaceList = (page,size,projectIds = [],projectId = '',interfaceUrl 
     }
 }
 
-// const GetCasesetList(page,size,setName:[String],interfaceIds)
+const GetCaseSetList = (page,size,setName,interfaceIds,projectId) => {
+    return async (dispatch) => {
+        const reqBody = {
+            pageNo: page,
+            pageSize: size,
+            setName: setName,
+            interfaceIds: interfaceIds,
+            projectId: projectId
+        };
+        const url = "http://localhost:8080/caseSet/caseSetList"
+        const res = await axios.post(url,reqBody);
+        modTime(Array.isArray(res.data) ? res.data : [])
+        console.log(res.data)
+        dispatch(setCaseSetList(res.data))
+    }
+}
 
 
 const FindInterfaceByFilter = (page,size,projectIds = [],interfaceUrl = '',interfaceName = '',projectId = '') => {
@@ -104,6 +124,6 @@ const FindInterfaceByFilter = (page,size,projectIds = [],interfaceUrl = '',inter
 }
 
 
-export {GetProjectList, GetPagination,GetInterfaceList,FindInterfaceByFilter}
+export {GetProjectList, GetPagination,GetInterfaceList,FindInterfaceByFilter,GetCaseSetList}
 const reducer = projectStore.reducer;
 export default reducer;
