@@ -97,7 +97,7 @@ const InterfaceList = () => {
     // 分页标记（表示当前渲染的数据是正常分页还是筛选查询）
     const [isFilter, setIsFilter] = useState(false);
 
-    // 项目详情
+    // 接口详情
     const [interfaceInfo, setInterfaceInfo] = useState({
         interfaceId: "",
         interfaceName: "",

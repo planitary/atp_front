@@ -49,27 +49,27 @@ const CaseSetList = () => {
         //     title: '创建人',
         //     dataIndex: 'createUser',
         // },
-        {
-            title: (
-                <div>
-                    参数提取列表
-                    <Tooltip title="鼠标悬浮在单元格内可查看详情">
-                        <InfoCircleOutlined className="interface-title-icon"/>
-
-                    </Tooltip>
-                </div>),
-
-            dataIndex: 'parameterList',
-            width: '12%',
-            ellipsis: {
-                showTitle: false
-            },
-            render: (parameterList) => (
-                <Tooltip placement="topLeft" title={parameterList}>
-                    {parameterList}
-                </Tooltip>
-            )
-        },
+        // {
+        //     title: (
+        //         <div>
+        //             参数提取列表
+        //             <Tooltip title="鼠标悬浮在单元格内可查看详情">
+        //                 <InfoCircleOutlined className="interface-title-icon"/>
+        //
+        //             </Tooltip>
+        //         </div>),
+        //
+        //     dataIndex: 'parameterList',
+        //     width: '12%',
+        //     ellipsis: {
+        //         showTitle: false
+        //     },
+        //     render: (parameterList) => (
+        //         <Tooltip placement="topLeft" title={parameterList}>
+        //             {parameterList}
+        //         </Tooltip>
+        //     )
+        // },
         {
             title: '负责人',
             dataIndex: 'owner',
@@ -96,6 +96,15 @@ const CaseSetList = () => {
             )
         }
     ];
+
+    // 集合详情
+    const [casetSetInfo,setCaseSetInfo] = useState({
+        setName: "",
+        interfaceIds: [],
+        projectId: "",
+        setWeight: "",
+        parameterList: [],
+    })
 
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -143,6 +152,7 @@ const CaseSetList = () => {
                 loading={loading}
                 // onChange={handleTableChange}
             />
+
         </>
     )
 }
