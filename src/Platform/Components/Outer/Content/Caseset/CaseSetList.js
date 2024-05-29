@@ -33,10 +33,12 @@ const CaseSetList = () => {
             </div>),
             dataIndex: 'setWeight',
             width: '7%',
-            render: (parameterList) => (
-                <Tooltip placement="topLeft" title={parameterList}>
-                    {parameterList}
-                </Tooltip>
+            render: (_,record) => (
+                <>
+                <Tag color={getTagColor(record.setWeight)} bordered={false}>
+                    {getTagText(record.setWeight)}
+                </Tag>
+                </>
             )
         },
         {
@@ -96,6 +98,41 @@ const CaseSetList = () => {
             )
         }
     ];
+
+    // 标签动态映射(颜色)
+    const getTagColor = (level) => {
+        switch (level) {
+            case 1:
+            case 2:
+                return 'lime';
+            case 3:
+                return 'blue';
+            case 4:
+                return 'orange';
+            case 5:
+                return 'red';
+            default:
+                return "blue"
+        }
+    }
+
+    // 标签动态映射(文本)
+    const getTagText = (level) => {
+        switch (level) {
+            case 1:
+                return '1';
+            case 2:
+                return '2';
+            case 3:
+                return '3';
+            case 4:
+                return '4';
+            case 5:
+                return '5';
+            default :
+                return '3'
+        }
+    }
 
     // 集合详情
     const [casetSetInfo,setCaseSetInfo] = useState({
