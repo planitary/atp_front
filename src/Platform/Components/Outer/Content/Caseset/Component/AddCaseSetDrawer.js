@@ -3,8 +3,8 @@ import {Button, Col, Drawer, Form, Input, message, Row, Select, Space} from 'ant
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import {updateInterface, updateProject} from "../../../../API/Api";
-import ProjectSelectorMultiple from "./ProjectSelectorMultiple";
 import {Selector} from "antd-mobile";
+import TCSInterfaceTable from "./TCSInterfaceTable";
 
 const {TextArea} = Input
 
@@ -14,7 +14,8 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
 
     const caseSetInfo = {...editData}
     const updateDTO = {...caseSetInfo}
-    console.log(caseSetInfo)
+    console.log("caseSetInfo", caseSetInfo)
+
     const [form] = Form.useForm();
 
     // 填充表单字段值（注意由于form被useForm管理,所以通常的设置默认值的方法不管用)
@@ -58,8 +59,8 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
     return (
         <>
             <Drawer
-                title="编辑接口"
-                width={500}
+                title="编辑集合"
+                width={1000}
                 mask={true}
                 onClose={handleCloseOut}
                 open={drawerVisible}
@@ -82,13 +83,13 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="interfaceName"
-                                label="接口名称"
+                                name="setName"
+                                label="集合名称"
                                 hasFeedback
                                 rules={[
                                     {
                                         required: true,
-                                        message: '请输入接口名称',
+                                        message: '请输入集合名称',
                                     },
                                 ]}
                             >
@@ -97,17 +98,15 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="interfaceUrl"
-                                label="接口url"
+                                name="projectName"
+                                label="项目名"
                                 hasFeedback
                                 rules={[
                                     {
                                         required: true,
-                                        message: '请输入接口url',
+                                        message: '请输入项目名',
                                     },
                                 ]}
-                                tooltip="接口url从第四级域名开始,例如，在www.test.com/cornerstone/test/data/add中接口url指/data/add"
-
                             >
                                 <Input
                                 />
@@ -117,23 +116,44 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="projectName"
-                                label="接口所属项目"
+                                name="setWeight"
+                                label="集合权重"
                                 rules={[
                                     {
-                                        required: true,
+                                        required: false,
                                     },
                                 ]}
                             >
-                                <Select
-                                    disabled={true}
+
+                                <Select options={[
+                                    {
+                                        value: '1',
+                                        label: '1',
+                                    },
+                                    {
+                                        value: '2',
+                                        label: '2',
+                                    },
+                                    {
+                                        value: '3',
+                                        label: '3',
+                                    },
+                                    {
+                                        value: '4',
+                                        label: '4',
+                                    },
+                                    {
+                                        value: '5',
+                                        label: '5',
+                                    }
+                                ]}
                                 />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="createUser"
-                                label={"维护人"}
+                                name="owner"
+                                label="维护人"
                                 rules={[
                                     {
                                         required: false
@@ -145,19 +165,11 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                         </Col>
                     </Row>
                     <Row gutter={16}>
-                        <Col span={23}>
-                            <Form.Item
-                                name="requestBody"
-                                label="接口请求体"
-                                rules={[
-                                    {
-                                        required: false,
-                                    },
-                                ]}
-                            >
-                                <TextArea rows={5} placeholder={"请以json格式输入该接口的请求参数"}/>
-                            </Form.Item>
-                        </Col>
+                        <Form.Item
+                            name="interfaceInfoSIPDTOS"
+                            label="接口列表">
+                            <TCSInterfaceTable data={caseSetInfo.interfaceInfoSIPDTOS}/>
+                        </Form.Item>
                     </Row>
                     <Row gutter={10}>
                         <Col span={10}>
@@ -166,15 +178,14 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                                 label="备注"
                                 rules={[
                                     {
-                                        required:false
+                                        required: false
                                     },
                                 ]}
-                                >
+                            >
                                 <Input/>
                             </Form.Item>
                         </Col>
                     </Row>
-
                 </Form>
             </Drawer>
         </>

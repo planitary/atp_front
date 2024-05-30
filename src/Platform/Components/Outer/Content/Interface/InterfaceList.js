@@ -118,7 +118,7 @@ const InterfaceList = () => {
     // 暂存数据值用于抽屉表单的回显
 
     const dispatch = useDispatch()
-    let projectList = []
+
     // 钩子函数，渲染完页面就访问一次列表页
     useEffect(() => {
         dispatch((GetProjectList(1, 5)))

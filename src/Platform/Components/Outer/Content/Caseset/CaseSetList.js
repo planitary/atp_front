@@ -3,16 +3,12 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {GetCaseSetList, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import {InfoCircleOutlined} from "@ant-design/icons";
+import {getCaseSetDetail} from "../../../API/Api";
+import AddCaseSetDrawer from "./Component/AddCaseSetDrawer";
+import axios from "axios";
 
 const CaseSetList = () => {
 
-    const handleEditClick = () => {
-
-    }
-
-    const handleDeleteClick = () => {
-
-    }
     const columns = [
         {
             title: '集合名',
@@ -26,18 +22,18 @@ const CaseSetList = () => {
         {
             title: (
                 <div>
-                权重
-                <Tooltip title="用1-5表示当前集合在项目中的占比，权重越高，占比越高，说明集合越重要">
-                    <InfoCircleOutlined className="interface-title-icon"/>
-                </Tooltip>
-            </div>),
+                    权重
+                    <Tooltip title="用1-5表示当前集合在项目中的占比，权重越高，占比越高，说明集合越重要">
+                        <InfoCircleOutlined className="interface-title-icon"/>
+                    </Tooltip>
+                </div>),
             dataIndex: 'setWeight',
             width: '7%',
-            render: (_,record) => (
+            render: (_, record) => (
                 <>
-                <Tag color={getTagColor(record.setWeight)} bordered={false}>
-                    {getTagText(record.setWeight)}
-                </Tag>
+                    <Tag color={getTagColor(record.setWeight)} bordered={false}>
+                        {getTagText(record.setWeight)}
+                    </Tag>
                 </>
             )
         },
@@ -92,7 +88,7 @@ const CaseSetList = () => {
             key: 'operation',
             render: (_, record) => (
                 <Space size="middle">
-                    <a>编辑</a>
+                    <a onClick={() => handleEditClick(record)}>编辑</a>
                     <a style={{"color": "red"}}>删除</a>
                 </Space>
             )
@@ -134,23 +130,102 @@ const CaseSetList = () => {
         }
     }
 
-    // 集合详情
-    const [casetSetInfo,setCaseSetInfo] = useState({
-        setName: "",
-        interfaceIds: [],
-        projectId: "",
-        setWeight: "",
-        parameterList: [],
-    })
+    // // 集合详情
+    // const [casetSetInfo, setCaseSetInfo] = useState({
+    //     setName: "",
+    //     projectId: "",
+    //     setWeight: "",
+    //     owner: "",
+    //     remark: "",
+    //     interfaceInfoSIPDTOS: [],
+    //     parameterList: [],
+    // })
 
 
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
+    const [drawerVisible, setDrawerVisible] = useState(false)
+
     const dispatch = useDispatch()
+
     useEffect(() => {
         dispatch((GetCaseSetList(1, 10)))
     }, [dispatch])
+
+
+
+    // const tcsInfo = {
+    //     setName: "",
+    //     projectName: "",
+    //     remark: "",
+    //     setWeight: "",
+    //     owner: "",
+    //     interfaceInfoSIPDTOS: []
+    // }
+    const handleEditClick = async (record) => {
+        await getCaseSetDetail(record.setId).then(res => {
+            if (res.data.code === '0') {
+                const data = res.data.data
+                // setTCSInfo({
+                //     setName: data.setName,
+                //     projectName: data.projectName,
+                //     remark: data.remark,
+                //     setWeight: data.setWeight,
+                //     owner: data.owner,
+                //     interfaceInfoSIPDTOS: data.interfaceInfoSIPDTOS,
+                // })
+                // tcsInfo.setName = data.setName;
+                // tcsInfo.projectName = data.projectName;
+                // tcsInfo.remark = data.remark;
+                // tcsInfo.setWeight = data.setWeight;
+                // tcsInfo.owner = data.owner;
+                // tcsInfo.interfaceInfoSIPDTOS = data.interfaceInfoSIPDTOS
+                setTCSInfo(data)
+            }
+            console.log("tcsInfo", tcsInfo)
+        })
+        setDrawerVisible(true)
+    }
+
+    // const handleEditClick = async (record) => {
+    //     const params = {
+    //         setId: record.setId
+    //     };
+    //     const url = "http://localhost:8080/caseSet/getCaseSetDetail";
+    //     try {
+    //         let res = await axios.get(url,{params});
+    //         setTCSInfo(res.data.data)
+    //     }catch (error){
+    //         console.error("Error:",error)
+    //     }
+    //     setDrawerVisible(true)
+    // }
+    // 抽屉关闭事件回调
+    const handleCloseClick = () => {
+        setDrawerVisible(false);
+        // 关闭后重新请求列表
+        dispatch(GetCaseSetList(currentPage, 10));
+    }
+
+    // 外部点击×或者取消的关闭回调
+    const handleCloseOut = () => {
+        setDrawerVisible(false);
+    }
+
+    const handleDeleteClick = () => {
+
+    }
+
+    const [tcsInfo, setTCSInfo] = useState({
+            setName: "",
+            projectName: "",
+            remark: "",
+            setWeight: "",
+            owner: "",
+            interfaceInfoSIPDTOS: []
+        })
+
 
     // // 从回调中拿到数据渲染列表
     const caseSetListData = useSelector(state => state.caseSetList)
@@ -189,6 +264,13 @@ const CaseSetList = () => {
                 loading={loading}
                 // onChange={handleTableChange}
             />
+            <AddCaseSetDrawer
+                editData={tcsInfo}
+                drawerVisible={drawerVisible}
+                handleCloseIn={handleCloseClick}
+                handleCloseOut={handleCloseOut}
+            />
+
 
         </>
     )
