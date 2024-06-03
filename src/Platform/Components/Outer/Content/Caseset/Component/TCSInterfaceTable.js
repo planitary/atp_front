@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import {Table, Radio, Divider, Tooltip} from 'antd';
+import {Table, Radio, Divider, Tooltip, Space} from 'antd';
+import {DeleteOutlined, DeleteTwoTone} from "@ant-design/icons";
 
 const columns = [
     {
         title: '接口名',
         dataIndex: 'interfaceName',
-        render: (text) => <a>{text}</a>,
+        // render: (text) => <a>{text}</a>,
         width: '15%'
     },
     {
@@ -20,7 +21,7 @@ const columns = [
     {
         title: '请求体',
         dataIndex: 'requestBody',
-        width: '20%',
+        width: '25%',
         ellipsis: {
             showTitle: false,
         },
@@ -28,6 +29,17 @@ const columns = [
             <Tooltip placement="topLeft" title={requestBody}>
                 {requestBody}
             </Tooltip>
+        )
+    },
+    {
+        title: '操作',
+        key: 'operationInInterface',
+        width: '8%',
+        render: (_, record) => (
+            <Space size="middle">
+                {/*<a ><DeleteTwoTone  twoToneColor={"red"} /></a>*/}
+                <a><DeleteOutlined style={{color:"red"}}/> </a>
+            </Space>
         )
     }
 ];
@@ -54,8 +66,11 @@ const TCSInterfaceTable = ({ data }) => {
                     type: "checkbox",
                     ...rowSelection,
                 }}
+                pagination={false}
+                bordered
                 columns={columns}
                 dataSource={data}
+                scroll={{y:300}}
                 rowKey="interfaceId" // 确保Table组件知道如何标识每一行
             />
         </div>

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Col, Drawer, Form, Input, message, Row, Select, Space} from 'antd';
 import {useDispatch} from "react-redux";
 import axios from "axios";
-import {updateInterface, updateProject} from "../../../../API/Api";
+import {updateCaseSet, updateInterface, updateProject} from "../../../../API/Api";
 import {Selector} from "antd-mobile";
 import TCSInterfaceTable from "./TCSInterfaceTable";
 
@@ -13,13 +13,22 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
 
 
     const caseSetInfo = {...editData}
-    const updateDTO = {...caseSetInfo}
+    const updateDTO = {
+        owner:"",
+        setId: caseSetInfo.setId,
+        remark:"",
+        projectName:"",
+        setName:"",
+        serWeight:"",
+        interfaceInfoSIPDTOS: []
+    }
     console.log("caseSetInfo", caseSetInfo)
 
     const [form] = Form.useForm();
 
     // 填充表单字段值（注意由于form被useForm管理,所以通常的设置默认值的方法不管用)
     form.setFieldsValue(caseSetInfo);
+    console.log("updateDTO",updateDTO)
 
 
     // 点击确认调用接口
@@ -30,13 +39,14 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
             const value = form.getFieldsValue();
             console.log("value:", value);
 
+            updateDTO.owner = value.owner;
             updateDTO.remark = value.remark;
-            updateDTO.createUser = value.createUser;
-            updateDTO.interfaceName = value.interfaceName;
-            updateDTO.interfaceUrl = value.interfaceUrl;
-            updateDTO.requestBody = value.requestBody;
+            updateDTO.projectName = value.projectName;
+            updateDTO.setName = value.setName;
+            updateDTO.setWeight = value.setWeight;
+            updateDTO.interfaceInfoSIPDTOS = value.interfaceInfoSIPDTOS;
 
-            updateInterface(updateDTO).then(res => {
+            updateCaseSet(updateDTO).then(res => {
                 if (res.data.code === '0') {
                     message.success('编辑成功!');
                     handleCloseIn();
@@ -101,14 +111,8 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                                 name="projectName"
                                 label="项目名"
                                 hasFeedback
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: '请输入项目名',
-                                    },
-                                ]}
                             >
-                                <Input
+                                <Input disabled={true}
                                 />
                             </Form.Item>
                         </Col>
@@ -167,7 +171,10 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                     <Row gutter={16}>
                         <Form.Item
                             name="interfaceInfoSIPDTOS"
-                            label="接口列表">
+                            label="接口列表"
+                            tooltip={"用例集合执行时，将按照列表顺序依次对接口进行调用，可对行进行拖曳更改顺序"}
+                        >
+                            todo:// 拖曳排序放后面实现吧
                             <TCSInterfaceTable data={caseSetInfo.interfaceInfoSIPDTOS}/>
                         </Form.Item>
                     </Row>

@@ -41,6 +41,19 @@ async function updateInterface(interfaceDto) {
     return res;
 }
 
+// 更新集合
+async function updateCaseSet(TCSDto){
+    const url = 'http://localhost:8080/caseSet/updateCaseSet'
+    let res = "";
+    try {
+        res = await axios.post(url,TCSDto);
+        console.log("res:",res.data);
+    }catch (error){
+        res = error.response;
+    }
+    return res;
+}
+
 
 async function addProject(project) {
     const url = "http://localhost:8080/project/addProject"
@@ -136,4 +149,4 @@ async function getCaseSetDetail(setId) {
 }
 
 export {updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
-,getCaseSetDetail}
+,getCaseSetDetail,updateCaseSet}
