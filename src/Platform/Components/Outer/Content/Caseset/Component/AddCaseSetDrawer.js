@@ -74,6 +74,7 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                     updateDTO.setWeight = ""
                     updateDTO.interfaceInfoSIPDTOS = []
                     updateDTO.interfaceIds = []
+                    updateDTO.projectId = ""
                     handleCloseIn();
                 } else {
                     message.error(res.data.errMsg)
