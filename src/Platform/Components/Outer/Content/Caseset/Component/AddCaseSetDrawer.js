@@ -20,7 +20,9 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
         projectName:"",
         setName:"",
         serWeight:"",
-        interfaceInfoSIPDTOS: []
+        interfaceInfoSIPDTOS: [],
+        interfaceIds:[],
+        projectId:""
     }
     console.log("caseSetInfo", caseSetInfo)
 
@@ -28,7 +30,6 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
 
     // 填充表单字段值（注意由于form被useForm管理,所以通常的设置默认值的方法不管用)
     form.setFieldsValue(caseSetInfo);
-    console.log("updateDTO",updateDTO)
 
 
     // 点击确认调用接口
@@ -40,15 +41,39 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
             console.log("value:", value);
 
             updateDTO.owner = value.owner;
+            updateDTO.projectId = caseSetInfo.projectId;
             updateDTO.remark = value.remark;
             updateDTO.projectName = value.projectName;
             updateDTO.setName = value.setName;
             updateDTO.setWeight = value.setWeight;
             updateDTO.interfaceInfoSIPDTOS = value.interfaceInfoSIPDTOS;
+            // 检查 value.interfaceInfoSIPDTOS 是否存在并且是数组
+            if (Array.isArray(value.interfaceInfoSIPDTOS)) {
+                // 确保 updateDTO.interfaceIds 已经初始化为一个数组
+                if (!Array.isArray(updateDTO.interfaceIds)) {
+                    updateDTO.interfaceIds = [];
+                }
+
+                // 使用 forEach 方法遍历数组并推入 interfaceId
+                value.interfaceInfoSIPDTOS.forEach((item) => {
+                    updateDTO.interfaceIds.push(item.interfaceId);
+                });
+            }
+
+            console.log("updateDTO",updateDTO)
+
 
             updateCaseSet(updateDTO).then(res => {
                 if (res.data.code === '0') {
                     message.success('编辑成功!');
+                    // 回调成功后清空对象
+                    updateDTO.owner = ""
+                    updateDTO.remark = ""
+                    updateDTO.projectName = ""
+                    updateDTO.setName = ""
+                    updateDTO.setWeight = ""
+                    updateDTO.interfaceInfoSIPDTOS = []
+                    updateDTO.interfaceIds = []
                     handleCloseIn();
                 } else {
                     message.error(res.data.errMsg)
