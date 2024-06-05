@@ -13,6 +13,7 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
 
 
     const caseSetInfo = {...editData}
+    const baseKey = caseSetInfo.interfaceInfoSIPDTOS.length
     const updateDTO = {
         owner:"",
         setId: caseSetInfo.setId,
@@ -24,6 +25,7 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
         interfaceIds:[],
         projectId:""
     }
+
     console.log("caseSetInfo", caseSetInfo)
 
     const [form] = Form.useForm();
@@ -85,6 +87,8 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
             message.error("请填写必填项");
         }
     }
+
+
 
 
     // const projectInfo = {
@@ -200,8 +204,8 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                             label="接口列表"
                             tooltip={"用例集合执行时，将按照列表顺序依次对接口进行调用，可对行进行拖曳更改顺序"}
                         >
-                            todo:// 拖曳排序放后面实现吧
-                            <TCSInterfaceTable data={caseSetInfo.interfaceInfoSIPDTOS}/>
+                            {/*todo:// 拖曳排序放后面实现吧*/}
+                            <TCSInterfaceTable sourceData={caseSetInfo.interfaceInfoSIPDTOS}/>
                         </Form.Item>
                     </Row>
                     <Row gutter={10}>
