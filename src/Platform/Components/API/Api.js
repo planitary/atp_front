@@ -147,7 +147,20 @@ async function getCaseSetDetail(setId) {
     }
     return res;
 }
-
+// 通过名称获取接口
+async function getInterfaceByName(interfaceName){
+    const reqBody = {
+        interfaceName: interfaceName
+    }
+    const url = 'http://localhost:8080/interface/getInterfaceDetailByName';
+    let res = "";
+    try{
+        res = await axios.post(url,reqBody);
+    }catch (error){
+        res = error.response
+    }
+    return res;
+}
 
 export {updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
-,getCaseSetDetail,updateCaseSet}
+,getCaseSetDetail,updateCaseSet,getInterfaceByName}

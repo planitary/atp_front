@@ -1,78 +1,148 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Table, Radio, Divider, Tooltip, Space, Button, Select} from 'antd';
-import {DeleteOutlined, DeleteTwoTone} from "@ant-design/icons";
-import "./TCSInterfaceTable.scss"
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Table, Tooltip, Space, Button, Select, Input, message } from 'antd';
+import { DeleteOutlined } from "@ant-design/icons";
+import axios from 'axios';
+import "./TCSInterfaceTable.scss";
+import Form from "antd/es/form/Form";
+import InterfaceSelectorSingle from "./InterfaceSelectorSingle";
+import {value} from "lodash/seq";
 
 const EditableContext = React.createContext(null);
 
-const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: (record) => ({
-        disabled: record.interfaceName === 'Disabled User', // Column configuration not to be checked
-        name: record.interfaceName,
-    }),
+const EditableRow = ({ index, ...props }) => {
+    const [form] = Form.useForm();
+    return (
+        <Form form={form} component={false}>
+            <EditableContext.Provider value={form}>
+                <tr {...props} />
+            </EditableContext.Provider>
+        </Form>
+    );
 };
 
-const TCSInterfaceTable = ({ sourceData }) => {
+const EditableCell = ({
+                          title,
+                          editable,
+                          children,
+                          dataIndex,
+                          record,
+                          handleSave,
+                          ...restProps
+                      }) => {
     const [editing, setEditing] = useState(false);
-    const ref = useRef(null);
+    const inputRef = useRef(null);
     const form = useContext(EditableContext);
+
     useEffect(() => {
         if (editing) {
-            ref.current?.focus();
+            inputRef.current?.focus();
         }
     }, [editing]);
 
+    const toggleEdit = () => {
+        setEditing(!editing);
+        form.setFieldsValue({ [dataIndex]: record[dataIndex] });
+    };
 
-    console.log(sourceData)
+    const save = async () => {
+        try {
+            const values = await form.validateFields();
+            toggleEdit();
+            handleSave({ ...record, ...values });
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo);
+        }
+    };
+
+    let childNode = children;
+    if (editable) {
+        childNode = editing ? (
+            <Form.Item
+                style={{ margin: 0 }}
+                name={dataIndex}
+                rules={[{ required: true, message: `${title} is required.` }]}
+            >
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+    return <td {...restProps}>{childNode}</td>;
+};
+
+const TCSInterfaceTable = ({ sourceData }) => {
     const [data, setData] = useState(sourceData);
-    const [count,setCount] = useState(sourceData.length)
+    const [count, setCount] = useState(sourceData.length);
+
     const handleAdd = () => {
         const newData = {
-            // 这里的值后续通过接口填充
-            interfaceId:'',
+            interfaceId: `new_${count}`, // 确保每个新数据有唯一的 ID
             interfaceName: '',
             interfaceUrl: '/new/ops',
             remark: '测试',
             requestBody: '',
         };
-        setData([...sourceData,newData])
-        setCount(count + 1)
-    }
+        setData([...data, newData]);
+        setCount(count + 1);
+    };
+
+    const handleSelectChange = (selectedOption, record) => {
+        console.log("selectedOption",selectedOption)
+        console.log("data",record)
+        if (selectedOption) {
+            // 判断当前列表的数据id是否含有new (筛选新增的那一条数据)
+            const newData = data.map(item =>
+                item.interfaceId.includes("new")
+                    ? { ...item, ...selectedOption }
+                    : item
+            );
+            setData(newData);
+        }
+        console.log(data)
+    };
+    // const handleChange = (selectedOption,record) => {
+    //     console.log(selectedOption)
+    //     if (selectedOption) {
+    //         setData({
+    //         });
+    //     }
+    // }
+
+    const handleDelete = (interfaceId) => {
+        const newData = data.filter(item => item.interfaceId !== interfaceId);
+        setData(newData);
+    };
 
     const handleSave = (record) => {
-        console.log("row",record)
         const newData = [...data];
-        console.log("newData:",newData)
-        const index = newData.findIndex((item) => record.interfaceId === item.interfaceId);
+        const index = newData.findIndex(item => record.interfaceId === item.interfaceId);
         const item = newData[index];
-        newData.splice(index,1,{
-            ...item,
-            ...record,
-        })
-        setData(newData)
-    }
+        newData.splice(index, 1, { ...item, ...record });
+        setData(newData);
+    };
+
+
     const columns = [
         {
             title: '接口名',
             dataIndex: 'interfaceName',
-            // 根据接口名动态选择样式，有值时展示文字，无值时展示搜索框
-            render: (text,record) => (
-                // console.log(text)
-                text === "" ? <Select options={[
-                    {
-                        value: '1',
-                        label: '1',
-                    },
-                    {
-                        value: '2',
-                        label: '2',
-                    }
-                ]} ref={ref} onBlur={handleSave}/> : <a>{text}</a>
+            render: (text, record) => (
+                text === "" ? (
+                    <InterfaceSelectorSingle onBlur={() => handleSave(record)}
+                                             onChange={handleSelectChange}
+                    />
+                ) : (
+                    <a>{text}</a>
+                )
             ),
-            width: '15%'
+            width: '20%',
         },
         {
             title: '接口url',
@@ -81,7 +151,6 @@ const TCSInterfaceTable = ({ sourceData }) => {
         {
             title: '备注',
             dataIndex: 'remark',
-
         },
         {
             title: '请求体',
@@ -94,7 +163,7 @@ const TCSInterfaceTable = ({ sourceData }) => {
                 <Tooltip placement="topLeft" title={requestBody}>
                     {requestBody}
                 </Tooltip>
-            )
+            ),
         },
         {
             title: '操作',
@@ -102,12 +171,14 @@ const TCSInterfaceTable = ({ sourceData }) => {
             width: '8%',
             render: (_, record) => (
                 <Space size="middle">
-                    {/*<a ><DeleteTwoTone  twoToneColor={"red"} /></a>*/}
-                    <a><DeleteOutlined style={{color:"red"}}/> </a>
+                    <a onClick={() => handleDelete(record.interfaceId)}>
+                        <DeleteOutlined style={{ color: "red" }} />
+                    </a>
                 </Space>
-            )
-        }
+            ),
+        },
     ];
+
     return (
         <div>
             <Button onClick={handleAdd} type="primary" className="add-button">
@@ -116,14 +187,13 @@ const TCSInterfaceTable = ({ sourceData }) => {
             <Table
                 rowSelection={{
                     type: "checkbox",
-                    ...rowSelection,
                 }}
                 pagination={false}
                 bordered
                 columns={columns}
                 dataSource={data}
-                scroll={{y:300}}
-                rowKey= {sourceData.interfaceId} // 确保Table组件知道如何标识每一行
+                scroll={{ y: 300 }}
+                rowKey="interfaceId" // 确保Table组件知道如何标识每一行
             />
         </div>
     );
