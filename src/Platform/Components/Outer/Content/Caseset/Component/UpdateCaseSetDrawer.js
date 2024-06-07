@@ -9,11 +9,11 @@ import TCSInterfaceTable from "./TCSInterfaceTable";
 const {TextArea} = Input
 
 
-const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOut}) => {
+const UpdateCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOut}) => {
 
 
     const caseSetInfo = {...editData}
-    const baseKey = caseSetInfo.interfaceInfoSIPDTOS.length
+    const [newDatas,setNewDatas] = useState([])
     const updateDTO = {
         owner:"",
         setId: caseSetInfo.setId,
@@ -24,6 +24,9 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
         interfaceInfoSIPDTOS: [],
         interfaceIds:[],
         projectId:""
+    }
+    const handleNewData = (newData) => {
+        setNewDatas(newData)
     }
 
     console.log("caseSetInfo", caseSetInfo)
@@ -48,21 +51,22 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
             updateDTO.projectName = value.projectName;
             updateDTO.setName = value.setName;
             updateDTO.setWeight = value.setWeight;
-            updateDTO.interfaceInfoSIPDTOS = value.interfaceInfoSIPDTOS;
+            updateDTO.interfaceInfoSIPDTOS = newDatas;
             // 检查 value.interfaceInfoSIPDTOS 是否存在并且是数组
-            if (Array.isArray(value.interfaceInfoSIPDTOS)) {
+            if (Array.isArray(newDatas)) {
                 // 确保 updateDTO.interfaceIds 已经初始化为一个数组
                 if (!Array.isArray(updateDTO.interfaceIds)) {
                     updateDTO.interfaceIds = [];
                 }
 
                 // 使用 forEach 方法遍历数组并推入 interfaceId
-                value.interfaceInfoSIPDTOS.forEach((item) => {
+                newDatas.forEach((item) => {
                     updateDTO.interfaceIds.push(item.interfaceId);
                 });
             }
 
             console.log("updateDTO",updateDTO)
+
 
 
             updateCaseSet(updateDTO).then(res => {
@@ -205,7 +209,7 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
                             tooltip={"用例集合执行时，将按照列表顺序依次对接口进行调用，可对行进行拖曳更改顺序"}
                         >
                             {/*todo:// 拖曳排序放后面实现吧*/}
-                            <TCSInterfaceTable sourceData={caseSetInfo.interfaceInfoSIPDTOS}/>
+                            <TCSInterfaceTable sourceData={caseSetInfo.interfaceInfoSIPDTOS} setNewData={handleNewData} />
                         </Form.Item>
                     </Row>
                     <Row gutter={10}>
@@ -228,4 +232,4 @@ const AddCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleCloseOu
         </>
     );
 };
-export default AddCaseSetDrawer;
+export default UpdateCaseSetDrawer;

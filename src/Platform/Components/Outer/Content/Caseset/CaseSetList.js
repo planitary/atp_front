@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {GetCaseSetList, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import {InfoCircleOutlined} from "@ant-design/icons";
 import {getCaseSetDetail} from "../../../API/Api";
-import AddCaseSetDrawer from "./Component/AddCaseSetDrawer";
+import UpdateCaseSetDrawer from "./Component/UpdateCaseSetDrawer";
 import axios from "axios";
 
 const CaseSetList = () => {
@@ -264,7 +264,7 @@ const CaseSetList = () => {
                 loading={loading}
                 // onChange={handleTableChange}
             />
-            <AddCaseSetDrawer
+            <UpdateCaseSetDrawer
                 editData={tcsInfo}
                 drawerVisible={drawerVisible}
                 handleCloseIn={handleCloseClick}

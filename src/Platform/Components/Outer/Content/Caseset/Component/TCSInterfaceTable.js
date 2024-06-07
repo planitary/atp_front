@@ -77,7 +77,7 @@ const EditableCell = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-const TCSInterfaceTable = ({ sourceData }) => {
+const TCSInterfaceTable = ({ sourceData,setNewData }) => {
     const [data, setData] = useState(sourceData);
     const [count, setCount] = useState(sourceData.length);
 
@@ -104,6 +104,7 @@ const TCSInterfaceTable = ({ sourceData }) => {
                     : item
             );
             setData(newData);
+            setNewData(newData)
         }
         console.log(data)
     };
@@ -118,6 +119,8 @@ const TCSInterfaceTable = ({ sourceData }) => {
     const handleDelete = (interfaceId) => {
         const newData = data.filter(item => item.interfaceId !== interfaceId);
         setData(newData);
+        setNewData(newData)
+
     };
 
     const handleSave = (record) => {
