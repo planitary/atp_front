@@ -1,10 +1,12 @@
-import {Space, Table, Tag, Tooltip} from "antd";
+import {Button, Space, Table, Tag, Tooltip} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {GetCaseSetList, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {getCaseSetDetail} from "../../../API/Api";
 import UpdateCaseSetDrawer from "./Component/UpdateCaseSetDrawer";
+import BatchUploadFormModal from "./Component/BatchUploadForm";
+import "./CaseSetList.scss"
 import axios from "axios";
 
 const CaseSetList = () => {
@@ -154,7 +156,6 @@ const CaseSetList = () => {
     }, [dispatch])
 
 
-
     // const tcsInfo = {
     //     setName: "",
     //     projectName: "",
@@ -218,13 +219,13 @@ const CaseSetList = () => {
     }
 
     const [tcsInfo, setTCSInfo] = useState({
-            setName: "",
-            projectName: "",
-            remark: "",
-            setWeight: "",
-            owner: "",
-            interfaceInfoSIPDTOS: []
-        })
+        setName: "",
+        projectName: "",
+        remark: "",
+        setWeight: "",
+        owner: "",
+        interfaceInfoSIPDTOS: []
+    })
 
 
     // // 从回调中拿到数据渲染列表
@@ -248,8 +249,40 @@ const CaseSetList = () => {
         return record.id
     }
 
+
+    // 批量新增表单控制
+    const [formOpen, setFormOpen] = useState(false);
+    const onCreate = (values) => {
+        console.log("表单赋值:", values);
+        setFormOpen(false);
+    }
+
+    // 批量新增按钮
+    const handleBatchAdd = () => {
+        setFormOpen(true)
+    }
+
+    // 新增表单关闭
+    const onCancel = () => {
+        setFormOpen(false)
+    }
+
     return (
         <>
+            <div className={"caseset-container"}>
+                <Button className={"caseset-button-wrapper"}
+                        icon={<PlusOutlined/>}
+                        type={"primary"}
+                        onClick={() => handleBatchAdd()}>
+                    新增测试用例（excel批量)
+                </Button>
+            </div>
+            <BatchUploadFormModal
+                open={formOpen}
+                onCreate={onCreate}
+                onCancel={onCancel}>
+            </BatchUploadFormModal>
+
             <Table
                 columns={columns}
                 rowKey={currentId}

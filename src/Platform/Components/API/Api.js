@@ -42,13 +42,13 @@ async function updateInterface(interfaceDto) {
 }
 
 // 更新集合
-async function updateCaseSet(TCSDto){
+async function updateCaseSet(TCSDto) {
     const url = 'http://localhost:8080/caseSet/updateCaseSet'
     let res = "";
     try {
-        res = await axios.post(url,TCSDto);
-        console.log("res:",res.data);
-    }catch (error){
+        res = await axios.post(url, TCSDto);
+        console.log("res:", res.data);
+    } catch (error) {
         res = error.response;
     }
     return res;
@@ -132,36 +132,74 @@ async function getCaseSetDetail(setId) {
     const url = "http://localhost:8080/caseSet/getCaseSetDetail";
     let res = "";
     try {
-        res = await axios.get(url, { params }); // 注意这里是 `params`
+        res = await axios.get(url, {params}); // 注意这里是 `params`
     } catch (error) {
         if (error.response) {
             // 请求已经发出，但服务器返回了状态码在 2xx 之外
             res = error.response;
         } else if (error.request) {
             // 请求已经发出，但没有收到响应
-            res = { message: "No response received", request: error.request };
+            res = {message: "No response received", request: error.request};
         } else {
             // 其他错误
-            res = { message: error.message };
+            res = {message: error.message};
         }
     }
     return res;
 }
+
 // 通过名称获取接口
-async function getInterfaceByName(interfaceName){
+async function getInterfaceByName(interfaceName) {
     const reqBody = {
         interfaceName: interfaceName
     }
     const url = 'http://localhost:8080/interface/getInterfaceDetailByName';
     let res = "";
-    try{
-        res = await axios.post(url,reqBody);
-    }catch (error){
+    try {
+        res = await axios.post(url, reqBody);
+    } catch (error) {
+        res = error.response
+    }
+    return res;
+}
+
+// 下载批量新增用例集合模板
+async function getTCSTemplate() {
+    let res = "";
+    try {
+        res = await axios.post('http://localhost:8080/exe/excel/getTestCaseTemplate',{},{responseType:'blob'});
+        // 创建一个URL指向Blob对象
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        // 创建一个隐藏的<a>元素，并设置其href属性为刚创建的URL。
+        const link = document.createElement('a');
+        link.href = url;
+        // 设置下载的文件名
+        // 提取文件名（可以根据后端返回的头信息或其他方式）
+        const contentDisposition = res.headers['content-disposition'];
+        console.log("contentDisposition",contentDisposition)
+        let fileName = '';
+        if (contentDisposition) {
+            const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (fileNameMatch && fileNameMatch[1]) {
+                fileName = fileNameMatch[1];
+            }
+        }else {
+            fileName = "TestCase" + Date.now() +".xlsx"
+        }
+
+
+        link.setAttribute('download', fileName); // 设置下载文件的名字
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    } catch (error){
         res = error.response
     }
     return res;
 }
 
 
-export {updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
-,getCaseSetDetail,updateCaseSet,getInterfaceByName}
+export {
+    updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
+    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplate
+}
