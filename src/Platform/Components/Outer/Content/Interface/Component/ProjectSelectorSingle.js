@@ -18,6 +18,7 @@ const fetch = (value, callback) => {
                     const data = result.map((item) => ({
                         value: item.projectName,
                         text: item.projectName,
+                        id: item.projectId
                     }));
                     callback(data);
                 }
@@ -35,11 +36,13 @@ const SearchInput = (props) => {
     const handleSearch = (newValue) => {
         fetch(newValue, setData);
     };
-    const handleChange = (newValue) => {
-        setValue(newValue);
-        props.onchange(newValue)
+    // Ant Design 的 Select 组件 onChange 方法默认只传递选中项的 value。
+    // 但可以通过 options 的 value 和 label 属性传递额外的信息
+    const handleChange = (value,option) => {
+        console.log(option)
+        setValue(value);
+        props.onchange(option)
     };
-    console.log("value:",value)
     return (
         <Select
             showSearch
@@ -54,15 +57,16 @@ const SearchInput = (props) => {
             options={(data || []).map((d) => ({
                 value: d.value,
                 label: d.text,
+                id: d.id
             }))}
         />
     );
 };
-const ProjectSelectorSingle = ({onchange}) => (
+const ProjectSelectorSingle = ({onchange,width}) => (
     <SearchInput
         placeholder="请输入项目名进行查询"
         style={{
-            width: 200,
+            width: width
         }}
         onchange = {onchange}
     />

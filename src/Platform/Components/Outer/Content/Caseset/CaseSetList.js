@@ -8,6 +8,7 @@ import UpdateCaseSetDrawer from "./Component/UpdateCaseSetDrawer";
 import BatchUploadFormModal from "./Component/BatchUploadForm";
 import "./CaseSetList.scss"
 import axios from "axios";
+import AddTCSForm from "./Component/AddTCSForm";
 
 const CaseSetList = () => {
 
@@ -251,36 +252,63 @@ const CaseSetList = () => {
 
 
     // 批量新增表单控制
-    const [formOpen, setFormOpen] = useState(false);
-    const onCreate = (values) => {
+    const [batchAddFormOpen, setBatchAddFormOpen] = useState(false);
+    // 新增表单控制
+    const [addFormOpen,setAddFormOpen] = useState(false);
+    // 批量新增创建表单
+    const onBatchCreate = (values) => {
         console.log("表单赋值:", values);
-        setFormOpen(false);
+        setBatchAddFormOpen(false);
+    }
+    // 新增TCS表单
+    const onCreate = (value) => {
+        setAddFormOpen(false);
     }
 
     // 批量新增按钮
     const handleBatchAdd = () => {
-        setFormOpen(true)
+        setBatchAddFormOpen(true)
+    }
+    // 新增测试用例集合
+    const handleAdd = () => {
+        setAddFormOpen(true)
     }
 
-    // 新增表单关闭
+    // 新增批量表单关闭
+    const onBatchCancel = () => {
+        setBatchAddFormOpen(false)
+    }
+    // 新增TCS表单关闭
     const onCancel = () => {
-        setFormOpen(false)
+        setAddFormOpen(false)
     }
 
     return (
         <>
             <div className={"caseset-container"}>
-                <Button className={"caseset-button-wrapper"}
+                <Button className={"caseset-batch-add-button-wrapper"}
                         icon={<PlusOutlined/>}
                         type={"primary"}
                         onClick={() => handleBatchAdd()}>
                     新增测试用例（excel批量)
                 </Button>
+                <Button
+                    className={"caseset-add-button-wrapper"}
+                    icon={<PlusOutlined/>}
+                    type={"primary"}
+                    onClick={() => handleAdd()}>
+                    新增测试用例
+                </Button>
             </div>
-            <BatchUploadFormModal
-                open={formOpen}
+            <AddTCSForm
+                open={addFormOpen}
                 onCreate={onCreate}
                 onCancel={onCancel}>
+            </AddTCSForm>
+            <BatchUploadFormModal
+                open={batchAddFormOpen}
+                onCreate={onBatchCreate}
+                onCancel={onBatchCancel}>
             </BatchUploadFormModal>
 
             <Table

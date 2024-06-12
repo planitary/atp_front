@@ -209,7 +209,9 @@ const UpdateCaseSetDrawer = ({drawerVisible, editData, handleCloseIn, handleClos
                             tooltip={"用例集合执行时，将按照列表顺序依次对接口进行调用，可对行进行拖曳更改顺序"}
                         >
                             {/*todo:// 拖曳排序放后面实现吧*/}
-                            <TCSInterfaceTable sourceData={caseSetInfo.interfaceInfoSIPDTOS} setNewData={handleNewData} />
+                            <TCSInterfaceTable sourceData={caseSetInfo.interfaceInfoSIPDTOS}
+                                               setNewData={handleNewData}
+                            projectId={caseSetInfo.projectId}/>
                         </Form.Item>
                     </Row>
                     <Row gutter={10}>

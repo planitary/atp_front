@@ -75,7 +75,7 @@ const CollectionCreateForm = ({form,onChange}) => {
                             },
                         ]}
                     >
-                        <ProjectSelectorSingle onchange={onChange}/>
+                        <ProjectSelectorSingle onchange={onChange} width={200}/>
                     </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -161,7 +161,8 @@ const CollectionCreateFormInterfaceModal = ({open, onCreate, onCancel}) => {
 
     }
     const handleChange = (value) => {
-        setProjectName(value);
+        console.log(value)
+        setProjectName(value.value);
     }
     return (
         <Modal

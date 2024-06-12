@@ -1,12 +1,17 @@
 .caseset-container{
   margin-bottom: 10px;
+  display: block;
 }
 
-.caseset-button-wrapper {
+.caseset-batch-add-button-wrapper {
   left: 80%;
   margin-left: 10px;
 }
 
+.caseset-add-button-wrapper {
+  left: 50%;
+  margin-left: 10px;
+}
 .custom-batch-add-modal{
   margin-bottom: 20px;
   color: gray;

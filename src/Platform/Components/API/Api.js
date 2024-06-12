@@ -149,9 +149,10 @@ async function getCaseSetDetail(setId) {
 }
 
 // 通过名称获取接口
-async function getInterfaceByName(interfaceName) {
+async function getInterfaceByName(interfaceName,projectId) {
     const reqBody = {
-        interfaceName: interfaceName
+        interfaceName: interfaceName,
+        projectId: projectId
     }
     const url = 'http://localhost:8080/interface/getInterfaceDetailByName';
     let res = "";

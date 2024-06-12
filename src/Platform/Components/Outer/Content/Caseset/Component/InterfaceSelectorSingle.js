@@ -4,14 +4,15 @@ import { getInterfaceByName } from "../../../../API/Api";
 let timeout;
 let currentValue;
 
-const fetch = (value, callback) => {
+
+const fetch = (value, callback,projectId) => {
     if (timeout) {
         clearTimeout(timeout);
         timeout = null;
     }
     currentValue = value;
     const getValues = () => {
-        getInterfaceByName(value)
+        getInterfaceByName(value,projectId)
             .then((d) => {
                 if (currentValue === value) {
                     const result = d.data.data;
@@ -35,7 +36,7 @@ const SearchInput = (props) => {
     const [data, setData] = useState([]);
     const [value, setValue] = useState('');
     const handleSearch = (newValue) => {
-        fetch(newValue, setData);
+        fetch(newValue, setData,props.projectId);
     };
     const handleChange = (newValue) => {
         setValue(newValue);
@@ -62,12 +63,13 @@ const SearchInput = (props) => {
     );
 };
 
-const InterfaceSelectorSingle = ({ onChange, onBlur }) => (
+const InterfaceSelectorSingle = ({ onChange, onBlur,projectId }) => (
     <SearchInput
         placeholder="请输入接口名进行查询"
         style={{ width: 150 }}
         onChange={onChange}
         onBlur={onBlur}
+        projectId={projectId}
     />
 );
 

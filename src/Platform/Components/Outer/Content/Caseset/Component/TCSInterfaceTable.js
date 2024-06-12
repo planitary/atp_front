@@ -77,7 +77,7 @@ const EditableCell = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-const TCSInterfaceTable = ({ sourceData,setNewData }) => {
+const TCSInterfaceTable = ({ sourceData,setNewData,projectId }) => {
     const [data, setData] = useState(sourceData);
     const [count, setCount] = useState(sourceData.length);
 
@@ -85,8 +85,8 @@ const TCSInterfaceTable = ({ sourceData,setNewData }) => {
         const newData = {
             interfaceId: `new_${count}`, // 确保每个新数据有唯一的 ID
             interfaceName: '',
-            interfaceUrl: '/new/ops',
-            remark: '测试',
+            interfaceUrl: '',
+            remark: '',
             requestBody: '',
         };
         setData([...data, newData]);
@@ -140,6 +140,7 @@ const TCSInterfaceTable = ({ sourceData,setNewData }) => {
                 text === "" ? (
                     <InterfaceSelectorSingle onBlur={() => handleSave(record)}
                                              onChange={handleSelectChange}
+                                             projectId={projectId}
                     />
                 ) : (
                     <a>{text}</a>
