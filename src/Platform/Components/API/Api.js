@@ -66,6 +66,19 @@ async function addProject(project) {
     return res
 }
 
+// 插入用例
+async function addTCS(TCSInfo){
+    const url = "http://localhost:8080/caseSet/insertCaseSet"
+    let res = "";
+    try {
+        res = await axios.post(url,TCSInfo);
+    }catch (error){
+        res = error.response;
+    }
+    return res;
+}
+
+
 async function addInterface(interfaceDTO) {
     const url = "http://localhost:8080/interface/addInterface"
     let res = "";
@@ -202,5 +215,5 @@ async function getTCSTemplate() {
 
 export {
     updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
-    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplate
+    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplate,addTCS
 }

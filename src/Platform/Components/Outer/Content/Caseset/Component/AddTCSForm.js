@@ -5,8 +5,8 @@ import TextArea from "antd/es/input/TextArea";
 import React, {useState} from "react";
 import {Option} from "antd/es/mentions";
 import TCSInterfaceTable from "./TCSInterfaceTable";
-import {addInterface} from "../../../../API/Api";
-import {GetInterfaceList} from "../../../Store/Modules/ProjectStore";
+import {addInterface, addTCS} from "../../../../API/Api";
+import {GetCaseSetList, GetInterfaceList} from "../../../Store/Modules/ProjectStore";
 
 // 新增TCS对象
 const TCSInfo = {
@@ -19,7 +19,7 @@ const TCSInfo = {
     extractParamDTOS: [{}]
 }
 
-const TCSAddCreateForm = ({form, onChange,setInterfaceList,projectInfo}) => {
+const TCSAddCreateForm = ({form, onChange, setInterfaceList, projectInfo}) => {
     console.log(projectInfo)
 
     // 新增时的原始数据
@@ -49,7 +49,7 @@ const TCSAddCreateForm = ({form, onChange,setInterfaceList,projectInfo}) => {
                 </Col>
                 <Col span={12}>
                     <Form.Item
-                        name="projectInfo"
+                        name="projectName"
                         label="集合所属项目"
                         rules={[
                             {
@@ -58,7 +58,7 @@ const TCSAddCreateForm = ({form, onChange,setInterfaceList,projectInfo}) => {
                             },
                         ]}
                         tooltip={"请选择当前集合所属的项目，注意，项目一旦选择后无法更改!"}
-                        >
+                    >
                         <ProjectSelectorSingle onchange={onChange} width={400}/>
                     </Form.Item>
                 </Col>
@@ -120,7 +120,7 @@ const TCSAddCreateForm = ({form, onChange,setInterfaceList,projectInfo}) => {
                     <TCSInterfaceTable sourceData={sourceData}
                                        setNewData={handleNewData}
                                        projectId={projectInfo.id}
-                                       />
+                    />
                 </Form.Item>
             </Row>
             <Form.Item
@@ -141,12 +141,13 @@ const TCSAddCreateForm = ({form, onChange,setInterfaceList,projectInfo}) => {
 
 const AddTCSForm = ({open, onCreate, onCancel}) => {
     const [form] = Form.useForm();
+    const dispatch = useDispatch()
     const handleChange = () => {
         return 1
     }
 
-    const [interfaceList,setInterfaceList] = useState("")
-    const [projectInfo,setProjectInfo] = useState("")
+    const [interfaceList, setInterfaceList] = useState("")
+    const [projectInfo, setProjectInfo] = useState("")
     const getInterfaceList = (values) => {
         console.log(values)
         setInterfaceList(values)
@@ -158,29 +159,37 @@ const AddTCSForm = ({open, onCreate, onCancel}) => {
 
     // 获取表单输入值并发起调用
     const handleFormInfo = async () => {
+        form.setFieldValue("projectName",projectInfo.value)
+        form.setFieldValue("interfaceList",interfaceList)
         // form.setFieldValue("projectName",projectName)
-        console.log("interfaceList:",interfaceList)
-        console.log("projectInfo",projectInfo)
-        // try {
-        //     await form.validateFields()
-        //     TCSInfo.setName = form.getFieldValue("setName")
-        //     TCSInfo.setWeight = form.getFieldValue("setWeight")
-        //     TCSInfo.remark = form.getFieldValue("TCSInfo")
-        //     TCSInfo.owner = form.getFieldValue("owner")
-        //     TCSInfo.interfaceIds = form.getFieldValue("remark")
-        //     console.log("interfaceDTO:", interfaceDTO)
-        //     addInterface(interfaceDTO).then(res => {
-        //         if (res.data.code === '0') {
-        //             message.success('新增成功!');
-        //             // 新增完毕后，刷新列表
-        //             dispatch(GetInterfaceList(1, 10))
-        //             onCancel();
-        //         } else {
-        //             message.error(res.data.errMsg)
-        //         }
-        //     })
-        // } catch (error) {
-        //     message.error("请填写必填项")
+        console.log("interfaceList:", interfaceList)
+        console.log("projectInfo", projectInfo)
+        // 确保 TCSInfo.interfaceIds 是一个数组
+        TCSInfo.interfaceIds = TCSInfo.interfaceIds || [];
+        interfaceList.forEach(item => {
+            TCSInfo.interfaceIds.push(item.interfaceId);
+        });
+        TCSInfo.projectId = projectInfo.id
+        try {
+            await form.validateFields()
+            TCSInfo.setName = form.getFieldValue("setName")
+            TCSInfo.setWeight = form.getFieldValue("setWeight")
+            TCSInfo.remark = form.getFieldValue("remark")
+            TCSInfo.owner = form.getFieldValue("owner")
+            console.log("TCSInfo:", TCSInfo)
+            addTCS(TCSInfo).then(res => {
+                if (res.data.code === '0') {
+                    message.success('新增成功!');
+                    // 新增完毕后，刷新列表
+                    dispatch(GetCaseSetList(1, 10))
+                    onCancel();
+                } else {
+                    message.error(res.data.errMsg)
+                }
+            })
+        } catch (error) {
+            message.error("请填写必填项")
+        }
     }
 
     return (
