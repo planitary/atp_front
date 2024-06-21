@@ -11,17 +11,24 @@
   width: 35%;
 }
 
+.interface-top-clear-button{
+  left: 61%;
+  margin-right: 2px;
+}
 .interface-top-confirm-button{
-  left: 79%;
+  left: 62%;
+  margin-left: 2px;
 }
 
-.interface-top-clear-button{
-  left: 78%;
-  margin-right: 10px;
-}
+
 .interface-top-add-button{
-  left: 80%;
-  margin-left: 10px;
+  left: 64%;
+  margin-left: 2px;
+}
+.interface-top-batch-add-button{
+  left: 450%;
+  margin-left: 2px;
+
 }
 .container {
   display: flex;

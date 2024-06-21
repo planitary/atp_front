@@ -11,6 +11,7 @@ import AddInterfaceDrawer from "./Component/AddInterfaceDrawer";
 import CollectionCreateFormModal from "../Project/Component/CollectionCreateForm";
 import CollectionCreateFormInterface from "./Component/CollectionCreateFormInterface";
 import CollectionCreateFormInterfaceModal from "./Component/CollectionCreateFormInterface";
+import InterfaceAddButton from "./Component/InterfaceAddButton";
 
 const {confirm} = Modal;
 
@@ -395,7 +396,7 @@ const InterfaceList = () => {
                 </div>
             </div>
 
-            <div style={{marginBottom: "10px"}}>
+            <div  style={{marginBottom: "10px"}}>
                 <Button type={"default"} onClick={() => clearButtonHandle()}
                         className={"interface-top-clear-button"}>重置</Button>
 
@@ -407,6 +408,7 @@ const InterfaceList = () => {
                         icon={<PlusOutlined/>}
                         onClick={() => setFormOpen(true)}
                 >新增接口</Button>
+                <InterfaceAddButton myClassName="interface-top-batch-add-button"/>
             </div>
             <CollectionCreateFormInterfaceModal
                 open={formOpen}
