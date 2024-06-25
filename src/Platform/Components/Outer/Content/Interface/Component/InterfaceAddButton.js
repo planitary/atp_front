@@ -32,7 +32,6 @@ const menuProps = {
     onClick: handleMenuClick,
 };
 const InterfaceAddButton = ({myClassName}) => (
-    <Space wrap>
 
         <Dropdown menu={menuProps} className={myClassName}>
             <Button type={"primary"} icon={<ImportOutlined/>}>
@@ -43,6 +42,5 @@ const InterfaceAddButton = ({myClassName}) => (
             </Button>
         </Dropdown>
 
-    </Space>
 );
 export default InterfaceAddButton;
