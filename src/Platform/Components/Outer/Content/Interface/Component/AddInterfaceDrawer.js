@@ -14,7 +14,6 @@ const AddInterfaceDrawer = ({drawerVisible, editData, handleCloseIn, handleClose
 
     const interfaceInfo = {...editData}
     const updateDTO = {...interfaceInfo}
-    console.log(interfaceInfo)
     const [form] = Form.useForm();
 
     // 填充表单字段值（注意由于form被useForm管理,所以通常的设置默认值的方法不管用)

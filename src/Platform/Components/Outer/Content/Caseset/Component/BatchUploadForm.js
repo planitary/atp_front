@@ -1,7 +1,7 @@
 import {Button, Divider, Form, Modal} from "antd";
 import {useDispatch} from "react-redux";
 import React, {useState} from "react";
-import {getTCSTemplate} from "../../../../API/Api";
+import {getTCSTemplate, getTCSTemplateCommon} from "../../../../API/Api";
 import axios from "axios";
 import UploadWithProgress from "./UploadWithProgress";
 import {DownloadOutlined} from "@ant-design/icons";
@@ -16,7 +16,7 @@ const BathUploadForm = ({form,onChange}) => {
                 >
                 <Button type="primary"
                         icon={<DownloadOutlined />}
-                        onClick={() => getTCSTemplate()}>下载模板(.xlsx)</Button>
+                        onClick={() => getTCSTemplateCommon('EX002')}>下载模板(.xlsx)</Button>
             </Form.Item>
 
             <Form.Item
@@ -29,17 +29,6 @@ const BathUploadForm = ({form,onChange}) => {
     )
 }
 
-// 下载批量新增用例集合模板
-const res = async function getTCSTemplate() {
-    const url = 'http://localhost:8080/exe/excel/getTestCaseTemplate'
-    let res = "";
-    try {
-        res = await axios.post(url);
-    } catch (error){
-        res = error.response
-    }
-    return res;
-}
 
 const BatchUploadFormModal = ({open,onCreate,onCancel}) => {
     const [form] = Form.useForm();

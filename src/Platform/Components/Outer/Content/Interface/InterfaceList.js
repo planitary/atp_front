@@ -8,10 +8,9 @@ import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Sto
 import "./InterfaceList.scss"
 import ProjectSelectorMultiple from "./Component/ProjectSelectorMultiple";
 import AddInterfaceDrawer from "./Component/AddInterfaceDrawer";
-import CollectionCreateFormModal from "../Project/Component/CollectionCreateForm";
-import CollectionCreateFormInterface from "./Component/CollectionCreateFormInterface";
 import CollectionCreateFormInterfaceModal from "./Component/CollectionCreateFormInterface";
 import InterfaceAddButton from "./Component/InterfaceAddButton";
+import BatchUploadInterfaceForm from "./Component/BatchUpload/BatchUploadInterfaceForm";
 
 const {confirm} = Modal;
 
@@ -344,6 +343,8 @@ const InterfaceList = () => {
 
     const [interfaceNameValue, setInterfaceNameValue] = useState('');
     const [interfaceUrlValue, setInterfaceUrlValue] = useState('');
+    // 批量新增按钮菜单控制
+    const [selectedForm,setSelectedForm] = useState(null)
 
     // 重置按钮清空事件
     const clearButtonHandle = () => {
@@ -355,12 +356,10 @@ const InterfaceList = () => {
         setInterfaceUrlValue('');
     }
 
-    const [selectedValue, setSelectedValue] = useState(null);
-
-    const handleClearSelection = () => {
-        setSelectedValue(null);
+    // 批量新增按钮的状态控制（供子组件调用）
+    const handleMenuClick = (key) => {
+        setSelectedForm(key);
     }
-
 
     return (
         <>
@@ -408,13 +407,17 @@ const InterfaceList = () => {
                         icon={<PlusOutlined/>}
                         onClick={() => setFormOpen(true)}
                 >新增接口</Button>
-                <InterfaceAddButton myClassName="interface-top-batch-add-button"/>
+
+                <InterfaceAddButton myClassName="interface-top-batch-add-button" onMenuClick={handleMenuClick}/>
             </div>
             <CollectionCreateFormInterfaceModal
                 open={formOpen}
                 onCreate={onCreate}
                 onCancel={onCancel}>
             </CollectionCreateFormInterfaceModal>
+
+            {selectedForm && <BatchUploadInterfaceForm formType={selectedForm}
+                                                       open={true} onCancel={() => setSelectedForm(null)} />}
 
             <Table
                 columns={columns}

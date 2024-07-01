@@ -1,16 +1,5 @@
 import axios from "axios";
 
-const projectInfo = {
-    projectId: "",
-    projectName: "",
-    projectUrl: "",
-    remark: "",
-    projectGroup: "",
-    projectOwner: "",
-    projectLevel: "",
-    version: 0
-}
-
 
 // 更新项目
 async function updateProject(projectInfo) {
@@ -212,8 +201,59 @@ async function getTCSTemplate() {
     return res;
 }
 
+// 下载通用模板
+async function getTCSTemplateCommon(bizCode) {
+    const reqBody = {
+        bizCode: bizCode,
+    };
+    console.log(bizCode);
+    let res = ""
+    try {
+        res = await axios.post("http://localhost:8080/exe/excel/getTestCaseTemplateCommon", reqBody, { responseType: 'blob' });
+
+        // 创建一个URL指向Blob对象
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+
+        // 创建一个隐藏的<a>元素，并设置其href属性为刚创建的URL
+        const link = document.createElement('a');
+        link.href = url;
+
+        // 提取文件名
+        const contentDisposition = res.headers['content-disposition'];
+        console.log("contentDisposition", contentDisposition);
+
+        let fileName = 'default.xlsx';
+        if (contentDisposition) {
+            const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (fileNameMatch && fileNameMatch[1]) {
+                fileName = fileNameMatch[1];
+            }
+         }else {
+            let prefix = ''
+            if (bizCode === 'EX001'){
+                prefix = 'BATCH_ADD_INTERFACE'
+            }
+            else if (bizCode === 'EX002'){
+                prefix = 'BATCH_ADD_TCS'
+            }
+            else if (bizCode === 'EX003'){
+                prefix = 'BATCH_ADD_PROJECT'
+            }
+            fileName = prefix + "_" + Date.now() +".xlsx"
+        }
+
+        link.setAttribute('download', fileName); // 设置下载文件的名字
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    } catch (error){
+        res = error.response
+    }
+    return res;
+}
+
 
 export {
     updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
-    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplate,addTCS
+    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplateCommon,addTCS
 }
