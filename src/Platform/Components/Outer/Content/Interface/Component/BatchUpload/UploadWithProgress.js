@@ -23,7 +23,7 @@ const props = {
             '0%': '#108ee9',
             '100%': '#87d068',
         },
-        strokeWidth: 3,
+        size: 3,
         format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
     },
 };

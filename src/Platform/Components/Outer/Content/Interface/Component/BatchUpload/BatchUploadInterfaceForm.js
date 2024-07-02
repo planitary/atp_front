@@ -1,39 +1,66 @@
-import {Button, Divider, Form, Modal} from 'antd';
-import {useDispatch} from 'react-redux';
-import React, {useState} from 'react';
-import {DownloadOutlined} from '@ant-design/icons';
+import { Button, Form, Modal } from 'antd';
+import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { DownloadOutlined } from '@ant-design/icons';
 import ProjectSelectorSingle from '../ProjectSelectorSingle';
-import UploadWithProgress from './UploadWithProgress'
-import {getTCSTemplateCommon} from "../../../../../API/Api";
+import UploadWithProgress from './UploadWithProgress';
+import { getTCSTemplateCommon } from "../../../../../API/Api";
+import Input from "antd/es/input/Input";
 
-const UploadInterfaceForm = ({form, onChange}) => {
+const UploadInterfaceForm = ({ form, onChange, formType }) => {
+    const renderFormContent = () => {
+        switch (formType) {
+            case '1':
+                return (
+                    <>
+                        <Form.Item name="projectId" label="请先选择项目名称"
+                                   rules={[{ required: true }]}>
+                            <ProjectSelectorSingle width={400} onchange={onChange} />
+                        </Form.Item>
+                        <Form.Item name="batchButton" label="下载批量上传模板">
+                            <Button type="primary" icon={<DownloadOutlined />} onClick={() => getTCSTemplateCommon('EX001')}>
+                                下载模板(.xlsx)
+                            </Button>
+                        </Form.Item>
+                        <Form.Item name="upload" label="选择文件">
+                            <UploadWithProgress />
+                        </Form.Item>
+                    </>
+                );
+            case '2':
+                return (
+                    <>
+                        <Form.Item name="jsonInput" label="请输入JSON">
+                            <Input.TextArea rows={4} />
+                        </Form.Item>
+                        <Form.Item name="jsonUpload" label="选择文件">
+                            <UploadWithProgress />
+                        </Form.Item>
+                    </>
+                );
+            case '3':
+                return (
+                    <>
+                        <Form.Item name="swaggerUrl" label="Swagger URL">
+                            <Input />
+                        </Form.Item>
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <Form layout="vertical" form={form} name="batchAddModal">
-            <Form.Item name="projectId" label="请先选择项目名称"
-                       rules={[
-                           {
-                               required: true,
-                           },
-                       ]}>
-                <ProjectSelectorSingle width={400} onchange={onChange}/>
-            </Form.Item>
-            <Form.Item name="batchButton" label="下载批量上传模板">
-                <Button type="primary" icon={<DownloadOutlined/>} onClick={() => getTCSTemplateCommon('EX001')}>
-                    下载模板(.xlsx)
-                </Button>
-            </Form.Item>
-
-            <Form.Item name="upload" label="选择文件">
-                <UploadWithProgress/>
-            </Form.Item>
+            {renderFormContent()}
         </Form>
     );
 };
 
-const BatchUploadInterfaceForm = ({open, onCreate, onCancel, formType}) => {
+const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const [fileName, setFileName] = useState('');
     const [projectName, setProjectName] = useState('');
 
     const handleChange = (value) => {
@@ -42,7 +69,6 @@ const BatchUploadInterfaceForm = ({open, onCreate, onCancel, formType}) => {
     };
 
     let title;
-    console.log(formType)
     switch (formType) {
         case '1':
             title = '通过Excel新增接口';
@@ -63,11 +89,11 @@ const BatchUploadInterfaceForm = ({open, onCreate, onCancel, formType}) => {
             title={<span className="custom-batch-add-modal">{title}</span>}
             okText="确认"
             cancelText="取消"
-            okButtonProps={{autoFocus: true}}
+            okButtonProps={{ autoFocus: true }}
             onCancel={onCancel}
             destroyOnClose
         >
-            <UploadInterfaceForm form={form} onChange={handleChange}/>
+            <UploadInterfaceForm form={form} onChange={handleChange} formType={formType} />
         </Modal>
     );
 };
