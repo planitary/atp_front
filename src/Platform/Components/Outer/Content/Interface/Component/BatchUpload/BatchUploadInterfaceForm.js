@@ -7,7 +7,7 @@ import UploadWithProgress from './UploadWithProgress';
 import { getTCSTemplateCommon } from "../../../../../API/Api";
 import Input from "antd/es/input/Input";
 
-const UploadInterfaceForm = ({ form, onChange, formType }) => {
+const UploadInterfaceForm = ({ form, onChange, formType ,projectId}) => {
     const renderFormContent = () => {
         switch (formType) {
             case '1':
@@ -23,7 +23,7 @@ const UploadInterfaceForm = ({ form, onChange, formType }) => {
                             </Button>
                         </Form.Item>
                         <Form.Item name="upload" label="选择文件">
-                            <UploadWithProgress />
+                            <UploadWithProgress projectId={projectId}/>
                         </Form.Item>
                     </>
                 );
@@ -61,11 +61,11 @@ const UploadInterfaceForm = ({ form, onChange, formType }) => {
 const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const [projectName, setProjectName] = useState('');
+    const [projectId, setProjectId] = useState('');
 
     const handleChange = (value) => {
         console.log(value);
-        setProjectName(value.value);
+        setProjectId(value.id);
     };
 
     let title;
@@ -93,7 +93,7 @@ const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
             onCancel={onCancel}
             destroyOnClose
         >
-            <UploadInterfaceForm form={form} onChange={handleChange} formType={formType} />
+            <UploadInterfaceForm form={form} onChange={handleChange} formType={formType} projectId={projectId} />
         </Modal>
     );
 };
