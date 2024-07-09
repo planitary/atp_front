@@ -15,7 +15,7 @@ const UploadWithProgress = ({ projectId }) => {
             formData.append('file', file);
             formData.append('projectId', projectId);
 
-            axios.post('http://localhost:8080/interface/batchAddInterface', formData, {
+            axios.post('http://localhost:8080/interface/uploadInterfaceByExcelhttp://localhost:8080/interface/uploadInterfaceByExcel', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
