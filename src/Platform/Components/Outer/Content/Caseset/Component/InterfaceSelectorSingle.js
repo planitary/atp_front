@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select } from 'antd';
+import { Select ,message} from 'antd';
 import { getInterfaceByName } from "../../../../API/Api";
 let timeout;
 let currentValue;
@@ -16,12 +16,18 @@ const fetch = (value, callback,projectId) => {
             .then((d) => {
                 if (currentValue === value) {
                     const result = d.data.data;
-                    const data = result.map((item) => ({
-                        value: item.interfaceName,
-                        text: item.interfaceName,
-                        ...item  // 将item的其他属性也包括进来
-                    }));
-                    callback(data);
+                    console.log(result)
+                    if (result.length === 0)
+                        // message.error("当前项目不存在此接口!").then(currentValue === "")
+                        console.log(1)
+                    else {
+                        const data = result.map((item) => ({
+                            value: item.interfaceName,
+                            text: item.interfaceName,
+                            ...item  // 将item的其他属性也包括进来
+                        }));
+                        callback(data);
+                    }
                 }
             });
     };

@@ -166,6 +166,19 @@ async function getInterfaceByName(interfaceName,projectId) {
     return res;
 }
 
+// 批量添加接口
+async function batchAddInterface(interfaceInfoList){
+    const url = 'http://localhost:8080/interface/batchAddInterface';
+    let res = "";
+    try {
+        res = await axios.post(url,interfaceInfoList);
+    }catch (error){
+        res = error.response
+    }
+    return res;
+
+}
+
 // 下载批量新增用例集合模板
 async function getTCSTemplate() {
     let res = "";
@@ -255,5 +268,5 @@ async function getTCSTemplateCommon(bizCode) {
 
 export {
     updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
-    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplateCommon,addTCS
+    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplateCommon,addTCS,batchAddInterface
 }

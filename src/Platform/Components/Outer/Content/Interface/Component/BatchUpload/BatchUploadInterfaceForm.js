@@ -1,20 +1,21 @@
-import { Button, Form, Modal } from 'antd';
+import {Button, Form, message, Modal} from 'antd';
 import { useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import { DownloadOutlined } from '@ant-design/icons';
 import ProjectSelectorSingle from '../ProjectSelectorSingle';
 import UploadWithProgress from './UploadWithProgress';
-import { getTCSTemplateCommon } from "../../../../../API/Api";
+import {batchAddInterface, getTCSTemplateCommon} from "../../../../../API/Api";
 import Input from "antd/es/input/Input";
+import {GetInterfaceList} from "../../../../Store/Modules/ProjectStore";
 
-const UploadInterfaceForm = ({ form, onChange, formType ,projectId}) => {
+const UploadInterfaceForm = ({ form, onChange, formType ,projectId,getList}) => {
     const renderFormContent = () => {
         switch (formType) {
             case '1':
                 return (
                     <>
-                        <Form.Item name="projectId" label="请先选择项目名称"
-                                   rules={[{ required: true }]}>
+                        <Form.Item name="projectName" label="请先选择项目名称"
+                                   rules={[{ required: true,message:"请填写项目名称"}]}>
                             <ProjectSelectorSingle width={400} onchange={onChange} />
                         </Form.Item>
                         <Form.Item name="batchButton" label="下载批量上传模板">
@@ -23,7 +24,7 @@ const UploadInterfaceForm = ({ form, onChange, formType ,projectId}) => {
                             </Button>
                         </Form.Item>
                         <Form.Item name="upload" label="选择文件">
-                            <UploadWithProgress projectId={projectId}/>
+                            <UploadWithProgress projectId={projectId} getListInfo={getList}/>
                         </Form.Item>
                     </>
                 );
@@ -58,15 +59,44 @@ const UploadInterfaceForm = ({ form, onChange, formType ,projectId}) => {
     );
 };
 
+
+
 const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const [interfaceList,setInterfaceList] = useState([])
     const [projectId, setProjectId] = useState('');
+    const [projectName,setProjectName] = useState('')
 
     const handleChange = (value) => {
         console.log(value);
         setProjectId(value.id);
+        setProjectName(value.value)
     };
+    const getInterfaceList = (value) => {
+        setInterfaceList(value)
+    }
+
+
+    const handleOk = async () => {
+        form.setFieldValue("projectName",projectName)
+        try {
+            await form.validateFields()
+            batchAddInterface(interfaceList).then(res => {
+                if (res.data.code === '0'){
+                    message.success("批量新增接口成功");
+                    // 新增完毕后，刷新列表
+                    dispatch(GetInterfaceList(1,10))
+                    onCancel()
+                }else {
+                    message.error(res.data.errMsg)
+                }
+            })
+        }catch (error) {
+            message.error("请填写必填项")
+        }
+
+    }
 
     let title;
     switch (formType) {
@@ -91,9 +121,15 @@ const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
             cancelText="取消"
             okButtonProps={{ autoFocus: true }}
             onCancel={onCancel}
+            onOk={handleOk}
             destroyOnClose
         >
-            <UploadInterfaceForm form={form} onChange={handleChange} formType={formType} projectId={projectId} />
+            <UploadInterfaceForm form={form} onChange={handleChange}
+                                 formType={formType}
+                                 projectId={projectId}
+                                 getList={getInterfaceList}
+
+            />
         </Modal>
     );
 };

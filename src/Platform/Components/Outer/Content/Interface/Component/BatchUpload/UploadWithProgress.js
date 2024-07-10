@@ -3,7 +3,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import React from 'react';
 import axios from "axios";
 
-const UploadWithProgress = ({ projectId }) => {
+const UploadWithProgress = ({ projectId ,getListInfo}) => {
     const props = {
         name: 'file',
         action: 'http://localhost:8080/interface/batchAddInterface',
@@ -15,7 +15,7 @@ const UploadWithProgress = ({ projectId }) => {
             formData.append('file', file);
             formData.append('projectId', projectId);
 
-            axios.post('http://localhost:8080/interface/uploadInterfaceByExcelhttp://localhost:8080/interface/uploadInterfaceByExcel', formData, {
+            axios.post('http://localhost:8080/interface/uploadInterfaceByExcel', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -23,6 +23,7 @@ const UploadWithProgress = ({ projectId }) => {
                 if (response.data.code === '0') {
                     message.success(`${file.name} 上传成功!`);
                     console.log(response.data);
+                    getListInfo(response.data.data)
                 }
                 else {
                     message.error(response.data.errMsg)
