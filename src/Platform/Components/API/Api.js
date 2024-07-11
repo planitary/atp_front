@@ -79,6 +79,20 @@ async function addInterface(interfaceDTO) {
     return res
 }
 
+async function deleteInterface(interfaceId){
+    const url = "http://localhost:8080/interface/deleteInterfaceById"
+    const reqBody = {
+        interfaceId: interfaceId
+    }
+    let res = "";
+    try {
+        res = await axios.post(url,reqBody);
+    }catch (error){
+        res = error.response
+    }
+    return res
+}
+
 async function deleteProject(projectId) {
     const url = "http://localhost:8080/project/deleteProject"
     const reqBody = {
@@ -268,5 +282,5 @@ async function getTCSTemplateCommon(bizCode) {
 
 export {
     updateProject, deleteProject, addProject, findInterfaceList, updateInterface, addInterface, getProject
-    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplateCommon,addTCS,batchAddInterface
+    , getCaseSetDetail, updateCaseSet, getInterfaceByName,getTCSTemplateCommon,addTCS,batchAddInterface,deleteInterface
 }

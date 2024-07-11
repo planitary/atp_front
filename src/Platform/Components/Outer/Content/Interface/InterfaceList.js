@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Input, message, Modal, Space, Table, Tooltip} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
-import {deleteProject} from "../../../API/Api";
+import {deleteInterface, deleteProject} from "../../../API/Api";
 import {ExclamationCircleOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {FindInterfaceByFilter, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import "./InterfaceList.scss"
@@ -151,9 +151,9 @@ const InterfaceList = () => {
         setDrawerVisible(true)
     }
 
-    const handleOk = (projectId) => {
+    const handleOk = (interfaceId) => {
         // setIsModalOpen(false);
-        deleteProject(projectId).then(res => {
+        deleteInterface(interfaceId).then(res => {
             if (res.data.code === '0') {
                 message.success(res.data.data);
                 dispatch(GetInterfaceList(currentPage, 10));
@@ -165,15 +165,16 @@ const InterfaceList = () => {
 
     // 删除按钮的回调
     const handleDeleteClick = (record) => {
-        const currentProjectId = getCurrentProjectId(record)
+        const currentInterfaceId = record.interfaceId;
+        console.log(currentInterfaceId)
         confirm({
-            title: '删除项目',
+            title: '删除接口',
             icon: <ExclamationCircleOutlined/>,
-            content: '确认要删除当前项目么?',
+            content: '确认要删除当前接口么?',
             okText: '确认',
             okType: 'danger',
             cancelText: '取消',
-            onOk: () => handleOk(currentProjectId)
+            onOk: () => handleOk(currentInterfaceId)
         })
     }
 
