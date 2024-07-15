@@ -8,7 +8,7 @@ import {batchAddInterface, getTCSTemplateCommon} from "../../../../../API/Api";
 import Input from "antd/es/input/Input";
 import {GetInterfaceList} from "../../../../Store/Modules/ProjectStore";
 
-const UploadInterfaceForm = ({ form, onChange, formType ,projectId,getList}) => {
+const UploadInterfaceForm = ({ form, onChange, formType,handleFile}) => {
     const renderFormContent = () => {
         switch (formType) {
             case '1':
@@ -24,7 +24,7 @@ const UploadInterfaceForm = ({ form, onChange, formType ,projectId,getList}) => 
                             </Button>
                         </Form.Item>
                         <Form.Item name="upload" label="选择文件">
-                            <UploadWithProgress projectId={projectId} getListInfo={getList}/>
+                            <UploadWithProgress handleFile={handleFile}/>
                         </Form.Item>
                     </>
                 );
@@ -67,6 +67,11 @@ const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
     const [interfaceList,setInterfaceList] = useState([])
     const [projectId, setProjectId] = useState('');
     const [projectName,setProjectName] = useState('')
+    const [file,setFile] = useState('')
+
+    const handleFile = (value) => {
+        setFile(value)
+    }
 
     const handleChange = (value) => {
         console.log(value);
@@ -82,7 +87,8 @@ const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
         form.setFieldValue("projectName",projectName)
         try {
             await form.validateFields()
-            batchAddInterface(interfaceList).then(res => {
+            console.log(file)
+            batchAddInterface(file,projectId).then(res => {
                 if (res.data.code === '0'){
                     message.success("批量新增接口成功");
                     // 新增完毕后，刷新列表
@@ -127,6 +133,7 @@ const BatchUploadInterfaceForm = ({ open, onCancel, formType }) => {
             <UploadInterfaceForm form={form} onChange={handleChange}
                                  formType={formType}
                                  projectId={projectId}
+                                 handleFile={handleFile}
                                  getList={getInterfaceList}
 
             />

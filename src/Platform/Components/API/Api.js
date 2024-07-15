@@ -181,11 +181,16 @@ async function getInterfaceByName(interfaceName,projectId) {
 }
 
 // 批量添加接口
-async function batchAddInterface(interfaceInfoList){
-    const url = 'http://localhost:8080/interface/batchAddInterface';
+async function batchAddInterface(file,projectId){
+    const url = 'http://localhost:8080/interface/uploadInterfaceByExcel';
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('projectId', projectId);
     let res = "";
     try {
-        res = await axios.post(url,interfaceInfoList);
+        res = await axios.post(url,formData,{headers: {
+                'Content-Type': 'multipart/form-data',
+            },});
     }catch (error){
         res = error.response
     }
