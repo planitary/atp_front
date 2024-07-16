@@ -4,6 +4,7 @@ import ProjectList from "../Content/Project/ProjectList";
 import CaseSetList from "../Content/Caseset/CaseSetList"
 import Layout from "../../Layout/Layout";
 import InterfaceList from "../Content/Interface/InterfaceList";
+import CaseSetExecute from "../Content/Caseset/CaseSetExecute";
 
 const OuterRouter = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const OuterRouter = createBrowserRouter([
             {
                 path: '/platform/casesetList',
                 element: <CaseSetList/>
+            },
+            {
+                path: '/platform/casesetExecute',
+                element: <CaseSetExecute/>
             }
         ]
     }

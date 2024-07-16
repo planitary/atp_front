@@ -10,6 +10,7 @@ import "./Platform.scss"
 import CollectionCreateForm from "../Outer/Content/Project/Component/CollectionCreateForm";
 import CollectionCreateFormModal from "../Outer/Content/Project/Component/CollectionCreateForm";
 import InterfaceList from "../Outer/Content/Interface/InterfaceList";
+import CaseSetExecute from "../Outer/Content/Caseset/CaseSetExecute";
 
 const {Header, Content} = Layout;
 
@@ -55,6 +56,7 @@ const PlatformApp = () => {
                             <Route exact path="/platform/projectList" element={<ProjectList/>}/>
                             <Route exact path="/platform/interfaceList" element={<InterfaceList/>}/>
                             <Route exact path="/platform/casesetList" element={<CaseSetList/>}/>
+                            <Route exact path="/platform/casesetExecute" element={<CaseSetExecute/>}/>
                         </Routes>
 
                     </Content>

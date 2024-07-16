@@ -215,6 +215,7 @@ const InterfaceList = () => {
 
     // 搜索筛选框默认值,传递一个对象
     let filledMap = [];
+    // const [filledMap,setFilledMap] = getDefaultMap(filledOptions)
     const getDefaultMap = (filledOptions) => {
         return filledOptions.map((item) => ({
             label: `${item.projectName}`,
@@ -355,6 +356,7 @@ const InterfaceList = () => {
         setInterfaceFindDTO(findDTO)
         setInterfaceNameValue('');
         setInterfaceUrlValue('');
+        setProjectIds("")
     }
 
     // 批量新增按钮的状态控制（供子组件调用）
