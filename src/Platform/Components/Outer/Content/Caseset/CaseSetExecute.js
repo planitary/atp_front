@@ -4,11 +4,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {GetCaseSetList, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import {InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {getCaseSetDetail} from "../../../API/Api";
-import UpdateCaseSetDrawer from "./Component/UpdateCaseSetDrawer";
-import BatchUploadFormModal from "./Component/BatchUploadForm";
+import UpdateCaseSetDrawer from "./Component/TCSList/UpdateCaseSetDrawer";
+import BatchUploadFormModal from "./Component/TCSList/BatchUploadForm";
 import "./CaseSetList.scss"
 import axios from "axios";
-import AddTCSForm from "./Component/AddTCSForm";
+import AddTCSForm from "./Component/TCSList/AddTCSForm";
+import ExeCuteDropButton from "./Component/TCSExcute/ExecuteDropButton";
 
 const CaseSetExecute = () => {
 
@@ -23,26 +24,8 @@ const CaseSetExecute = () => {
             dataIndex: 'projectName',
         },
         {
-            title: (
-                <div>
-                    权重
-                    <Tooltip title="用1-5表示当前集合在项目中的占比，权重越高，占比越高，说明集合越重要">
-                        <InfoCircleOutlined className="interface-title-icon"/>
-                    </Tooltip>
-                </div>),
-            dataIndex: 'setWeight',
-            width: '7%',
-            render: (_, record) => (
-                <>
-                    <Tag color={getTagColor(record.setWeight)} bordered={false}>
-                        {getTagText(record.setWeight)}
-                    </Tag>
-                </>
-            )
-        },
-        {
-            title: '备注',
-            dataIndex: 'remark',
+            title: '步骤数',
+            dataIndex: 'steps',
             width: '12%'
         },
 
@@ -82,17 +65,13 @@ const CaseSetExecute = () => {
             width: '15%'
         },
         {
-            title: '更新时间',
-            dataIndex: 'updateTime',
-            width: '15%'
-        },
-        {
             title: '操作',
             key: 'operation',
             render: (_, record) => (
                 <Space size="middle">
-                    <a onClick={() => handleEditClick(record)}>编辑</a>
+                    <a>执行</a>
                     <a style={{"color": "red"}}>删除</a>
+                    <ExeCuteDropButton/>
                 </Space>
             )
         }
@@ -228,12 +207,34 @@ const CaseSetExecute = () => {
         interfaceInfoSIPDTOS: []
     })
 
+    //mock数据，后续从接口取值
+    const mockData = [{
+        setName: "开票通用",
+        projectName: "BMS",
+        remark: "12",
+        setWeight: "1",
+        owner: "Stack",
+        steps:22,
+        interfaceInfoSIPDTOS: [12,23,23],
+        createTime: '-'
+    },{
+        setName: "OMS外部下单",
+        projectName: "OMS",
+        remark: "备注",
+        setWeight: "1",
+        owner: "Lynn",
+        steps: 17,
+        interfaceInfoSIPDTOS: [12,23,23],
+        createTime: '-'
+    }]
+
 
     // // 从回调中拿到数据渲染列表
     const caseSetListData = useSelector(state => state.caseSetList)
     console.log(caseSetListData)
     const resData = caseSetListData.caseSetList
-    const rowData = resData.items;
+    // const rowData = resData.items;
+    const rowData = mockData
     console.log("currentPage", currentPage)
 
     // 分页回调

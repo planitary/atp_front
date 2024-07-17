@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Select ,message} from 'antd';
-import { getInterfaceByName } from "../../../../API/Api";
+import { getInterfaceByName } from "../../../../../API/Api";
 let timeout;
 let currentValue;
 

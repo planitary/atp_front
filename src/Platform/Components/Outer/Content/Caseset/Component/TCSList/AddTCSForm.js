@@ -1,12 +1,12 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Col, Form, Input, message, Modal, Row, Select} from "antd";
-import ProjectSelectorSingle from "../../Interface/Component/ProjectSelectorSingle";
+import ProjectSelectorSingle from "../../../Interface/Component/ProjectSelectorSingle";
 import TextArea from "antd/es/input/TextArea";
 import React, {useState} from "react";
 import {Option} from "antd/es/mentions";
 import TCSInterfaceTable from "./TCSInterfaceTable";
-import {addInterface, addTCS} from "../../../../API/Api";
-import {GetCaseSetList, GetInterfaceList} from "../../../Store/Modules/ProjectStore";
+import {addInterface, addTCS} from "../../../../../API/Api";
+import {GetCaseSetList, GetInterfaceList} from "../../../../Store/Modules/ProjectStore";
 
 // 新增TCS对象
 const TCSInfo = {

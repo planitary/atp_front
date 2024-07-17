@@ -4,11 +4,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {GetCaseSetList, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
 import {InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {getCaseSetDetail} from "../../../API/Api";
-import UpdateCaseSetDrawer from "./Component/UpdateCaseSetDrawer";
-import BatchUploadFormModal from "./Component/BatchUploadForm";
+import UpdateCaseSetDrawer from "./Component/TCSList/UpdateCaseSetDrawer";
+import BatchUploadFormModal from "./Component/TCSList/BatchUploadForm";
 import "./CaseSetList.scss"
 import axios from "axios";
-import AddTCSForm from "./Component/AddTCSForm";
+import AddTCSForm from "./Component/TCSList/AddTCSForm";
 
 const CaseSetList = () => {
 

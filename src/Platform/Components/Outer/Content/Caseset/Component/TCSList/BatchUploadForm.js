@@ -1,11 +1,11 @@
 import {Button, Divider, Form, Modal} from "antd";
 import {useDispatch} from "react-redux";
 import React, {useState} from "react";
-import {getTCSTemplate, getTCSTemplateCommon} from "../../../../API/Api";
+import {getTCSTemplate, getTCSTemplateCommon} from "../../../../../API/Api";
 import axios from "axios";
 import UploadWithProgress from "./UploadWithProgress";
 import {DownloadOutlined} from "@ant-design/icons";
-import "../CaseSetList.scss"
+import "../../CaseSetList.scss"
 
 const BathUploadForm = ({form,onChange}) => {
     return (

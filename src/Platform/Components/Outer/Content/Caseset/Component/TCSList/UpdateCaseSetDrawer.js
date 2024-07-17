@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Col, Drawer, Form, Input, message, Row, Select, Space} from 'antd';
 import {useDispatch} from "react-redux";
 import axios from "axios";
-import {updateCaseSet, updateInterface, updateProject} from "../../../../API/Api";
+import {updateCaseSet, updateInterface, updateProject} from "../../../../../API/Api";
 import {Selector} from "antd-mobile";
 import TCSInterfaceTable from "./TCSInterfaceTable";
 
