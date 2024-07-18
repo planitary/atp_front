@@ -93,6 +93,7 @@ const CaseSetList = () => {
                 <Space size="middle">
                     <a onClick={() => handleEditClick(record)}>编辑</a>
                     <a style={{"color": "red"}}>删除</a>
+                    <a>维护步骤</a>
                 </Space>
             )
         }
