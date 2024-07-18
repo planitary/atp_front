@@ -133,6 +133,7 @@ const TCSInterfaceTable = ({ sourceData,setNewData,projectId }) => {
 
 
     const columns = [
+
         {
             title: '接口名',
             dataIndex: 'interfaceName',
@@ -149,15 +150,44 @@ const TCSInterfaceTable = ({ sourceData,setNewData,projectId }) => {
             width: '20%',
         },
         {
+            title: "步骤说明",
+            dataIndex: 'stepInfo',
+            render:(_,record) =>(
+                <Input></Input>
+            )
+        },
+        {
             title: '接口url',
             dataIndex: 'interfaceUrl',
         },
         {
-            title: '备注',
-            dataIndex: 'remark',
+            title: '操作方式',
+            dataIndex: 'optionType',
+            render:(_,record) =>(
+                <Select defaultValue={"接口调用"}
+                options={[
+                    {
+                        value: '接口调用',
+                        label: '接口调用',
+                    },
+                    {
+                        value: 'DB操作',
+                        label: 'DB操作',
+                    },
+                    {
+                        value: "Redis操作",
+                        label: 'Redis操作',
+                    },
+                    {
+                        value: 'RPC调用',
+                        label: 'RPC调用'
+                    }
+                ]}
+                />
+            )
         },
         {
-            title: '请求体',
+            title: '接口出参',
             dataIndex: 'requestBody',
             width: '25%',
             ellipsis: {
