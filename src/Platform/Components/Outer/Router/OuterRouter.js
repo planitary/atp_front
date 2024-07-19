@@ -5,6 +5,7 @@ import CaseSetList from "../Content/Caseset/CaseSetList"
 import Layout from "../../Layout/Layout";
 import InterfaceList from "../Content/Interface/InterfaceList";
 import CaseSetExecute from "../Content/Caseset/CaseSetExecute";
+import AddTCSFormV2 from "../Content/Caseset/Component/TCSList/AddTCSFormV2";
 
 const OuterRouter = createBrowserRouter([
     {
@@ -26,6 +27,16 @@ const OuterRouter = createBrowserRouter([
             {
                 path: '/platform/caseset/casesetExecute',
                 element: <CaseSetExecute/>
+            }
+        ]
+    },
+    {
+        path: '/platform/caseset/casesetList',
+        element: <CaseSetList/>,
+        children:[
+            {
+                path: '/platform/caseset/casesetList/edit',
+                element: <AddTCSFormV2/>,
             }
         ]
     }

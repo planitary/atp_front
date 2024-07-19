@@ -8,14 +8,17 @@ import CaseSetExecute from "../Content/Caseset/CaseSetExecute";
 import {Switch} from "antd";
 import AddTCSFormV2 from "../Content/Caseset/Component/TCSList/AddTCSFormV2";
 
-const InnerRouter = () => {
-    return (
-        <Router >
-            <Switch>
-                <Route path="/platform/caseset/casesetExecute/edit" component={AddTCSFormV2}/>
-            </Switch>
-        </Router>
-    )
-}
+const InnerRouter =  createBrowserRouter([
+    {
+        path: '/platform/caseset/casesetList',
+        element: <CaseSetList/>,
+        children:[
+            {
+                path: '/platform/caseset/casesetList/edit',
+                element: <AddTCSFormV2/>,
+            }
+        ]
+    }
+])
 
 export default InnerRouter
