@@ -16,17 +16,17 @@ function getItem(label, key, icon, children, type) {
 const AutoTestNavTitle = [
     getItem('项目', 'ATSub1', <ApartmentOutlined/>, [
         getItem('新建项目', '/addNewProject'),
-        getItem('项目列表', '/projectList'),
+        getItem('项目列表', '/project/projectList'),
     ]),
     getItem('接口', 'ATSub2', <ApiOutlined/>, [
         getItem('新建接口', 'a1'),
-        getItem('接口列表', '/interfaceList'),
+        getItem('接口列表', '/interface/interfaceList'),
         getItem('接口调用', 'a3'),
         getItem('调用记录', 'a4'),
     ]),
     getItem('测试集合','ATSub3',<FolderOutlined />,[
-        getItem('测试集合列表','/casesetList'),
-        getItem("集合执行",'/casesetExecute'),
+        getItem('测试集合列表','/caseset/casesetList'),
+        getItem("集合执行",'/caseset/casesetExecute'),
         getItem('集合维护站','c2'),
     ])
 ]

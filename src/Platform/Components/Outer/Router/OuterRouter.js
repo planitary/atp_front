@@ -12,19 +12,19 @@ const OuterRouter = createBrowserRouter([
         element: <PlatformApp/>,
         children:[
             {
-                path: '/platform/projectList',
+                path: '/platform/project/projectList',
                 element: <ProjectList/>,
             },
             {
-                path: '/platform/interfaceList',
+                path: '/platform/interface/interfaceList',
                 element: <InterfaceList/>
             },
             {
-                path: '/platform/casesetList',
+                path: '/platform/caseset/casesetList',
                 element: <CaseSetList/>
             },
             {
-                path: '/platform/casesetExecute',
+                path: '/platform/caseset/casesetExecute',
                 element: <CaseSetExecute/>
             }
         ]

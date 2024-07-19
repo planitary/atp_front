@@ -10,6 +10,7 @@ import "./CaseSetList.scss"
 import axios from "axios";
 import AddTCSForm from "./Component/TCSList/AddTCSForm";
 import ExeCuteDropButton from "./Component/TCSExcute/ExecuteDropButton";
+// import {useHistory} from 'react-router-dom'
 
 const CaseSetExecute = () => {
 
@@ -251,6 +252,7 @@ const CaseSetExecute = () => {
         return record.id
     }
 
+    // const history = useHistory();
 
     // 批量新增表单控制
     const [batchAddFormOpen, setBatchAddFormOpen] = useState(false);
@@ -284,6 +286,10 @@ const CaseSetExecute = () => {
         setAddFormOpen(false)
     }
 
+    // 新增用例
+    // const handleAddTCSClick = () =>{
+    //     history.push('/edit')
+    // }
     return (
         <>
             <div className={"caseset-container"}>

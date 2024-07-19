@@ -1,221 +1,107 @@
-import {useDispatch, useSelector} from "react-redux";
-import {Col, Form, Input, message, Modal, Row, Select} from "antd";
-import ProjectSelectorSingle from "../../../Interface/Component/ProjectSelectorSingle";
-import TextArea from "antd/es/input/TextArea";
-import React, {useState} from "react";
-import {Option} from "antd/es/mentions";
-import TCSInterfaceTable from "./TCSInterfaceTable";
-import {addInterface, addTCS} from "../../../../../API/Api";
-import {GetCaseSetList, GetInterfaceList} from "../../../../Store/Modules/ProjectStore";
+import React, { useState } from 'react';
+import { PageHeader, Steps, List, Form, Input, Button, Card } from 'antd';
 
-// 修改新增样式，用例新增时，表单只需要填写用例名称、所属项目、权重、维护人和备注，列表页额外增加一个操作（维护步骤）
-// 新增TCS对象
-const TCSInfo = {
-    setName: "",
-    interfaceIds: [],
-    remark: "",
-    setWeight: 0,
-    projectId: "",
-    owner: "",
-    extractParamDTOS: [{}]
-}
+const { Step } = Steps;
 
-const TCSAddCreateForm2 = ({form, onChange, setInterfaceList, projectInfo}) => {
-    console.log(projectInfo)
+const steps = [
+    {
+        title: 'Step 1',
+        content: (
+            <Form layout="vertical">
+                <Form.Item label="Field A">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="Field B">
+                    <Input />
+                </Form.Item>
+            </Form>
+        ),
+    },
+    {
+        title: 'Step 2',
+        content: (
+            <Form layout="vertical">
+                <Form.Item label="Field C">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="Field D">
+                    <Input />
+                </Form.Item>
+            </Form>
+        ),
+    },
+    {
+        title: 'Step 3',
+        content: (
+            <Form layout="vertical">
+                <Form.Item label="Field E">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="Field F">
+                    <Input />
+                </Form.Item>
+            </Form>
+        ),
+    },
+];
 
-    // 新增时的原始数据
-    const [sourceData, setSourceData] = useState([])
+const AddTCSFormV2 = () => {
+    const [current, setCurrent] = useState(0);
 
-    // 填充后后的新数据
-    const handleNewData = (newData) => {
-        setInterfaceList(newData)
-    }
+    const next = () => {
+        setCurrent(current + 1);
+    };
+
+    const prev = () => {
+        setCurrent(current - 1);
+    };
 
     return (
-        <Form layout="vertical" form={form} name="form_in_modal">
-            <Row gutter={23}>
-                <Col span={12}>
-                    <Form.Item
-                        name="setName"
-                        label="集合名称"
-                        rules={[
-                            {
-                                required: true,
-                                message: '请输入测试集合名称!',
-                            },
-                        ]}
-                    >
-                        <Input placeholder={"请输入测试集合名称"}/>
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item
-                        name="projectName"
-                        label="集合所属项目"
-                        rules={[
-                            {
-                                required: true,
-                                message: '请选择测试集合所属项目!',
-                            },
-                        ]}
-                        tooltip={"请选择当前集合所属的项目，注意，项目一旦选择后无法更改!"}
-                    >
-                        <ProjectSelectorSingle onchange={onChange} width={400}/>
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row gutter={16}>
-                <Col span={12}>
-                    <Form.Item
-                        name="setWeight"
-                        label="集合权重"
-                        rules={[
-                            {
-                                required: true,
-                                message: '请输入测试集合名称!',
-                            },
-                        ]}
-                        tooltip={"用1-5表示当前集合在项目中的占比，权重越高，占比越高，说明集合越重要"}
-                    >
-                        <Select placeholder="集合权重">
-                            <Option value="1">1</Option>
-                            <Option value="2">2</Option>
-                            <Option value="3">3</Option>
-                            <Option value="4">4</Option>
-                            <Option value="5">5</Option>
-                        </Select>
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item
-                        name="owner"
-                        label="负责人"
-                        rules={[
-                            {
-                                required: false,
-                            },
-                        ]}
-                    >
-                        <Select placeholder="测试集合负责人">
-                            <Option value="Zane">Zane</Option>
-                            <Option value="Molly">Molly</Option>
-                            <Option value="Cole">Cole</Option>
-                            <Option value="Stack">Stack</Option>
-                            <Option value="Noah">Noah</Option>
-                        </Select>
-                    </Form.Item>
-                </Col>
-            </Row>
-            <Row gutter={20}>
-                <Form.Item
-                    name="interfaceList"
-                    label="接口列表"
-                    rules={[
-                        {
-                            required: true,
-                            message: "请至少选择一个接口!",
-                        },
-                    ]}
-                    tooltip={"在下方列表为当前集合选择接口，输入接口名称会自动进行搜索"}
-                >
-                    <TCSInterfaceTable sourceData={sourceData}
-                                       setNewData={handleNewData}
-                                       projectId={projectInfo.id}
-                    />
-                </Form.Item>
-            </Row>
-            <Form.Item
-                name="remark"
-                label="备注"
-                rules={[
-                    {
-                        required: false,
-                    },
-                ]}
-            >
-                <Input/>
-            </Form.Item>
-        </Form>
+        <div>
+            {/*<PageHeader*/}
+            {/*    title="页面展示"*/}
+            {/*    subTitle="这是一个展示页面，不能编辑"*/}
+            {/*    style={{ borderBottom: '1px solid #f0f0f0' }}*/}
+            {/*/>*/}
+
+            <Steps current={current} style={{ margin: '20px 0' }}>
+                {steps.map((item, index) => (
+                    <Step key={index} title={item.title} />
+                ))}
+            </Steps>
+
+            <div style={{ display: 'flex' }}>
+                <List
+                    header={<div>配置预览</div>}
+                    bordered
+                    dataSource={['选项 1', '选项 2', '选项 3']}
+                    renderItem={item => <List.Item>{item}</List.Item>}
+                    style={{ width: '20%', marginRight: '20px' }}
+                />
+
+                <Card title="表单内容" style={{ width: '75%' }}>
+                    {steps[current].content}
+                    <div style={{ marginTop: '24px' }}>
+                        {current < steps.length - 1 && (
+                            <Button type="primary" onClick={() => next()}>
+                                下一步
+                            </Button>
+                        )}
+                        {current === steps.length - 1 && (
+                            <Button type="primary" onClick={() => alert('完成')}>
+                                完成
+                            </Button>
+                        )}
+                        {current > 0 && (
+                            <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                                上一步
+                            </Button>
+                        )}
+                    </div>
+                </Card>
+            </div>
+        </div>
     );
 };
 
-
-const AddTCSFormV2 = ({open, onCreate, onCancel}) => {
-    const [form] = Form.useForm();
-    const dispatch = useDispatch()
-    const handleChange = () => {
-        return 1
-    }
-
-    const [interfaceList, setInterfaceList] = useState("")
-    const [projectInfo, setProjectInfo] = useState("")
-    const getInterfaceList = (values) => {
-        console.log(values)
-        setInterfaceList(values)
-    }
-    // 项目取值
-    const fillProject = (value) => {
-        setProjectInfo(value)
-    }
-
-    // 获取表单输入值并发起调用
-    const handleFormInfo = async () => {
-        form.setFieldValue("projectName",projectInfo.value)
-        form.setFieldValue("interfaceList",interfaceList)
-        // form.setFieldValue("projectName",projectName)
-        console.log("interfaceList:", interfaceList)
-        console.log("projectInfo", projectInfo)
-        // 确保 TCSInfo.interfaceIds 是一个数组
-        TCSInfo.interfaceIds = TCSInfo.interfaceIds || [];
-        interfaceList.forEach(item => {
-            TCSInfo.interfaceIds.push(item.interfaceId);
-        });
-        TCSInfo.projectId = projectInfo.id
-        try {
-            await form.validateFields()
-            TCSInfo.setName = form.getFieldValue("setName")
-            TCSInfo.setWeight = form.getFieldValue("setWeight")
-            TCSInfo.remark = form.getFieldValue("remark")
-            TCSInfo.owner = form.getFieldValue("owner")
-            console.log("TCSInfo:", TCSInfo)
-            addTCS(TCSInfo).then(res => {
-                if (res.data.code === '0') {
-                    message.success('新增成功!');
-                    // 新增完毕后，刷新列表
-                    dispatch(GetCaseSetList(1, 10))
-                    onCancel();
-                } else {
-                    message.error(res.data.errMsg)
-                }
-            })
-        } catch (error) {
-            message.error("请填写必填项")
-        }
-    }
-
-    return (
-        <Modal
-            open={open}
-            title={"新建集合"}
-            okText="确认"
-            cancelText="取消"
-            width={950}
-            okButtonProps={{
-                autoFocus: true,
-            }}
-            onCancel={onCancel}
-            destroyOnClose
-            onOk={handleFormInfo}
-        >
-            <TCSAddCreateForm2
-                form={form}
-                onChange={fillProject}
-                // 调用子组件获取接口信息，此处调用链为Modal->TCSAddCreateForm->TCSInterfaceTable
-                setInterfaceList={getInterfaceList}
-                projectInfo={projectInfo}
-            />
-        </Modal>
-    )
-}
-
-export default AddTCSFormV2
+export default AddTCSFormV2;
