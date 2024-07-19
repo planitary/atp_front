@@ -55,7 +55,7 @@ const PlatformApp = () => {
 
                         <Routes>
                             <Route exact path="/platform/project/projectList" element={<ProjectList/>}/>
-                            <Route exact path="/platform/inteface/interfaceList" element={<InterfaceList/>}/>
+                            <Route exact path="/platform/interface/interfaceList" element={<InterfaceList/>}/>
                             <Route exact path="/platform/caseset/casesetList" element={<CaseSetList/>}/>
                             <Route exact path="/platform/caseset/casesetExecute" element={<CaseSetExecute/>}/>
                             <Route exact path="/platform/caseset/editProgress" element={<AddTCSFormV2/>}/>
