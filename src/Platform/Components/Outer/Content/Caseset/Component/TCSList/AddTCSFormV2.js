@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Layout, Steps, List, Form, Input, Button, Card, Divider, Row, Col} from 'antd';
 import {useDispatch} from "react-redux";
 import {getCaseSetDetail} from "../../../../../API/Api";
-import {ContactsTwoTone} from "@ant-design/icons";
+import {ContactsTwoTone, HourglassTwoTone} from "@ant-design/icons";
 
 const {Header, Content} = Layout;
 const {Step} = Steps;
@@ -70,10 +70,12 @@ const AddTCSFormV2 = ({tcsInfo}) => {
         createTime: "2024-06-24 19:04:27"
     }
 
-    return (<Layout style={{backgroundColor: '#fff'}}>
-            <Header style={{background: '#fff', padding: '0px', height: '160px'}}>
-                <span style={{margin: "0", fontWeight: "850", display: "flex"}}><ContactsTwoTone
-                    style={{fontSize: "20px", marginRight: "5px"}}/>基础信息</span>
+    return (
+        <Layout style={{ backgroundColor: '#fff' }}>
+            <Header style={{ background: '#fff', padding: '0px', height: '120px' }}>
+        <span style={{ margin: "0", fontWeight: "850", display: "flex", alignItems: 'center', justifyContent: 'center', height: '40px' }}>
+          <ContactsTwoTone style={{fontSize:"18px",marginRight:"5px"}}/>基础信息
+        </span>
 
                 <Form layout="horizontal">
                     <Row gutter={10}>
@@ -104,43 +106,46 @@ const AddTCSFormV2 = ({tcsInfo}) => {
                                 {mockInfo.owner}
                             </Form.Item>
                         </Col>
-
                     </Row>
                 </Form>
             </Header>
+            <Divider/>
+                <Content style={{ background: '#fff', padding: '0px'}}>
+          <span style={{ margin: "0", fontWeight: "850", display: "flex", alignItems: 'center', justifyContent: 'center', height: '40px' }}>
+            <HourglassTwoTone style={{fontSize:"18px",marginRight:"5px"}}/>测试步骤
+          </span>
 
-            <br/>
-            <Content style={{marginLeft: '5px', backgroundColor: '#fff'}}>
-                <Steps current={current} style={{marginBottom: '20px',width:"100%"}}>
-                    {steps.map((item, index) => (<Step key={index} title={item.title}/>))}
-                </Steps>
+                    <Steps current={current} style={{ marginBottom: '20px', width: "100%" }}>
+                        {steps.map((item, index) => (<Step key={index} title={item.title} />))}
+                    </Steps>
 
-                <div style={{display: 'flex'}}>
-                    <List
-                        header={<div>配置预览</div>}
-                        bordered
-                        dataSource={['选项 1', '选项 2', '选项 3']}
-                        renderItem={(item) => <List.Item>{item}</List.Item>}
-                        style={{width: '20%', marginRight: '20px'}}
-                    />
+                    <div style={{ display: 'flex' }}>
+                        <List
+                            header={<div>配置预览</div>}
+                            bordered
+                            dataSource={['选项 1', '选项 2', '选项 3']}
+                            renderItem={(item) => <List.Item>{item}</List.Item>}
+                            style={{ width: '20%', marginRight: '20px' }}
+                        />
 
-                    <Card title="表单内容" style={{width: '85%'}}>
-                        {steps[current].content}
-                        <div style={{marginTop: '24px'}}>
-                            {current < steps.length - 1 && (<Button type="primary" onClick={next}>
+                        <Card title="表单内容" style={{ width: '85%' }}>
+                            {steps[current].content}
+                            <div style={{ marginTop: '24px' }}>
+                                {current < steps.length - 1 && (<Button type="primary" onClick={next}>
                                     下一步
                                 </Button>)}
-                            {current === steps.length - 1 && (<Button type="primary" onClick={() => alert('完成')}>
+                                {current === steps.length - 1 && (<Button type="primary" onClick={() => alert('完成')}>
                                     完成
                                 </Button>)}
-                            {current > 0 && (<Button style={{margin: '0 8px'}} onClick={prev}>
+                                {current > 0 && (<Button style={{ margin: '0 8px' }} onClick={prev}>
                                     上一步
                                 </Button>)}
-                        </div>
-                    </Card>
-                </div>
-            </Content>
-        </Layout>);
+                            </div>
+                        </Card>
+                    </div>
+                </Content>
+        </Layout>
+    );
 };
 
 export default AddTCSFormV2;
