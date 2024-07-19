@@ -13,6 +13,12 @@ const projectStore = createSlice({
         interfaceList: [],
         // 集合列表
         caseSetList: [],
+        // 集合详情
+        casesetDetail: {
+            setName: "",
+            projectName: "",
+            remark: ""
+        }
     },
 
     reducers: {
@@ -24,11 +30,15 @@ const projectStore = createSlice({
         },
         setCaseSetList(state,action){
             state.caseSetList = action.payload
+        },
+        setCasesetDetail(state,action) {
+            state.casesetDetail = action.payload
         }
     }
 })
 
-const {setProjectList,setInterfaceList,setCaseSetList} = projectStore.actions;
+const {setProjectList,setInterfaceList,setCaseSetList,
+            setCasesetDetail} = projectStore.actions;
 const pagination = {
     pageNo: 2,
     pageSize: 10,
@@ -99,6 +109,8 @@ const GetCaseSetList = (page,size,setName,interfaceIds,projectId) => {
         dispatch(setCaseSetList(res.data))
     }
 }
+
+
 
 
 const FindInterfaceByFilter = (page,size,projectIds = [],interfaceUrl = '',interfaceName = '',projectId = '') => {

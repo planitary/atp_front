@@ -9,6 +9,7 @@ import BatchUploadFormModal from "./Component/TCSList/BatchUploadForm";
 import "./CaseSetList.scss"
 import axios from "axios";
 import AddTCSForm from "./Component/TCSList/AddTCSForm";
+import {useNavigate} from "react-router-dom";
 
 const CaseSetList = () => {
 
@@ -45,6 +46,8 @@ const CaseSetList = () => {
             dataIndex: 'remark',
             width: '12%'
         },
+
+
 
         // {
         //     title: '创建人',
@@ -93,11 +96,24 @@ const CaseSetList = () => {
                 <Space size="middle">
                     <a onClick={() => handleEditClick(record)}>编辑</a>
                     <a style={{"color": "red"}}>删除</a>
-                    <a>维护步骤</a>
+                    <a onClick={handleTCSEditClick}>维护步骤</a>
                 </Space>
             )
         }
     ];
+
+    // mock数据
+    const mockList = [
+        {
+            setName: "测试1",
+            projectName: "cornerstone",
+            setWeight: 4,
+            remark: "测试",
+            owner: "Lynn",
+            createTime: "2024-01-23 12:09:44",
+            updateTime: "2024-01-24 23:22:10"
+        }
+    ]
 
     // 标签动态映射(颜色)
     const getTagColor = (level) => {
@@ -216,8 +232,11 @@ const CaseSetList = () => {
         setDrawerVisible(false);
     }
 
-    const handleDeleteClick = () => {
+    const navigate = useNavigate();
 
+    //维护步骤
+    const handleTCSEditClick = (record) => {
+        navigate("/platform/caseset/editProgress");
     }
 
     const [tcsInfo, setTCSInfo] = useState({
@@ -315,7 +334,8 @@ const CaseSetList = () => {
             <Table
                 columns={columns}
                 rowKey={currentId}
-                dataSource={rowData}
+                // 在公司时用mock的数据
+                dataSource={mockList}
                 pagination={{
                     pageSize: resData.pageSize,
                     current: currentPage,

@@ -27,19 +27,13 @@ const OuterRouter = createBrowserRouter([
             {
                 path: '/platform/caseset/casesetExecute',
                 element: <CaseSetExecute/>
+            },
+            {
+                path: '/platform/caseset/editProgress',
+                element:<AddTCSFormV2/>
             }
         ]
     },
-    {
-        path: '/platform/caseset/casesetList',
-        element: <CaseSetList/>,
-        children:[
-            {
-                path: '/platform/caseset/casesetList/edit',
-                element: <AddTCSFormV2/>,
-            }
-        ]
-    }
 ])
 
 export default OuterRouter

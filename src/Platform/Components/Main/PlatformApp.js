@@ -11,6 +11,7 @@ import CollectionCreateForm from "../Outer/Content/Project/Component/CollectionC
 import CollectionCreateFormModal from "../Outer/Content/Project/Component/CollectionCreateForm";
 import InterfaceList from "../Outer/Content/Interface/InterfaceList";
 import CaseSetExecute from "../Outer/Content/Caseset/CaseSetExecute";
+import AddTCSFormV2 from "../Outer/Content/Caseset/Component/TCSList/AddTCSFormV2";
 
 const {Header, Content} = Layout;
 
@@ -57,6 +58,7 @@ const PlatformApp = () => {
                             <Route exact path="/platform/inteface/interfaceList" element={<InterfaceList/>}/>
                             <Route exact path="/platform/caseset/casesetList" element={<CaseSetList/>}/>
                             <Route exact path="/platform/caseset/casesetExecute" element={<CaseSetExecute/>}/>
+                            <Route exact path="/platform/caseset/editProgress" element={<AddTCSFormV2/>}/>
                         </Routes>
 
                     </Content>
