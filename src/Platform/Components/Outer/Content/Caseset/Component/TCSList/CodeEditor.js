@@ -3,9 +3,11 @@ import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css'; // 引入 material 主题样式
 import 'codemirror/mode/sql/sql'; // 确保 SQL 模式文件被正确引入
+import 'codemirror/mode/javascript/javascript'
+// import './CodeEditor.scss'
 
 const CodeEditor = ({code , handleCode}) => {
-    console.log(code)
+    // console.log(code)
     const [localCode,setLocalCode] = useState(code)
     useEffect(() => {
         setLocalCode(code);

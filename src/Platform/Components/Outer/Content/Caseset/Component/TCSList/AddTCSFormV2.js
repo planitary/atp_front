@@ -3,7 +3,9 @@ import { Layout, Steps, List, Form, Input, Button, Card, Divider, Row, Col, Sele
 import { ContactsTwoTone, HourglassTwoTone } from "@ant-design/icons";
 import InterfaceSelectorSingle from "./InterfaceSelectorSingle";
 import CodeEditor from "./CodeEditor";
-
+import './CodeEditor.scss'
+import {valuesIn} from "lodash/object";
+import {Option} from "antd/es/mentions";
 
 
 const { Header, Content } = Layout;
@@ -17,15 +19,29 @@ const operateList = [
 ];
 
 
-// 接口调用表单
-const OperationForm1 = () => (
-    <InterfaceSelectorSingle projectId={"20000000"}/>
+
+
+// 接口调用表单,搜索出接口后，会按照接口信息自动填充
+const OperationForm1 = ({values,handleChange,projectId}) => (
+    <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
+        <Form.Item label={"接口名"} name={"interfaceName"}>
+            <InterfaceSelectorSingle projectId={projectId}/>
+        </Form.Item>
+        <Form.Item label={"接口url"} name={"interfaceUrl"}>
+            <Input />
+        </Form.Item>
+        <Form.Item label={"传参"} name={"requestBody"}>
+            <Input/>
+        </Form.Item>
+
+    </Form>
+
 )
 
 // DB操作表单
 const OperationForm2 = ({values,handleChange,handleCode,code}) => (
     <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
-        <Form.Item label={"说明"} name={"remark"}>
+        <Form.Item label={"说明"}  name={"remark"}>
             <Input />
         </Form.Item>
         <Form.Item label={"sql语句"} name={"DBContent"}>
@@ -37,6 +53,7 @@ const OperationForm2 = ({values,handleChange,handleCode,code}) => (
 
 
 const AddTCSFormV2 = () => {
+
 
     const steps = [
         {
@@ -60,7 +77,7 @@ const AddTCSFormV2 = () => {
                 const operationType = values.operationType
                 switch (operationType) {
                     case 'operation_1':
-                        return <OperationForm1/>;
+                        return <OperationForm1 values={values} handleChange={handleChange}/>;
                     case 'operation_2':
                         return <OperationForm2 values={values} handleChange={handleChange} handleCode={handleCode} code={code}/>
                     default:
@@ -70,12 +87,36 @@ const AddTCSFormV2 = () => {
         },
         {
             title: '断言设置',
-            fields: ['fieldE', 'fieldF'],
+            fields: ['paramA', 'assertType'],
             content: (values, handleChange) => (
-                <Form layout="vertical" initialValues={values} onValuesChange={handleChange}>
-                    <Form.Item label="Field E" name="fieldE">
-                        <Input />
-                    </Form.Item>
+                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} title={"断言设置"}>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Form.Item label="参数A" name="paramA">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item label={"表达式"} name={"assertType"}>
+                                <Select>
+                                    <Option value={'Equal'}>{'='}</Option>
+                                    <Option value={'NotEqual'}>{'!='}</Option>
+                                    <Option value={'GreaterEqual'}>{'>='}</Option>
+                                    <Option value={'LessEqual'}>{'<='}</Option>
+                                    <Option value={'Greater'}>{'>'}</Option>
+                                    <Option value={'Less'}>{'<'}</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item label="参数B" name="paramB">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                    </Row>
+
+
                     <Form.Item label="Field F" name="fieldF">
                         <Input />
                     </Form.Item>
@@ -98,20 +139,47 @@ const AddTCSFormV2 = () => {
         },
     ];
     const [current, setCurrent] = useState(0);
+
+    // 储存当前代码
     const [code,setCode] = useState('')
+
+    // 记录当前操作类型
+    const [currentOType,setCurrentOType] = useState('')
+
+    const getFormTitle = () => {
+        return
+    }
+
     // 步骤表单收集
     const [formValues, setFormValues] = useState({
         stepName: '',
         operationType: '',
         remark: '',
         DBContent: '',
+        interfaceName: '',
+        interfaceUrl: '',
+        requestBody: '',
+        fieldH: '',
         fieldE: '',
         fieldF: '',
         fieldG: '',
-        fieldH: '',
     });
 
+    // 操作方式变更后清空之前的表单值
+    const clearPrevValue = () => {
+        formValues.DBContent = '';
+        formValues.interfaceName = '';
+        formValues.interfaceUrl = '';
+        formValues.remark = "";
+        setCode("")
+    }
+
     const handleChange = (changedValues, allValues) => {
+        // 第一步判断操作方式是否变更，变更后要清空之前的表单值
+        if (currentOType !== changedValues.operationType && current === 0) {
+            clearPrevValue()
+        }
+        console.log(changedValues)
         setFormValues(prevValues => ({
             ...prevValues,
             ...allValues
