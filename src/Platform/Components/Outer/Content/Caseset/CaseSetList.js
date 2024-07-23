@@ -96,7 +96,7 @@ const CaseSetList = () => {
                 <Space size="middle">
                     <a onClick={() => handleEditClick(record)}>编辑</a>
                     <a style={{"color": "red"}}>删除</a>
-                    <a onClick={handleTCSEditClick}>维护步骤</a>
+                    <a onClick={() => handleTCSEditClick(record)}>维护步骤</a>
                 </Space>
             )
         }
@@ -234,11 +234,6 @@ const CaseSetList = () => {
 
     const navigate = useNavigate();
 
-    //维护步骤
-    const handleTCSEditClick = (record) => {
-        navigate("/platform/caseset/editProgress");
-    }
-
     const [tcsInfo, setTCSInfo] = useState({
         setName: "",
         projectName: "",
@@ -247,6 +242,28 @@ const CaseSetList = () => {
         owner: "",
         interfaceInfoSIPDTOS: []
     })
+
+    let tcsData = {
+        setName: "",
+        projectName: "",
+        remark: "",
+        setWeight: "",
+        owner: "",
+        createTime: "",
+    }
+
+
+    //维护步骤
+    const handleTCSEditClick = async (record) => {
+        await getCaseSetDetail(record.setId).then(res => {
+            if (res.data.code === '0'){
+                const setData = res.data.data
+                tcsData = {...setData}
+            }
+        })
+        console.log(tcsData)
+        navigate("/platform/caseset/editProgress", { state: { tcsData } });
+    }
 
 
     // // 从回调中拿到数据渲染列表
@@ -335,7 +352,9 @@ const CaseSetList = () => {
                 columns={columns}
                 rowKey={currentId}
                 // 在公司时用mock的数据
-                dataSource={mockList}
+                // dataSource={mockList}
+                // 家里的正式数据
+                dataSource={rowData}
                 pagination={{
                     pageSize: resData.pageSize,
                     current: currentPage,
