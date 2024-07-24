@@ -1,161 +1,29 @@
-import React, {useState} from 'react';
-import {Layout, Steps, List, Form, Input, Button, Card, Divider, Row, Col, Select} from 'antd';
-import {ContactsTwoTone, HourglassTwoTone} from "@ant-design/icons";
+import React, { useState, useCallback } from 'react';
+import { Layout, Steps, List, Form, Input, Button, Card, Divider, Row, Col, Select } from 'antd';
+import {ContactsTwoTone, HourglassTwoTone, PieChartOutlined} from "@ant-design/icons";
 import InterfaceSelectorSingle from "./InterfaceSelectorSingle";
 import CodeEditor from "./CodeEditor";
-import './CodeEditor.scss'
-import {valuesIn} from "lodash/object";
-import {Option} from "antd/es/mentions";
-import {useLocation} from "react-router-dom";
+import './CodeEditor.scss';
+import { useLocation } from "react-router-dom";
 
-
-const {Header, Content} = Layout;
-const {Step} = Steps;
-
+const { Header, Content } = Layout;
+const { Step } = Steps;
 
 const AddTCSFormV2 = () => {
-
     const [form] = Form.useForm();
     const operateList = [
-        {label: '接口调用', value: 'operation_1'},
-        {label: 'DB操作', value: 'operation_2'},
-        {label: 'Redis操作', value: 'operation_3'},
-        {label: 'RPC调用', value: 'operation_4'}
+        { label: '接口调用', value: 'operation_1' },
+        { label: 'DB操作', value: 'operation_2' },
+        { label: 'Redis操作', value: 'operation_3' },
+        { label: 'RPC调用', value: 'operation_4' }
     ];
-    // 钩子函数，获取详情信息
+
     const location = useLocation();
-    const {tcsData} = location.state || {}
+    const { tcsData } = location.state || {};
 
-    // const handleInterfaceChange = (record) => {
-    //     form.setFieldsValue("interfaceName",record.interfaceName)
-    // }
-
-    // 接口调用表单,搜索出接口后，会按照接口信息自动填充
-    const OperationForm1 = ({values, handleChange}) => (
-        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form}>
-            <Form.Item label={"接口名"} name={"name"}>
-                <InterfaceSelectorSingle projectId={tcsData.projectId} />
-            </Form.Item>
-            <Form.Item label={"接口url"} name={"interfaceUrl"}>
-                <Input disabled={true}/>
-            </Form.Item>
-            <Form.Item label={"传参"} name={"requestBody"}>
-                <Input disabled={true}/>
-            </Form.Item>
-
-        </Form>
-
-    )
-
-    // DB操作表单
-    const OperationForm2 = ({values, handleChange, handleCode, code}) => (
-        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
-            <Form.Item label={"说明"} name={"remark"}>
-                <Input/>
-            </Form.Item>
-            <Form.Item label={"sql语句"} name={"DBContent"}>
-                <CodeEditor handleCode={handleCode} code={code}/>
-            </Form.Item>
-        </Form>
-    )
-
-
-    const steps = [
-        {
-            title: '填写基本信息',
-            fields: ['stepName', 'operationType'],
-            content: (values, handleChange) => (
-                <Form layout="vertical" initialValues={values} onValuesChange={handleChange}>
-                    <Form.Item label="步骤名称" name="stepName">
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item label="执行方式" name="operationType">
-                        <Select options={operateList}/>
-                    </Form.Item>
-                </Form>
-            ),
-        },
-        {
-            title: '详细参数',
-            content: (values, handleChange, handleCode) => {
-                const operationType = values.operationType
-                switch (operationType) {
-                    case 'operation_1':
-                        return <OperationForm1 values={values} handleChange={handleChange}/>;
-                    case 'operation_2':
-                        return <OperationForm2 values={values} handleChange={handleChange} handleCode={handleCode}
-                                               code={code}/>
-                    default:
-                        return <div>请选择一个类型</div>
-                }
-            },
-        },
-        {
-            title: '断言设置',
-            fields: ['paramA', 'assertType'],
-            content: (values, handleChange) => (
-                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} title={"断言设置"}>
-                    <Row gutter={16}>
-                        <Col span={8}>
-                            <Form.Item label="参数A" name="paramA">
-                                <Input/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={8}>
-                            <Form.Item label={"表达式"} name={"assertType"}>
-                                <Select>
-                                    <Option value={'Equal'}>{'='}</Option>
-                                    <Option value={'NotEqual'}>{'!='}</Option>
-                                    <Option value={'GreaterEqual'}>{'>='}</Option>
-                                    <Option value={'LessEqual'}>{'<='}</Option>
-                                    <Option value={'Greater'}>{'>'}</Option>
-                                    <Option value={'Less'}>{'<'}</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={8}>
-                            <Form.Item label="参数B" name="paramB">
-                                <Input/>
-                            </Form.Item>
-                        </Col>
-
-                    </Row>
-
-
-                    <Form.Item label="Field F" name="fieldF">
-                        <Input/>
-                    </Form.Item>
-                </Form>
-            ),
-        },
-        {
-            title: '额外配置',
-            fields: ['fieldG', 'fieldH'],
-            content: (values, handleChange) => (
-                <Form layout="vertical" initialValues={values} onValuesChange={handleChange}>
-                    <Form.Item label="Field G" name="fieldG">
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item label="Field H" name="fieldH">
-                        <Input/>
-                    </Form.Item>
-                </Form>
-            ),
-        },
-    ];
     const [current, setCurrent] = useState(0);
-
-    // 储存当前代码
-    const [code, setCode] = useState('')
-
-    // 记录当前操作类型
-    const [currentOType, setCurrentOType] = useState('')
-
-    const getFormTitle = () => {
-        return
-    }
-
-    // 步骤表单收集
+    const [code, setCode] = useState('');
+    const [currentOType, setCurrentOType] = useState('');
     const [formValues, setFormValues] = useState({
         stepName: '',
         operationType: '',
@@ -171,73 +39,166 @@ const AddTCSFormV2 = () => {
         fieldG: '',
     });
 
-    // 操作方式变更后清空之前的表单值
-    const clearPrevValue = () => {
-        formValues.DBContent = '';
-        formValues.interfaceName = '';
-        formValues.interfaceUrl = '';
-        formValues.remark = "";
-        setCode("")
-    }
+    const clearPrevValue = useCallback(() => {
+        setFormValues(prevValues => ({
+            ...prevValues,
+            DBContent: '',
+            name: '',
+            interfaceUrl: '',
+            remark: '',
+        }));
+        setCode('');
+    }, []);
 
-    const handleChange = (changedValues, allValues) => {
-        console.log(changedValues)
-        // 第一步判断操作方式是否变更，变更后要清空之前的表单值
+    const handleChange = useCallback((changedValues, allValues) => {
+
         if (currentOType !== changedValues.operationType && current === 0) {
-            clearPrevValue()
+            clearPrevValue();
         }
-        // 填充接口时特殊处理
-        // if (current === 1 && ){
-        //     // console.log(changedValues)
-        //     form.setFieldValue("name",changedValues.name.interfaceName)
-        //     form.setFieldValue("interfaceUrl",changedValues.name.interfaceUrl)
-        //     form.setFieldValue("requestBody",changedValues.name.requestBody)
-        // }
         setFormValues(prevValues => ({
             ...prevValues,
             ...allValues
         }));
-    };
+    }, [current, currentOType, clearPrevValue]);
 
-    const handleCode = (value) => {
+    const handleCode = useCallback((value) => {
         setCode(value);
-        formValues.DBContent = value;
-    }
+        setFormValues(prevValues => ({
+            ...prevValues,
+            DBContent: value
+        }));
+    }, []);
 
-    const next = () => {
+    const next = useCallback(() => {
         setCurrent(current + 1);
-    };
+    }, [current]);
 
-    const prev = () => {
+    const prev = useCallback(() => {
         setCurrent(current - 1);
-    };
+    }, [current]);
 
-    const mockInfo = {
-        setName: "应走货路由",
-        projectName: "Cornerstone",
-        remark: "mock数据",
-        owner: "Molly罗爽",
-        createTime: "2024-06-24 19:04:27"
-    };
+    const handleFinish = useCallback(() => {
+        console.log(formValues);
+    }, [formValues]);
 
-    // 步骤全部结束后的调用
-    const handleFinish = () => {
-        console.log(formValues)
-    }
+    const OperationForm1 = useCallback(({ values, handleChange }) => (
+        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form}>
+            <Form.Item label={"接口名"} name={"name"}>
+                <InterfaceSelectorSingle projectId={tcsData.projectId} />
+            </Form.Item>
+            <Form.Item label={"接口url"} name={"interfaceUrl"}>
+                <Input />
+            </Form.Item>
+            <Form.Item label={"传参"} name={"requestBody"}>
+                <Input />
+            </Form.Item>
+        </Form>
+    ), [tcsData.projectId]);
+
+    const OperationForm2 = useCallback(({ values, handleChange, handleCode, code }) => (
+        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
+            <Form.Item label={"说明"} name={"remark"}>
+                <Input />
+            </Form.Item>
+            <Form.Item label={"sql语句"} name={"DBContent"}>
+                <CodeEditor handleCode={handleCode} code={code} />
+            </Form.Item>
+        </Form>
+    ), [code]);
+
+    const steps = [
+        {
+            title: '填写基本信息',
+            fields: ['stepName', 'operationType'],
+            content: (values, handleChange) => (
+                <Form layout="vertical" initialValues={values} onValuesChange={handleChange}>
+                    <Form.Item label="步骤名称" name="stepName">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="执行方式" name="operationType">
+                        <Select options={operateList} />
+                    </Form.Item>
+                </Form>
+            ),
+        },
+        {
+            title: '详细参数',
+            content: (values, handleChange, handleCode) => {
+                const operationType = values.operationType;
+                switch (operationType) {
+                    case 'operation_1':
+                        return <OperationForm1 values={values} handleChange={handleChange} />;
+                    case 'operation_2':
+                        return <OperationForm2 values={values} handleChange={handleChange} handleCode={handleCode} code={code} />;
+                    default:
+                        return <div>请选择一个类型</div>;
+                }
+            },
+        },
+        {
+            title: '断言设置',
+            fields: ['paramA', 'assertType'],
+            content: (values, handleChange) => (
+                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} title={"断言设置"}>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Form.Item label="参数A" name="paramA">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item label={"表达式"} name={"assertType"}>
+                                <Select>
+                                    <Select.Option value={'Equal'}>{'='}</Select.Option>
+                                    <Select.Option value={'NotEqual'}>{'!='}</Select.Option>
+                                    <Select.Option value={'GreaterEqual'}>{'>='}</Select.Option>
+                                    <Select.Option value={'LessEqual'}>{'<='}</Select.Option>
+                                    <Select.Option value={'Greater'}>{'>'}</Select.Option>
+                                    <Select.Option value={'Less'}>{'<'}</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item label="参数B" name="paramB">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Form.Item label="Field F" name="fieldF">
+                        <Input />
+                    </Form.Item>
+                </Form>
+            ),
+        },
+        {
+            title: '额外配置',
+            fields: ['fieldG', 'fieldH'],
+            content: (values, handleChange) => (
+                <Form layout="vertical" initialValues={values} onValuesChange={handleChange}>
+                    <Form.Item label="Field G" name="fieldG">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="Field H" name="fieldH">
+                        <Input />
+                    </Form.Item>
+                </Form>
+            ),
+        },
+    ];
 
     return (
-        <Layout style={{backgroundColor: '#fff'}}>
-            <Header style={{background: '#fff', padding: '0px', height: '120px'}}>
-        <span style={{
-            margin: "0",
-            fontWeight: "850",
-            display: "flex",
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '40px'
-        }}>
-          <ContactsTwoTone style={{fontSize: "18px", marginRight: "5px"}}/>基础信息
-        </span>
+        <Layout style={{ backgroundColor: '#fff' }}>
+            <Header style={{ background: '#fff', padding: '0px', height: '120px' }}>
+                <span style={{
+                    margin: "0",
+                    fontWeight: "850",
+                    display: "flex",
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '40px'
+                }}>
+                    <ContactsTwoTone style={{ fontSize: "18px", marginRight: "5px" }} />基础信息
+                </span>
                 <Form layout="horizontal">
                     <Row gutter={10}>
                         <Col span={7}>
@@ -270,33 +231,34 @@ const AddTCSFormV2 = () => {
                     </Row>
                 </Form>
             </Header>
-            <Divider/>
-            <Content style={{background: '#fff', padding: '0px'}}>
-        <span style={{
-            margin: "0",
-            fontWeight: "850",
-            display: "flex",
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '40px'
-        }}>
-          <HourglassTwoTone style={{fontSize: "18px", marginRight: "5px"}}/>测试步骤
-        </span>
-                <Steps current={current} style={{marginBottom: '20px', width: "100%"}}>
-                    {steps.map((item, index) => (<Step key={index} title={item.title}/>))}
+            <Divider />
+            <Content style={{ background: '#fff', padding: '0px' }}>
+                <span style={{
+                    margin: "0",
+                    fontWeight: "850",
+                    display: "flex",
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '40px'
+                }}>
+                    <HourglassTwoTone style={{ fontSize: "18px", marginRight: "5px" }} />测试步骤
+                    {/*<PieChartOutlined  style={{ fontSize: "18px", marginRight: "5px" }}/>测试步骤*/}
+                </span>
+                <Steps current={current} style={{ marginBottom: '20px', width: "100%" }}>
+                    {steps.map((item, index) => (<Step key={index} title={item.title} />))}
                 </Steps>
-                <div style={{display: 'flex'}}>
+                <div style={{ display: 'flex' }}>
                     <List
                         header={<div>配置预览</div>}
                         bordered
                         dataSource={['选项 1', '选项 2', '选项 3']}
                         renderItem={(item) => <List.Item>{item}</List.Item>}
-                        style={{width: '20%', marginRight: '20px'}}
+                        style={{ width: '20%', marginRight: '20px' }}
                     />
-                    <Card title="表单内容" style={{width: '85%'}}>
+                    <Card title="表单内容" style={{ width: '85%' }}>
                         {steps[current].content(formValues, handleChange, handleCode)}
-                        <div style={{marginTop: '24px'}}>
-                            {current > 0 && (<Button style={{margin: '0 8px'}} onClick={prev}>
+                        <div style={{ marginTop: '24px' }}>
+                            {current > 0 && (<Button style={{ margin: '0 8px' }} onClick={prev}>
                                 上一步
                             </Button>)}
                             {current < steps.length - 1 && (<Button type="primary" onClick={next}>
@@ -305,7 +267,6 @@ const AddTCSFormV2 = () => {
                             {current === steps.length - 1 && (<Button type="primary" onClick={handleFinish}>
                                 完成
                             </Button>)}
-
                         </div>
                     </Card>
                 </div>

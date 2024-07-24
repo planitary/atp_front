@@ -1,24 +1,29 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css'; // 引入 material 主题样式
 import 'codemirror/mode/sql/sql'; // 确保 SQL 模式文件被正确引入
 import 'codemirror/mode/javascript/javascript'
-// import './CodeEditor.scss'
 
-const CodeEditor = ({code , handleCode}) => {
-    // console.log(code)
-    const [localCode,setLocalCode] = useState(code)
+const CodeEditor = ({ code, handleCode }) => {
+    const [localCode, setLocalCode] = useState(code);
+    const editorRef = useRef(null);
+
     useEffect(() => {
         setLocalCode(code);
-    },[code])
+    }, [code]);
+
+    // Ensure CodeMirror instance is available and focus on update
+    useEffect(() => {
+        if (editorRef.current) {
+            editorRef.current.editor.focus();
+        }
+    }, [localCode]);
 
     const handleChange = (editor, data, value) => {
         setLocalCode(value);
-        handleCode(value)
+        handleCode(value);
     };
-
-
 
     const options = {
         mode: 'sql', // 确保设置了 SQL 模式
@@ -29,6 +34,7 @@ const CodeEditor = ({code , handleCode}) => {
 
     return (
         <CodeMirror
+            ref={editorRef}
             value={localCode}
             onBeforeChange={handleChange}
             options={options}
