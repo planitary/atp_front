@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import InterfaceSelectorSingle from "../TCSList/InterfaceSelectorSingle";
 import CodeEditor from "./CodeEditor";
 import debounce from "lodash/debounce";
+import InterfaceSelector from "./InterfaceSelector";
 
 const { Step } = Steps;
 const FinishModal = ({open}) =>{
@@ -21,12 +22,37 @@ const FinishModal = ({open}) =>{
 }
 
 const ProgressPage = ({tcsData}) => {
-
     const [form] = Form.useForm()
+
+    const OperationForm1 = useCallback(({ values, handleChange }) => (
+        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form}>
+            <Form.Item label={"接口名"} name={"interfaceName"}>
+                <InterfaceSelector projectId={tcsData.projectId} handleData={handleInterfaceInfo}  />
+            </Form.Item>
+            <Form.Item label={"接口url"} name={"interfaceUrl"}>
+                <Input disabled={true}/>
+            </Form.Item>
+            <Form.Item label={"传参"} name={"requestBody"}>
+                <Input disabled={true}/>
+            </Form.Item>
+        </Form>
+    ), [form, tcsData.projectId]);
+
+    const OperationForm2 = useCallback(({ values, handleChange, handleCode, code }) => (
+        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
+            <Form.Item label={"说明"} name={"remark"}>
+                <Input />
+            </Form.Item>
+            <Form.Item label={"sql语句"} name={"DBContent"}>
+                <CodeEditor handleCode={handleCode} code={code} />
+            </Form.Item>
+        </Form>
+    ), []);
+
 
     const [current, setCurrent] = useState(0);
     const [code, setCode] = useState('');
-    const [currentOType, setCurrentOType] = useState('');
+    let currentOType;
     // 测试步骤列表
     const [progressList,setProgressList] = useState([])
 
@@ -41,6 +67,15 @@ const ProgressPage = ({tcsData}) => {
         { label: 'Redis操作', value: 'operation_3' },
         { label: 'RPC调用', value: 'operation_4' }
     ];
+
+    let interfaceInfo = {
+        interfaceName: "",
+        interfaceUrl: "",
+        interfaceId: "",
+        requestBody: ""
+    }
+
+
 
     const [formValues, setFormValues] = useState({
         stepName: '',
@@ -72,6 +107,7 @@ const ProgressPage = ({tcsData}) => {
 
     const handleChange = useCallback((changedValues, allValues) => {
 
+        console.log(currentOType)
         if (currentOType !== changedValues.operationType && current === 0) {
             clearPrevValue();
         }
@@ -79,7 +115,7 @@ const ProgressPage = ({tcsData}) => {
             ...prevValues,
             ...allValues
         }));
-    }, [current, currentOType, clearPrevValue]);
+    }, [currentOType, current, clearPrevValue, interfaceInfo.interfaceName, interfaceInfo.interfaceUrl, form]);
 
     const handleCode = useCallback((value) => {
         setCode(value);
@@ -88,6 +124,16 @@ const ProgressPage = ({tcsData}) => {
             DBContent: value
         }));
     }, []);
+
+    // 拿到接口信息
+    const handleInterfaceInfo = (value) => {
+        interfaceInfo = {...value}
+        console.log(interfaceInfo)
+    }
+
+    const getInterfaceInfo = () => {
+        return interfaceInfo;
+    }
 
 
     // 步骤结束后的确认
@@ -122,30 +168,7 @@ const ProgressPage = ({tcsData}) => {
     },[debouncedHandleFinish]);
 
 
-    const OperationForm1 = useCallback(({ values, handleChange }) => (
-        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form}>
-            <Form.Item label={"接口名"} name={"interfaceName"}>
-                <InterfaceSelectorSingle projectId={tcsData.projectId} />
-            </Form.Item>
-            <Form.Item label={"接口url"} name={"interfaceUrl"}>
-                <Input />
-            </Form.Item>
-            <Form.Item label={"传参"} name={"requestBody"}>
-                <Input />
-            </Form.Item>
-        </Form>
-    ), [form, tcsData.projectId]);
 
-    const OperationForm2 = useCallback(({ values, handleChange, handleCode, code }) => (
-        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
-            <Form.Item label={"说明"} name={"remark"}>
-                <Input />
-            </Form.Item>
-            <Form.Item label={"sql语句"} name={"DBContent"}>
-                <CodeEditor handleCode={handleCode} code={code} />
-            </Form.Item>
-        </Form>
-    ), []);
 
     const steps = [
         {
@@ -235,7 +258,6 @@ const ProgressPage = ({tcsData}) => {
         setCurrent(current - 1);
     }, [current]);
 
-    console.log(finishButtonStatus)
     return (
         <span>
             <Steps current={current} style={{marginBottom: '20px', width: "100%"}}>
@@ -247,7 +269,7 @@ const ProgressPage = ({tcsData}) => {
                     bordered = {true}
                     dataSource={progressList}
                     renderItem={(item) => <List.Item key={item.stepName}>{item.stepName}</List.Item>}
-                    style={{width: '20%', marginRight: '20px'}}
+                    style={{width: '30%', marginRight: '20px'}}
                 />
                 <Card title="表单内容" style={{width: '85%'}}>
                     {steps[current].content(formValues, handleChange, handleCode)}
