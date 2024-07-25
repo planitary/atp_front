@@ -1,19 +1,39 @@
-import {Button, Card, Col, Form, Input, List, Row, Select, Steps} from "antd";
+import {Button, Card, Col, Form, Input, List, Modal, Row, Select, Steps} from "antd";
 import React, {useCallback, useEffect, useState} from "react";
 import InterfaceSelectorSingle from "../TCSList/InterfaceSelectorSingle";
 import CodeEditor from "./CodeEditor";
 import debounce from "lodash/debounce";
 
 const { Step } = Steps;
+const FinishModal = ({open}) =>{
+    return (
+        <Modal
+            open={open}
+
+            title={"新增步骤"}
+            footer={[
+                <Button key={"continue"} type={"primary"}>继续新增</Button>,
+                <Button key={"back"}>不再新增</Button>
+            ]}>
+            <p>当前步骤已新增完成!</p>
+        </Modal>
+    )
+}
+
 const ProgressPage = ({tcsData}) => {
 
-    const form = Form.useForm()
+    const [form] = Form.useForm()
 
     const [current, setCurrent] = useState(0);
     const [code, setCode] = useState('');
     const [currentOType, setCurrentOType] = useState('');
     // 测试步骤列表
     const [progressList,setProgressList] = useState([])
+
+    const [finishButtonStatus,setStatus] = useState(false)
+
+    // 新增后的对话框状态
+    const [open,setOpen] = useState(false)
 
     const operateList = [
         { label: '接口调用', value: 'operation_1' },
@@ -27,7 +47,7 @@ const ProgressPage = ({tcsData}) => {
         operationType: '',
         remark: '',
         DBContent: '',
-        name: '',
+        interfaceName: '',
         interfaceUrl: '',
         requestBody: '',
         projectId: '',
@@ -47,6 +67,8 @@ const ProgressPage = ({tcsData}) => {
         }));
         setCode('');
     }, []);
+
+
 
     const handleChange = useCallback((changedValues, allValues) => {
 
@@ -73,7 +95,19 @@ const ProgressPage = ({tcsData}) => {
         const newValue = {...formValues};
         setProgressList(prevList => [...prevList,newValue])
         console.log(formValues)
-    }, [formValues, progressList]);
+        setStatus(true)
+        setOpen(true)
+        Modal.success({
+            title: 'success',
+            footer: (_) =>(
+                <>
+                    <Button key={"back"}>不再添加</Button>
+                    <Button key={"continue"} type={"primary"}>继续添加</Button>
+                </>
+            ),
+            content:"当前步骤已添加完成，需要继续添加么?"
+        });
+    }, [formValues]);
 
     //防抖
     const debouncedHandleFinish = useCallback(
@@ -90,7 +124,7 @@ const ProgressPage = ({tcsData}) => {
 
     const OperationForm1 = useCallback(({ values, handleChange }) => (
         <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form}>
-            <Form.Item label={"接口名"} name={"name"}>
+            <Form.Item label={"接口名"} name={"interfaceName"}>
                 <InterfaceSelectorSingle projectId={tcsData.projectId} />
             </Form.Item>
             <Form.Item label={"接口url"} name={"interfaceUrl"}>
@@ -200,6 +234,8 @@ const ProgressPage = ({tcsData}) => {
     const prev = useCallback(() => {
         setCurrent(current - 1);
     }, [current]);
+
+    console.log(finishButtonStatus)
     return (
         <span>
             <Steps current={current} style={{marginBottom: '20px', width: "100%"}}>
@@ -208,9 +244,9 @@ const ProgressPage = ({tcsData}) => {
             <div style={{display: 'flex'}}>
                 <List
                     header={<div style={{textAlign: "center", fontWeight: "600"}}>测试计划</div>}
-                    bordered
+                    bordered = {true}
                     dataSource={progressList}
-                    renderItem={(item) => <List.Item>{item.stepName}</List.Item>}
+                    renderItem={(item) => <List.Item key={item.stepName}>{item.stepName}</List.Item>}
                     style={{width: '20%', marginRight: '20px'}}
                 />
                 <Card title="表单内容" style={{width: '85%'}}>
@@ -223,13 +259,15 @@ const ProgressPage = ({tcsData}) => {
                             下一步
                         </Button>)}
                         {current === steps.length - 1 && (
-                            <Button type="primary" onClick={debouncedHandleFinish}>
+                            <Button type="primary" onClick={debouncedHandleFinish} >
                                 完成
                             </Button>)}
                     </div>
                 </Card>
             </div>
+            {/*<FinishModal open={open}/>*/}
         </span>
+
     )
 };
 export default ProgressPage
