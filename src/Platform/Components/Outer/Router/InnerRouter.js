@@ -6,7 +6,7 @@ import Layout from "../../Layout/Layout";
 import InterfaceList from "../Content/Interface/InterfaceList";
 import CaseSetExecute from "../Content/Caseset/CaseSetExecute";
 import {Switch} from "antd";
-import AddTCSFormV2 from "../Content/Caseset/Component/TCSList/AddTCSFormV2";
+import AddTCSFormV2 from "../Content/Caseset/Component/TCSProgress/AddTCSFormV2";
 
 const InnerRouter =  createBrowserRouter([
     {

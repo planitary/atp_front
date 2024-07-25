@@ -11,7 +11,7 @@ import CollectionCreateForm from "../Outer/Content/Project/Component/CollectionC
 import CollectionCreateFormModal from "../Outer/Content/Project/Component/CollectionCreateForm";
 import InterfaceList from "../Outer/Content/Interface/InterfaceList";
 import CaseSetExecute from "../Outer/Content/Caseset/CaseSetExecute";
-import AddTCSFormV2 from "../Outer/Content/Caseset/Component/TCSList/AddTCSFormV2";
+import AddTCSFormV2 from "../Outer/Content/Caseset/Component/TCSProgress/AddTCSFormV2";
 
 const {Header, Content} = Layout;
 

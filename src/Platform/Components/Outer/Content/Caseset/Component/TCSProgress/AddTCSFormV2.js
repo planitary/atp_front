@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { Layout, Steps, List, Form, Input, Button, Card, Divider, Row, Col, Select } from 'antd';
 import {ContactsTwoTone, HourglassTwoTone, PieChartOutlined} from "@ant-design/icons";
-import InterfaceSelectorSingle from "./InterfaceSelectorSingle";
+import InterfaceSelectorSingle from "../TCSList/InterfaceSelectorSingle";
 import CodeEditor from "./CodeEditor";
 import './CodeEditor.scss';
 import { useLocation } from "react-router-dom";
+import EmptyPage from "./EmptyPage";
 
 const { Header, Content } = Layout;
 const { Step } = Steps;
@@ -19,7 +20,11 @@ const AddTCSFormV2 = () => {
     ];
 
     const location = useLocation();
-    const { tcsData } = location.state || {};
+    // const { tcsData } = location.state || {};
+    // mock数据
+    const {mockData} = location.state || {}
+    const  tcsData = mockData;
+    console.log(tcsData.stepsData.length)
 
     const [current, setCurrent] = useState(0);
     const [code, setCode] = useState('');
@@ -38,6 +43,14 @@ const AddTCSFormV2 = () => {
         fieldF: '',
         fieldG: '',
     });
+
+    const [progressPage,setProgressPage] = useState(false)
+
+    // 空白页新增按钮的回调
+    const handlePage = (value) =>{
+        console.log(value)
+        setProgressPage(value)
+    }
 
     const clearPrevValue = useCallback(() => {
         setFormValues(prevValues => ({
@@ -93,7 +106,7 @@ const AddTCSFormV2 = () => {
                 <Input />
             </Form.Item>
         </Form>
-    ), [tcsData.projectId]);
+    ), [form, tcsData.projectId]);
 
     const OperationForm2 = useCallback(({ values, handleChange, handleCode, code }) => (
         <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
@@ -104,7 +117,7 @@ const AddTCSFormV2 = () => {
                 <CodeEditor handleCode={handleCode} code={code} />
             </Form.Item>
         </Form>
-    ), [code]);
+    ), []);
 
     const steps = [
         {
@@ -232,7 +245,8 @@ const AddTCSFormV2 = () => {
                 </Form>
             </Header>
             <Divider />
-            <Content style={{ background: '#fff', padding: '0px' }}>
+
+                <Content style={{ background: '#fff', padding: '0px' }}>
                 <span style={{
                     margin: "0",
                     fontWeight: "850",
@@ -241,36 +255,45 @@ const AddTCSFormV2 = () => {
                     justifyContent: 'center',
                     height: '40px'
                 }}>
-                    <HourglassTwoTone style={{ fontSize: "18px", marginRight: "5px" }} />测试步骤
+
+                    <HourglassTwoTone style={{ fontSize: "18px", marginRight: "5px" }}/>测试步骤
                     {/*<PieChartOutlined  style={{ fontSize: "18px", marginRight: "5px" }}/>测试步骤*/}
                 </span>
-                <Steps current={current} style={{ marginBottom: '20px', width: "100%" }}>
-                    {steps.map((item, index) => (<Step key={index} title={item.title} />))}
-                </Steps>
-                <div style={{ display: 'flex' }}>
-                    <List
-                        header={<div>配置预览</div>}
-                        bordered
-                        dataSource={['选项 1', '选项 2', '选项 3']}
-                        renderItem={(item) => <List.Item>{item}</List.Item>}
-                        style={{ width: '20%', marginRight: '20px' }}
-                    />
-                    <Card title="表单内容" style={{ width: '85%' }}>
-                        {steps[current].content(formValues, handleChange, handleCode)}
-                        <div style={{ marginTop: '24px' }}>
-                            {current > 0 && (<Button style={{ margin: '0 8px' }} onClick={prev}>
-                                上一步
-                            </Button>)}
-                            {current < steps.length - 1 && (<Button type="primary" onClick={next}>
-                                下一步
-                            </Button>)}
-                            {current === steps.length - 1 && (<Button type="primary" onClick={handleFinish}>
-                                完成
-                            </Button>)}
-                        </div>
-                    </Card>
-                </div>
-            </Content>
+
+                    {/*无数据且步骤页标记为false时展示空白页*/}
+                    {tcsData.stepsData.length === 0 && !progressPage ? (<EmptyPage handlePage={handlePage}/>) : (<span>
+                    <Steps current={current} style={{ marginBottom: '20px', width: "100%" }}>
+                        {steps.map((item, index) => (<Step key={index} title={item.title} />))}
+                    </Steps>
+                    <div style={{ display: 'flex' }}>
+                        <List
+                            header={<div>配置预览</div>}
+                            bordered
+                            dataSource={['选项 1', '选项 2', '选项 3']}
+                            renderItem={(item) => <List.Item>{item}</List.Item>}
+                            style={{ width: '20%', marginRight: '20px' }}
+                        />
+                        <Card title="表单内容" style={{ width: '85%' }}>
+                            {steps[current].content(formValues, handleChange, handleCode)}
+                            <div style={{ marginTop: '24px' }}>
+                                {current > 0 && (<Button style={{ margin: '0 8px' }} onClick={prev}>
+                                    上一步
+                                </Button>)}
+                                {current < steps.length - 1 && (<Button type="primary" onClick={next}>
+                                    下一步
+                                </Button>)}
+                                {current === steps.length - 1 && (<Button type="primary" onClick={handleFinish}>
+                                    完成
+                                </Button>)}
+                            </div>
+                        </Card>
+                    </div>
+                    </span>)
+                    }
+
+                </Content>
+
+
         </Layout>
     );
 };
