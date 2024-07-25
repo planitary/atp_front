@@ -19,7 +19,7 @@ const EmptyPage = ({handlePage}) => {
                 </Typography.Text>
             }
         >
-            <Button type={"primary"} onClick={() => handlePage(true)}>新增步骤</Button>
+            <Button type={"primary"} onClick={() => handlePage(1)}>新增步骤</Button>
 
         </Empty>
     </span>
