@@ -1,8 +1,12 @@
-//表单label
-.ant-form-item-label > label {
-  width: 70px;
+//codeEditor表单
+.code-editor-label .ant-form-item-label > label {
+  width: 60px;
 }
 // 编辑器行号颜色
 .cm-s-material .CodeMirror-linenumber {
   color: #9fa2e3;
+}
+
+.interface-add-label .ant-form-item-label > label{
+  width: 68px;
 }

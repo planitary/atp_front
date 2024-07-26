@@ -24,7 +24,7 @@ const AddTCSFormV2 = () => {
     // mock数据
     const {mockData} = location.state || {}
     const  tcsData = mockData;
-    tcsData.stepsData = ["哈哈哈"]
+    // tcsData.stepsData = ["哈哈哈"]
     console.log(tcsData.stepsData.length)
 
     /**

@@ -1,10 +1,12 @@
 import {Button, Card, Col, Form, Input, List, Modal, Row, Select, Space, Steps} from "antd";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import InterfaceSelectorSingle from "../TCSList/InterfaceSelectorSingle";
 import CodeEditor from "./CodeEditor";
 import debounce from "lodash/debounce";
 import InterfaceSelector from "./InterfaceSelector";
+import './CodeEditor.scss'
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {Option} from "antd/es/mentions";
 
 const {Step} = Steps;
 
@@ -19,14 +21,20 @@ const ProgressPage = ({tcsData}) => {
 
     // 接口新增
     const OperationForm1 = useCallback(({values, handleChange}) => (
-        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form} preserve={false}>
-            <Form.Item label={"接口名"} name={"interfaceName"}>
+        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}
+              form={form} preserve={false}  className={"interface-add-label"} >
+            <Form.Item label={"接口名"} name={"interfaceName"} rules={[
+                {
+                    required: true,
+                    message: "请选定一个接口"
+                }
+            ]}>
                 <InterfaceSelector projectId={tcsData.projectId} />
             </Form.Item>
-            <Form.Item label={"接口url"} name={"interfaceUrl"}>
+            <Form.Item label={"接口url"} name={"interfaceUrl"} labelAlign={"left"}>
                 <Input disabled={true}/>
             </Form.Item>
-            <Form.Item label={"传参"} name={"requestBody"}>
+            <Form.Item label={"传参"} name={"requestBody"} labelAlign={"left"}>
                 <Input disabled={true}/>
             </Form.Item>
         </Form>
@@ -35,7 +43,7 @@ const ProgressPage = ({tcsData}) => {
     // code输入
     const OperationForm2 = useCallback(({values, handleChange, handleCode, code}) => (
         <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} preserve={false}>
-            <Form.Item label={"说明"} name={"remark"}>
+            <Form.Item label={"说明"} name={"remark"} className={"code-editor-label"}>
                 <Input/>
             </Form.Item>
             <Form.Item label={"sql语句"} name={"DBContent"}>
@@ -55,8 +63,20 @@ const ProgressPage = ({tcsData}) => {
                 <Select.Option value={'Greater'}>{'>'}</Select.Option>
                 <Select.Option value={'Less'}>{'<'}</Select.Option>
             </Select>
+
         )
     }
+
+    // 额外配置筛选项
+    const ExtraSelect = ({value,onChange}) => {
+        return (
+        <Select defaultValue={"接口响应超时时间"} value={value} onChange={onChange} name>
+            <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
+            <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
+            <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
+            <Select.Option value={"waitTimeOut"}>等待时间</Select.Option>
+        </Select>
+        )}
 
     // 断言动态表单
     const DynamicAssertForm = useCallback(({values, handleChange}) => (
@@ -68,18 +88,36 @@ const ProgressPage = ({tcsData}) => {
                         {fields.map(({key, name, ...restField}) => (
                             <Space key={key} style={{display: "flex", marginBottom: 8}} align={"baseline"}>
                                 <Row gutter={16} >
-                                    <Col span={8}>
-                                        <Form.Item label="参数A" name={[name, 'param']} {...restField}>
-                                            <Input placeholder={"断言参数"}/>
+                                    <Col span={9}>
+                                        <Form.Item label="参数A" name={[name, 'param']} {...restField}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:'参数缺失'
+                                            }
+                                        ]}>
+                                            <Input placeholder={"断言参数"} />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={8}>
-                                        <Form.Item label={"表达式"} name={[name, 'assertType']} {...restField}>
+                                    <Col span={6}>
+                                        <Form.Item label={"表达式"} name={[name, 'assertType']} {...restField}
+                                        rules={[
+                                            {
+                                                required:true,
+                                                message:"请选择一个表达式"
+                                            }
+                                        ]}>
                                             <AssertSelect/>
                                         </Form.Item>
                                     </Col>
-                                    <Col span={8}>
-                                        <Form.Item label="参数B" name={[name, 'value']} {...restField}>
+                                    <Col span={9}>
+                                        <Form.Item label="参数B" name={[name, 'value']} {...restField}
+                                                   rules={[
+                                                       {
+                                                           required: true,
+                                                           message:'参数缺失'
+                                                       }
+                                                   ]}>
                                             <Input placeholder={'断言值'}/>
 
                                         </Form.Item>
@@ -100,12 +138,35 @@ const ProgressPage = ({tcsData}) => {
         </Form>
     ), []);
 
-    const operateList = [
+    // 额外配置动态表单
+    // const DynamicExtraForm = useCallback(({values,handleChange}) => (
+    //     <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} preserve={false}
+    //           title={"额外配置"} name={"extras"}>
+    //         <Form.List name={"extras"}>
+    //             {(fields,{add,remove}) =>(
+    //                 <>
+    //                     {fields.map(({key,name,...restField}) => (
+    //                         <Space key={key} style={{display: "flex",marginBottom:8}} align={"baseline"}>
+    //                             <Input addonBefore={ExtraSelect(values,handleChange)} addonAfter={"ms"} style={{width:"100%"}}/>
+    //                             <MinusCircleOutlined onClick={() => remove(name)}/>
+    //                         </Space>
+    //                     ))}
+    //                     <Form.Item>
+    //                         <Button type={"dashed"} onClick={() => add()} block icon={<PlusOutlined />}>新增一行
+    //                         </Button>
+    //                     </Form.Item>
+    //                 </>
+    //             )}
+    //         </Form.List>
+    //     </Form>
+    // ),[]);
+
+    const operateList = useMemo(() => [
         {label: '接口调用', value: 'operation_1'},
         {label: 'DB操作', value: 'operation_2'},
         {label: 'Redis操作', value: 'operation_3'},
         {label: 'RPC调用', value: 'operation_4'}
-    ];
+    ],[])
 
     let interfaceInfo = {
         interfaceName: "",
@@ -173,6 +234,7 @@ const ProgressPage = ({tcsData}) => {
 
     //继续添加
     const handleContinue = useCallback(() => {
+        console.log(formValues)
         setProgressList(prevList => [...prevList, formValues])
         clearPrevValue();
         // setFormValues({})
@@ -213,23 +275,34 @@ const ProgressPage = ({tcsData}) => {
     }, [debouncedHandleFinish]);
 
 
-    const steps = [
+    const steps = useMemo(() => [
         {
             title: '填写基本信息',
             fields: ['stepName', 'operationType'],
             content: (values, handleChange) => (
-                <Form layout="vertical" initialValues={values} onValuesChange={handleChange} preserve={false} form={form}>
-                    <Form.Item label="步骤名称" name="stepName">
-                        <Input/>
+                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false}
+                      form={form} >
+                    <Form.Item label="步骤名称" name="stepName" rules={[
+                        {
+                            required:true,
+                            message:"请输入步骤说明"
+                        },
+                    ]} hasFeedback>
+                        <Input />
                     </Form.Item>
-                    <Form.Item label="执行方式" name="operationType">
+                    <Form.Item label="执行方式" name="operationType" rules={[
+                        {
+                            required: true,
+                            message:"请选择一个执行步骤"
+                        }
+                    ]}>
                         <Select options={operateList}/>
                     </Form.Item>
                 </Form>
             ),
         },
         {
-            title: '详细参数',
+            title: '编辑详细参数',
             content: (values, handleChange, handleCode) => {
                 const operationType = values.operationType;
                 switch (operationType) {
@@ -252,23 +325,36 @@ const ProgressPage = ({tcsData}) => {
         },
         {
             title: '额外配置',
-            fields: ['fieldG', 'fieldH'],
+            fields: ['interfaceTimeOut', 'sqlTimeOut'],
             content: (values, handleChange) => (
-                <Form layout="vertical" form={form} initialValues={values} onValuesChange={handleChange} preserve={false}>
-                    <Form.Item label="Field G" name="fieldG">
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item label="Field H" name="fieldH">
-                        <Input/>
+                // <DynamicExtraForm values={values} handleChange={handleChange}/>
+                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false} form={form}>
+
+                    <Form.Item label="额外配置" name="extra">
+                        <Input addonBefore={
+                            <Form.Item name={"ExtraType"} noStyle initialValue={"接口响应超时时间"}>
+                                <Select  value={values} onChange={handleChange}>
+                                    <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
+                                    <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
+                                    <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
+                                    <Select.Option value={"WaitTimeOut"}>等待时间</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        } addonAfter={"ms"}/>
                     </Form.Item>
                 </Form>
             ),
         },
-    ];
+    ],[form, operateList, code]);
 
-    const next = useCallback(() => {
-        setCurrent(current + 1);
-    }, [current]);
+    const next = useCallback(async () => {
+        try {
+            await form.validateFields(steps[current].fields)
+            setCurrent(current + 1);
+        } catch (error) {
+            console.log("表单校验失败", error);
+        }
+    },[form, steps, current]);
 
     const prev = useCallback(() => {
         setCurrent(current - 1);
@@ -287,7 +373,7 @@ const ProgressPage = ({tcsData}) => {
                     renderItem={(item) => <List.Item key={item.stepName}>{item.stepName}</List.Item>}
                     style={{width: '30%', marginRight: '20px'}}
                 />
-                <Card title="表单内容" style={{width: '85%'}}>
+                <Card title={steps[current].title} style={{width: '85%'}}>
                     {steps[current].content(formValues, handleChange, handleCode)}
                     <div style={{marginTop: '24px'}}>
                         {current > 0 && (<Button style={{margin: '0 8px'}} onClick={prev}>
