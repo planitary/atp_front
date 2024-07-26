@@ -266,17 +266,17 @@ const CaseSetList = () => {
 
     //维护步骤
     const handleTCSEditClick = async (record) => {
-        await getCaseSetDetail(record.setId).then(res => {
-            if (res.data.code === '0'){
-                const setData = res.data.data
-                tcsData = {...setData}
-            }
-        })
+        // await getCaseSetDetail(record.setId).then(res => {
+        //     if (res.data.code === '0'){
+        //         const setData = res.data.data
+        //         tcsData = {...setData}
+        //     }
+        // })
         // console.log(mockData)
         // 真实数据
-        navigate("/platform/caseset/editProgress", { state: { tcsData } });
+        // navigate("/platform/caseset/editProgress", { state: { tcsData } });
         // mock数据
-        // navigate("/platform/caseset/editProgress", { state: { mockData } });
+        navigate("/platform/caseset/editProgress", { state: { mockData } });
     }
 
 
@@ -366,9 +366,9 @@ const CaseSetList = () => {
                 columns={columns}
                 rowKey={currentId}
                 // 在公司时用mock的数据
-                // dataSource={mockList}
+                dataSource={mockList}
                 // 家里的正式数据
-                dataSource={rowData}
+                // dataSource={rowData}
                 pagination={{
                     pageSize: resData.pageSize,
                     current: currentPage,
