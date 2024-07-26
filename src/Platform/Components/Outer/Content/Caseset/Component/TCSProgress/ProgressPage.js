@@ -161,12 +161,86 @@ const ProgressPage = ({tcsData}) => {
     //     </Form>
     // ),[]);
 
+
+
     const operateList = useMemo(() => [
         {label: '接口调用', value: 'operation_1'},
         {label: 'DB操作', value: 'operation_2'},
         {label: 'Redis操作', value: 'operation_3'},
         {label: 'RPC调用', value: 'operation_4'}
     ],[])
+
+    const steps = useMemo(() => [
+        {
+            title: '填写基本信息',
+            fields: ['stepName', 'operationType'],
+            content: (values, handleChange) => (
+                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false}
+                      form={form} >
+                    <Form.Item label="步骤名称" name="stepName" rules={[
+                        {
+                            required:true,
+                            message:"请输入步骤说明"
+                        },
+                    ]} hasFeedback>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="执行方式" name="operationType" rules={[
+                        {
+                            required: true,
+                            message:"请选择一个执行步骤"
+                        }
+                    ]}>
+                        <Select options={operateList}/>
+                    </Form.Item>
+                </Form>
+            ),
+        },
+        {
+            title: '编辑详细参数',
+            content: (values, handleChange, handleCode) => {
+                const operationType = values.operationType;
+                switch (operationType) {
+                    case 'operation_1':
+                        return <OperationForm1 values={values} handleChange={handleChange}/>;
+                    case 'operation_2':
+                        return <OperationForm2 values={values} handleChange={handleChange} handleCode={handleCode}
+                                               code={code}/>;
+                    default:
+                        return <div>请选择一个类型</div>;
+                }
+            },
+        },
+        {
+            title: '断言设置',
+            fields: ['asserts'],
+            content: (values, handleChange) => (
+                <DynamicAssertForm values={values} handleChange={handleChange}/>
+            ),
+        },
+        {
+            title: '额外配置',
+            fields: ['interfaceTimeOut', 'sqlTimeOut'],
+            content: (values, handleChange) => (
+                // <DynamicExtraForm values={values} handleChange={handleChange}/>
+                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false} form={form}>
+
+                    <Form.Item label="额外配置" name="extra">
+                        <Input addonBefore={
+                            <Form.Item name={"ExtraType"} noStyle initialValue={"接口响应超时时间"}>
+                                <Select  value={values} onChange={handleChange}>
+                                    <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
+                                    <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
+                                    <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
+                                    <Select.Option value={"WaitTimeOut"}>等待时间</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        } addonAfter={"ms"}/>
+                    </Form.Item>
+                </Form>
+            ),
+        },
+    ],[form, operateList, code]);
 
     let interfaceInfo = {
         interfaceName: "",
@@ -203,8 +277,6 @@ const ProgressPage = ({tcsData}) => {
 
 
     const handleChange = useCallback((changedValues, allValues) => {
-        console.log(changedValues)
-
         if (currentOType !== changedValues.operationType && current === 0) {
             clearPrevValue();
         }
@@ -268,87 +340,9 @@ const ProgressPage = ({tcsData}) => {
         [handleFinish]
     );
 
-    useEffect(() => {
-        return () => {
-            debouncedHandleFinish.cancel();
-        };
-    }, [debouncedHandleFinish]);
-
-
-    const steps = useMemo(() => [
-        {
-            title: '填写基本信息',
-            fields: ['stepName', 'operationType'],
-            content: (values, handleChange) => (
-                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false}
-                      form={form} >
-                    <Form.Item label="步骤名称" name="stepName" rules={[
-                        {
-                            required:true,
-                            message:"请输入步骤说明"
-                        },
-                    ]} hasFeedback>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="执行方式" name="operationType" rules={[
-                        {
-                            required: true,
-                            message:"请选择一个执行步骤"
-                        }
-                    ]}>
-                        <Select options={operateList}/>
-                    </Form.Item>
-                </Form>
-            ),
-        },
-        {
-            title: '编辑详细参数',
-            content: (values, handleChange, handleCode) => {
-                const operationType = values.operationType;
-                switch (operationType) {
-                    case 'operation_1':
-                        return <OperationForm1 values={values} handleChange={handleChange}/>;
-                    case 'operation_2':
-                        return <OperationForm2 values={values} handleChange={handleChange} handleCode={handleCode}
-                                               code={code}/>;
-                    default:
-                        return <div>请选择一个类型</div>;
-                }
-            },
-        },
-        {
-            title: '断言设置',
-            fields: ['paramA', 'assertType'],
-            content: (values, handleChange) => (
-                <DynamicAssertForm values={values} handleChange={handleChange}/>
-            ),
-        },
-        {
-            title: '额外配置',
-            fields: ['interfaceTimeOut', 'sqlTimeOut'],
-            content: (values, handleChange) => (
-                // <DynamicExtraForm values={values} handleChange={handleChange}/>
-                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false} form={form}>
-
-                    <Form.Item label="额外配置" name="extra">
-                        <Input addonBefore={
-                            <Form.Item name={"ExtraType"} noStyle initialValue={"接口响应超时时间"}>
-                                <Select  value={values} onChange={handleChange}>
-                                    <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
-                                    <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
-                                    <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
-                                    <Select.Option value={"WaitTimeOut"}>等待时间</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        } addonAfter={"ms"}/>
-                    </Form.Item>
-                </Form>
-            ),
-        },
-    ],[form, operateList, code]);
-
     const next = useCallback(async () => {
         try {
+            console.log("x:",steps[current].fields)
             await form.validateFields(steps[current].fields)
             setCurrent(current + 1);
         } catch (error) {
@@ -359,6 +353,15 @@ const ProgressPage = ({tcsData}) => {
     const prev = useCallback(() => {
         setCurrent(current - 1);
     }, [current]);
+
+    useEffect(() => {
+        return () => {
+            debouncedHandleFinish.cancel();
+        };
+    }, [debouncedHandleFinish]);
+
+
+
 
     return (
         <span>
