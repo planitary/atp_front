@@ -7,32 +7,21 @@ import InterfaceSelector from "./InterfaceSelector";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
 const {Step} = Steps;
-const FinishModal = ({open}) => {
-    return (
-        <Modal
-            open={open}
-
-            title={"新增步骤"}
-            footer={[
-                <Button key={"continue"} type={"primary"}>继续新增</Button>,
-                <Button key={"back"}>不再新增</Button>
-            ]}>
-            <p>当前步骤已新增完成!</p>
-        </Modal>
-    )
-}
-
-
 
 const ProgressPage = ({tcsData}) => {
+    
     const [form] = Form.useForm()
-    let baseCount = 0
+    const [current, setCurrent] = useState(0);
+    const [code, setCode] = useState('');
+    let currentOType;
+    // 测试步骤列表
+    const [progressList, setProgressList] = useState([])
 
     // 接口新增
     const OperationForm1 = useCallback(({values, handleChange}) => (
-        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form}>
+        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} form={form} preserve={false}>
             <Form.Item label={"接口名"} name={"interfaceName"}>
-                <InterfaceSelector projectId={tcsData.projectId} handleData={handleInterfaceInfo}/>
+                <InterfaceSelector projectId={tcsData.projectId} />
             </Form.Item>
             <Form.Item label={"接口url"} name={"interfaceUrl"}>
                 <Input disabled={true}/>
@@ -45,7 +34,7 @@ const ProgressPage = ({tcsData}) => {
 
     // code输入
     const OperationForm2 = useCallback(({values, handleChange, handleCode, code}) => (
-        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}>
+        <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange} preserve={false}>
             <Form.Item label={"说明"} name={"remark"}>
                 <Input/>
             </Form.Item>
@@ -71,7 +60,7 @@ const ProgressPage = ({tcsData}) => {
 
     // 断言动态表单
     const DynamicAssertForm = useCallback(({values, handleChange}) => (
-        <Form layout="horizontal" initialValues={values} onValuesChange={handleChange}
+        <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false}
               title={"断言设置"} name={"asserts"}>
             <Form.List name={"asserts"}>
                 {(fields, {add, remove}) => (
@@ -111,18 +100,6 @@ const ProgressPage = ({tcsData}) => {
         </Form>
     ), []);
 
-
-    const [current, setCurrent] = useState(0);
-    const [code, setCode] = useState('');
-    let currentOType;
-    // 测试步骤列表
-    const [progressList, setProgressList] = useState([])
-
-    const [finishButtonStatus, setStatus] = useState(false)
-
-    // 新增后的对话框状态
-    const [open, setOpen] = useState(false)
-
     const operateList = [
         {label: '接口调用', value: 'operation_1'},
         {label: 'DB操作', value: 'operation_2'},
@@ -138,31 +115,30 @@ const ProgressPage = ({tcsData}) => {
     }
 
 
-    const [formValues, setFormValues] = useState({
-        stepName: '',
-        operationType: '',
-        remark: '',
-        DBContent: '',
-        interfaceName: '',
-        interfaceUrl: '',
-        requestBody: '',
-        projectId: '',
-        fieldH: '',
-        fieldE: '',
-        fieldF: '',
-        fieldG: '',
-    });
+    const [formValues, setFormValues] = useState({});
 
     const clearPrevValue = useCallback(() => {
-        setFormValues(prevValues => ({
-            ...prevValues,
-            DBContent: '',
-            name: '',
-            interfaceUrl: '',
+        setFormValues({
+            stepName: '',
+            operationType: '',
             remark: '',
-        }));
+            DBContent: '',
+            interfaceName: '',
+            interfaceUrl: '',
+            requestBody: '',
+            projectId: '',
+            fieldH: '',
+            fieldE: '',
+            fieldF: '',
+            fieldG: '',
+        });
         setCode('');
     }, []);
+
+    // const handleChange = useCallback((changedValues, allValues) => {
+    //     console.log(changedValues);
+    //     setFormValues(allValues);
+    // }, []);
 
 
     const handleChange = useCallback((changedValues, allValues) => {
@@ -195,25 +171,34 @@ const ProgressPage = ({tcsData}) => {
         return interfaceInfo;
     }
 
+    //继续添加
+    const handleContinue = useCallback(() => {
+        setProgressList(prevList => [...prevList, formValues])
+        clearPrevValue();
+        // setFormValues({})
+        // form.setFieldsValue("");
+        // form.resetFields()
+        form.setFieldValue("stepName","")
+        form.setFieldValue("operationType","")
+        setCurrent(0)
+        Modal.destroyAll();
+    },[clearPrevValue, form, formValues])
 
     // 步骤结束后的确认
     const handleFinish = useCallback(() => {
-        const newValue = {...formValues};
-        setProgressList(prevList => [...prevList, newValue])
-        console.log(formValues)
-        setStatus(true)
-        setOpen(true)
+
         Modal.success({
-            title: 'success',
+            title: '添加成功',
             footer: (_) => (
                 <>
                     <Button key={"back"}>不再添加</Button>
-                    <Button key={"continue"} type={"primary"}>继续添加</Button>
+                    <Button key={"continue"} type={"primary"}  onClick={handleContinue}>继续添加</Button>
                 </>
             ),
             content: "当前步骤已添加完成，需要继续添加么?"
         });
-    }, [formValues]);
+    }, [handleContinue]
+    );
 
     //防抖
     const debouncedHandleFinish = useCallback(
@@ -233,7 +218,7 @@ const ProgressPage = ({tcsData}) => {
             title: '填写基本信息',
             fields: ['stepName', 'operationType'],
             content: (values, handleChange) => (
-                <Form layout="vertical" initialValues={values} onValuesChange={handleChange}>
+                <Form layout="vertical" initialValues={values} onValuesChange={handleChange} preserve={false} form={form}>
                     <Form.Item label="步骤名称" name="stepName">
                         <Input/>
                     </Form.Item>
@@ -269,7 +254,7 @@ const ProgressPage = ({tcsData}) => {
             title: '额外配置',
             fields: ['fieldG', 'fieldH'],
             content: (values, handleChange) => (
-                <Form layout="vertical" initialValues={values} onValuesChange={handleChange}>
+                <Form layout="vertical" form={form} initialValues={values} onValuesChange={handleChange} preserve={false}>
                     <Form.Item label="Field G" name="fieldG">
                         <Input/>
                     </Form.Item>
