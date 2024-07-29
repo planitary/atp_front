@@ -1,5 +1,5 @@
 import {Button, Empty, Typography} from "antd";
-import file from "../../../../../../Static/empty-box-svgrepo-com.svg"
+import file from "../../../../../../Static/icons/empty-box-svgrepo-com.svg"
 
 
 

@@ -1,17 +1,18 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import { Layout, Steps, List, Form, Input, Button, Card, Divider, Row, Col, Select } from 'antd';
+import {Layout, Steps, List, Form, Input, Button, Card, Divider, Row, Col, Select} from 'antd';
 import {ContactsTwoTone, HourglassTwoTone, PieChartOutlined} from "@ant-design/icons";
 import InterfaceSelectorSingle from "../TCSList/InterfaceSelectorSingle";
 import CodeEditor from "./CodeEditor";
 import './CodeEditor.scss';
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import EmptyPage from "./EmptyPage";
 import {add} from "lodash/math";
 import debounce from "lodash/debounce";
 import ProgressPage from "./ProgressPage";
 import AddTCSForm from "../TCSList/AddTCSForm";
+import ProgressList from "./ProgressList";
 
-const { Header, Content } = Layout;
+const {Header, Content} = Layout;
 
 const AddTCSFormV2 = () => {
 
@@ -23,9 +24,35 @@ const AddTCSFormV2 = () => {
     // tcsData.stepsData = []
     // mock数据
     const {mockData} = location.state || {}
-    const  tcsData = mockData;
-    // tcsData.stepsData = ["哈哈哈"]
-    console.log(tcsData.stepsData.length)
+    const tcsData = mockData;
+    tcsData.stepsData = [
+        {
+            title: '测试步骤1',
+            key: '3252509',
+            operationType: 'ot1'
+        },
+        {
+            title: '登陆接口',
+            key: '32525092',
+            operationType: 'ot1'
+        },
+        {
+            title: 'DB调用',
+            key: '3233339',
+            operationType: 'ot2'
+        },
+        {
+            title: 'DB调用后数据聚合',
+            key: '3580294124',
+            operationType: 'ot1'
+        },
+        {
+            title: '清空数据',
+            key: '4327891441',
+            operationType: 'ot3'
+        }
+    ]
+    // console.log(tcsData.stepsData.length)
 
     /**
      * 测试步骤组件渲染标记
@@ -33,16 +60,16 @@ const AddTCSFormV2 = () => {
      * 1：步骤操作页
      * -1：空白页
      */
-    const [pageIndex,setPageIndex] = useState(0)
+    const [pageIndex, setPageIndex] = useState(0)
 
     // 测试步骤组件渲染标记
-    const handleComponent = (value) =>{
+    const handleComponent = (value) => {
         console.log(value)
         setPageIndex(value)
     }
-    
-    useEffect(() =>{
-        if (tcsData.stepsData.length === 0){
+
+    useEffect(() => {
+        if (tcsData.stepsData.length === 0) {
             setPageIndex(-1)
         }
     }, [tcsData.stepsData.length])
@@ -50,7 +77,7 @@ const AddTCSFormV2 = () => {
     let component;
     switch (pageIndex) {
         case 0:
-            component = <AddTCSForm/>
+            component = <ProgressList data={tcsData.stepsData}/>
             break;
         case 1:
             component = <ProgressPage tcsData={tcsData}/>
@@ -63,8 +90,8 @@ const AddTCSFormV2 = () => {
     }
 
     return (
-        <Layout style={{ backgroundColor: '#fff' }}>
-            <Header style={{ background: '#fff', padding: '0px', height: '120px' }}>
+        <Layout style={{backgroundColor: '#fff'}}>
+            <Header style={{background: '#fff', padding: '0px', height: '120px'}}>
                 <span style={{
                     margin: "0",
                     fontWeight: "850",
@@ -73,7 +100,7 @@ const AddTCSFormV2 = () => {
                     justifyContent: 'center',
                     height: '40px'
                 }}>
-                    <ContactsTwoTone style={{ fontSize: "18px", marginRight: "5px" }} />基础信息
+                    <ContactsTwoTone style={{fontSize: "18px", marginRight: "5px"}}/>基础信息
                 </span>
                 <Form layout="horizontal">
                     <Row gutter={10}>
@@ -107,9 +134,9 @@ const AddTCSFormV2 = () => {
                     </Row>
                 </Form>
             </Header>
-            <Divider />
+            <Divider/>
 
-                <Content style={{ background: '#fff', padding: '0px' }}>
+            <Content style={{background: '#fff', padding: '0px'}}>
                 <span style={{
                     margin: "0",
                     fontWeight: "850",
@@ -119,13 +146,13 @@ const AddTCSFormV2 = () => {
                     height: '40px'
                 }}>
 
-                    <HourglassTwoTone style={{ fontSize: "18px", marginRight: "5px" }}/>测试步骤
+                    <HourglassTwoTone style={{fontSize: "18px", marginRight: "5px"}}/>测试步骤
                     {/*<PieChartOutlined  style={{ fontSize: "18px", marginRight: "5px" }}/>测试步骤*/}
                 </span>
 
-                    {/*根据组件标记，分别展示列表页、步骤新增页、空白页*/}
-                    {component}
-                </Content>
+                {/*根据组件标记，分别展示列表页、步骤新增页、空白页*/}
+                {component}
+            </Content>
 
 
         </Layout>
