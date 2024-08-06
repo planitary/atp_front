@@ -1,18 +1,8 @@
-import React from "react";
-import {ReactComponent as RedisMulti} from "../icons/RedisMulti.svg";
+import {createFromIconfontCN} from "@ant-design/icons";
+import ReactDom from 'react-dom/client'
 
+const RedisIcon = createFromIconfontCN({
+    scriptUrl:'//at.alicdn.com/t/c/font_4636439_jku01l695g.js'
+});
 
-const icons = {
-    RedisMulti,
-};
-// 封裝svg為組件
-
-const CustomSvgIcon = ({name, ...props}) => {
-    const IconComponent = icons[name];
-    if (!IconComponent){
-        return <span>Icon not found</span>
-    }
-    return <IconComponent {...props} />
-}
-
-export default CustomSvgIcon
+// ReactDom.createRoot(mountNode).render(<RedisIcon type={"icon-example"} />)

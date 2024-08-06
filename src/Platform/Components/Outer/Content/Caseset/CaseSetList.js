@@ -277,6 +277,7 @@ const CaseSetList = () => {
         // navigate("/platform/caseset/editProgress", { state: { tcsData } });
         // mock数据
         navigate("/platform/caseset/editProgress", { state: { mockData } });
+        //todo: 根据stepsData不同的情况，进入不同的navigate
     }
 
 

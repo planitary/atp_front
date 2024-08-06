@@ -52,7 +52,7 @@ const AddTCSFormV2 = () => {
             operationType: 'ot3'
         }
     ]
-    // console.log(tcsData.stepsData.length)
+    console.log(tcsData.stepsData.length)
 
     /**
      * 测试步骤组件渲染标记
