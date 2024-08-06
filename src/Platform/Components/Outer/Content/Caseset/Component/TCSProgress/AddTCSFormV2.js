@@ -11,6 +11,7 @@ import debounce from "lodash/debounce";
 import ProgressPage from "./ProgressPage";
 import AddTCSForm from "../TCSList/AddTCSForm";
 import ProgressList from "./ProgressList";
+import {value} from "lodash/seq";
 
 const {Header, Content} = Layout;
 
@@ -25,33 +26,33 @@ const AddTCSFormV2 = () => {
     // mock数据
     const {mockData} = location.state || {}
     const tcsData = mockData;
-    tcsData.stepsData = [
-        {
-            title: '测试步骤1',
-            key: '3252509',
-            operationType: 'ot1'
-        },
-        {
-            title: '登陆接口',
-            key: '32525092',
-            operationType: 'ot1'
-        },
-        {
-            title: 'DB调用',
-            key: '3233339',
-            operationType: 'ot2'
-        },
-        {
-            title: 'DB调用后数据聚合',
-            key: '3580294124',
-            operationType: 'ot1'
-        },
-        {
-            title: '清空数据',
-            key: '4327891441',
-            operationType: 'ot3'
-        }
-    ]
+    // tcsData.stepsData = [
+    //     {
+    //         title: '测试步骤1',
+    //         key: '3252509',
+    //         operationType: 'ot1'
+    //     },
+    //     {
+    //         title: '登陆接口',
+    //         key: '32525092',
+    //         operationType: 'ot1'
+    //     },
+    //     {
+    //         title: 'DB调用',
+    //         key: '3233339',
+    //         operationType: 'ot2'
+    //     },
+    //     {
+    //         title: 'DB调用后数据聚合',
+    //         key: '3580294124',
+    //         operationType: 'ot1'
+    //     },
+    //     {
+    //         title: '清空数据',
+    //         key: '4327891441',
+    //         operationType: 'ot3'
+    //     }
+    // ]
     console.log(tcsData.stepsData.length)
 
     /**
@@ -68,10 +69,71 @@ const AddTCSFormV2 = () => {
         setPageIndex(value)
     }
 
-    //todo 有步骤时带入记录
-    const handleForm = (value) =>{
+    // mock初始表单数据
+    const mockForm = [
+        {
+            stepName:"登录",
+            operationType:"operation_1",
+            remark:"test",
+            interfaceName:"全局用户登录",
+            interfaceUrl:"/use/center/login",
+            requestBody:{"id":"1","class":"s.cls"},
+            asserts:[
+                {
+                    param:"$..data..id",
+                    assertType:"NotEquals",
+                    value:"111"
 
-    }
+                }
+            ],
+            extraType: "ConnectTimeOut",
+            extraValue:"45",
+            key:0,
+            value:"ConnectTimeOut",
+            children:"连接超时时间"
+        },
+        {
+            stepName:"测试sql链接",
+            operationType:"operation_2",
+            remark:"test",
+            DBContent:"xxx",
+            asserts:[
+                {
+                    param:"$..data..id",
+                    assertType:"NotEquals",
+                    value:"222"
+
+                }
+            ],
+            extraType: "WaitTimeOut",
+            extraValue:"95",
+            key:1,
+            value:"WaitTimeOut",
+            children:"等待超时时间"
+        },
+        {
+            stepName:"清空数据",
+            operationType:"operation_2",
+            remark:"test",
+            DBContent:"select * from cs_trend_class_config where trend_station_id = '1172652247652106241'",
+            asserts:[
+                {
+                    param:"$..data..id",
+                    assertType:"NotEquals",
+                    value:"333"
+
+                }
+            ],
+            extraType: "SqlExeTimeOut",
+            extraValue:"120",
+            key:2,
+            value:"WaitTimeOut",
+            children:"Sql执行超时时间"
+        },
+    ]
+
+    const mockForm2 = []
+
 
     useEffect(() => {
         if (tcsData.stepsData.length === 0) {
@@ -85,7 +147,7 @@ const AddTCSFormV2 = () => {
             component = <ProgressList data={tcsData.stepsData} handlePage={handleComponent}/>
             break;
         case 1:
-            component = <ProgressPage tcsData={tcsData}/>
+            component = <ProgressPage tcsData={tcsData} initForm={mockForm}/>
             break;
         case -1:
             component = <EmptyPage handlePage={handleComponent}/>

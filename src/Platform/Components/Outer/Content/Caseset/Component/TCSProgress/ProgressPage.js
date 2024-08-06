@@ -10,14 +10,15 @@ import {Option} from "antd/es/mentions";
 
 const {Step} = Steps;
 
-const ProgressPage = ({tcsData}) => {
-    
+const ProgressPage = ({tcsData,initForm}) => {
+
+    let listSeq = 0;
     const [form] = Form.useForm()
     const [current, setCurrent] = useState(0);
     const [code, setCode] = useState('');
     let currentOType;
     // 测试步骤列表
-    const [progressList, setProgressList] = useState([])
+    const [progressList, setProgressList] = useState(initForm)
 
     // 接口新增
     const OperationForm1 = useCallback(({values, handleChange}) => (
@@ -74,7 +75,7 @@ const ProgressPage = ({tcsData}) => {
             <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
             <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
             <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
-            <Select.Option value={"waitTimeOut"}>等待时间</Select.Option>
+            <Select.Option value={"WaitTimeOut"}>等待时间</Select.Option>
         </Select>
         )}
 
@@ -225,9 +226,9 @@ const ProgressPage = ({tcsData}) => {
                 // <DynamicExtraForm values={values} handleChange={handleChange}/>
                 <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false} form={form}>
 
-                    <Form.Item label="额外配置" name="extra">
+                    <Form.Item label="额外配置" name="extraValue">
                         <Input addonBefore={
-                            <Form.Item name={"ExtraType"} noStyle initialValue={"接口响应超时时间"}>
+                            <Form.Item name={"extraType"} noStyle initialValue={"接口响应超时时间"}>
                                 <Select  value={values} onChange={handleChange}>
                                     <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
                                     <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
@@ -250,7 +251,8 @@ const ProgressPage = ({tcsData}) => {
     }
 
 
-    const [formValues, setFormValues] = useState({});
+    // 根据表单是否有值来进行初始化，无则置空，有则默认取第一个
+    const [formValues, setFormValues] = useState(initForm.length === 0 ? {} : initForm[0]);
 
     const clearPrevValue = useCallback(() => {
         setFormValues({
@@ -340,6 +342,23 @@ const ProgressPage = ({tcsData}) => {
         [handleFinish]
     );
 
+    // 有值的时候progressList的点击事件
+    const handleListItemClick = (item) => {
+        setCurrent(0)
+        setFormValues(item)
+        if (item.operationType === 'operation_2'){
+            setCode(item.DBContent)
+        }
+    }
+
+    //点击progressList后更新表单值
+    useEffect(() => {
+        if (formValues){
+            console.log('after:',formValues);
+            form.setFieldsValue(formValues)
+        }
+    },[form, formValues])
+
     const next = useCallback(async () => {
         try {
             console.log("x:",steps[current].fields)
@@ -361,8 +380,6 @@ const ProgressPage = ({tcsData}) => {
     }, [debouncedHandleFinish]);
 
 
-
-
     return (
         <span>
             <Steps current={current} style={{marginBottom: '20px', width: "100%"}}>
@@ -373,8 +390,12 @@ const ProgressPage = ({tcsData}) => {
                     header={<div style={{textAlign: "center", fontWeight: "600"}}>测试计划</div>}
                     bordered={true}
                     dataSource={progressList}
-                    renderItem={(item) => <List.Item key={item.stepName}>{item.stepName}</List.Item>}
+                    rowKey={progressList.map(item => item.key)}
+                    renderItem={(item) => <List.Item key={item.key}>
+                        <a onClick={() => handleListItemClick(item)}>{item.stepName}</a>
+                    </List.Item>}
                     style={{width: '30%', marginRight: '20px'}}
+
                 />
                 <Card title={steps[current].title} style={{width: '85%'}}>
                     {steps[current].content(formValues, handleChange, handleCode)}
