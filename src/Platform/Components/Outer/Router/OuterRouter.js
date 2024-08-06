@@ -32,7 +32,7 @@ const OuterRouter = createBrowserRouter([
             },
             {
                 path: '/platform/caseset/editProgress',
-                element:<ProgressPage/>
+                element:<AddTCSFormV2/>
             },
             {
                 path: '/platform/caseset/emptyProgressPage',

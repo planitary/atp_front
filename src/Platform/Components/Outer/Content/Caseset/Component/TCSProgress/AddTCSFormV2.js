@@ -68,6 +68,11 @@ const AddTCSFormV2 = () => {
         setPageIndex(value)
     }
 
+    //todo 有步骤时带入记录
+    const handleForm = (value) =>{
+
+    }
+
     useEffect(() => {
         if (tcsData.stepsData.length === 0) {
             setPageIndex(-1)
@@ -77,7 +82,7 @@ const AddTCSFormV2 = () => {
     let component;
     switch (pageIndex) {
         case 0:
-            component = <ProgressList data={tcsData.stepsData}/>
+            component = <ProgressList data={tcsData.stepsData} handlePage={handleComponent}/>
             break;
         case 1:
             component = <ProgressPage tcsData={tcsData}/>

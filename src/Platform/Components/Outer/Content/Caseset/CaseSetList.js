@@ -250,6 +250,7 @@ const CaseSetList = () => {
         setWeight: "",
         owner: "",
         createTime: "",
+        stepsData:[]
     }
 
     const mockData = {
@@ -277,7 +278,16 @@ const CaseSetList = () => {
         // navigate("/platform/caseset/editProgress", { state: { tcsData } });
         // mock数据
         navigate("/platform/caseset/editProgress", { state: { mockData } });
-        //todo: 根据stepsData不同的情况，进入不同的navigate
+        // const stepsData = tcsData.stepsData
+        // const stepsData = mockData.stepsData;
+        //
+
+        // if (stepsData.length === 0){
+        //     navigate("/platform/caseset/emptyProgressPage",{state:{mockData}})
+        // }
+        // else {
+        //     navigate("/platform/caseset/progressList",{state:{mockData}})
+        // }
     }
 
 

@@ -8,7 +8,7 @@ const RedisIcon = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/c/font_4636439_jku01l695g.js'
 })
 
-const ProgressList = ({data}) => {
+const ProgressList = ({data,handlePage}) => {
 
     const getOperationTypeAvatar = (operationType) => {
         switch (operationType) {
@@ -28,7 +28,7 @@ const ProgressList = ({data}) => {
     return (
         <>
             <Space className={"progress-list-space"}>
-                <Button type={"primary"}>编辑</Button>
+                <Button type={"primary"} onClick={() => handlePage(1)}>编辑</Button>
             </Space>
             <List
                 itemLayout="horizontal"
