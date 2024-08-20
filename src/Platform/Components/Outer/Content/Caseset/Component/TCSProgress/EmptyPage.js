@@ -3,7 +3,7 @@ import file from "../../../../../../Static/icons/empty-box-svgrepo-com.svg"
 
 
 
-const EmptyPage = ({handlePage}) => {
+const EmptyPage = ({handlePage,data}) => {
 
     return (
         <span style={{marginBottom: "10px"}}>
@@ -19,7 +19,7 @@ const EmptyPage = ({handlePage}) => {
                 </Typography.Text>
             }
         >
-            <Button type={"primary"} onClick={() => handlePage(1)}>新增步骤</Button>
+            <Button type={"primary"} onClick={() => handlePage(1,data)}>新增步骤</Button>
 
         </Empty>
     </span>

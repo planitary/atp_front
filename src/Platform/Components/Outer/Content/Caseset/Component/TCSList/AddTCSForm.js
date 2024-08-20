@@ -105,24 +105,24 @@ const TCSAddCreateForm = ({form, onChange, setInterfaceList, projectInfo}) => {
                     </Form.Item>
                 </Col>
             </Row>
-            <Row gutter={20}>
-                <Form.Item
-                    name="interfaceList"
-                    label="接口列表"
-                    rules={[
-                        {
-                            required: true,
-                            message: "请至少选择一个接口!",
-                        },
-                    ]}
-                    tooltip={"在下方列表为当前集合选择接口，输入接口名称会自动进行搜索"}
-                >
-                    <TCSInterfaceTable sourceData={sourceData}
-                                       setNewData={handleNewData}
-                                       projectId={projectInfo.id}
-                    />
-                </Form.Item>
-            </Row>
+            {/*<Row gutter={20}>*/}
+            {/*    <Form.Item*/}
+            {/*        name="interfaceList"*/}
+            {/*        label="接口列表"*/}
+            {/*        rules={[*/}
+            {/*            {*/}
+            {/*                required: true,*/}
+            {/*                message: "请至少选择一个接口!",*/}
+            {/*            },*/}
+            {/*        ]}*/}
+            {/*        tooltip={"在下方列表为当前集合选择接口，输入接口名称会自动进行搜索"}*/}
+            {/*    >*/}
+            {/*        <TCSInterfaceTable sourceData={sourceData}*/}
+            {/*                           setNewData={handleNewData}*/}
+            {/*                           projectId={projectInfo.id}*/}
+            {/*        />*/}
+            {/*    </Form.Item>*/}
+            {/*</Row>*/}
             <Form.Item
                 name="remark"
                 label="备注"
@@ -166,9 +166,9 @@ const AddTCSForm = ({open, onCreate, onCancel}) => {
         console.log("projectInfo", projectInfo)
         // 确保 TCSInfo.interfaceIds 是一个数组
         TCSInfo.interfaceIds = TCSInfo.interfaceIds || [];
-        interfaceList.forEach(item => {
-            TCSInfo.interfaceIds.push(item.interfaceId);
-        });
+        // interfaceList.forEach(item => {
+        //     TCSInfo.interfaceIds.push(item.interfaceId);
+        // });
         TCSInfo.projectId = projectInfo.id
         try {
             await form.validateFields()

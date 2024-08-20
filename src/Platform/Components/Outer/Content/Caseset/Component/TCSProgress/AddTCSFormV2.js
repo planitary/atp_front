@@ -19,75 +19,76 @@ const AddTCSFormV2 = () => {
 
     // 拿到父组件跳转的值
     const location = useLocation();
-    // const { tcsData } = location.state || {};
+    const { tcsData } = location.state || {};
 
     // 临时创建一条数据
     // tcsData.stepsData = []
     // mock数据
     const {mockData} = location.state || {}
-    const tcsData = mockData;
-    tcsData.stepsData = [
-        {
-            stepName:"登录",
-            operationType:"operation_1",
-            remark:"test",
-            interfaceName:"全局用户登录",
-            interfaceUrl:"/use/center/login",
-            requestBody:{"id":"1","class":"s.cls"},
-            asserts:[
-                {
-                    param:"$..data..id",
-                    assertType:"NotEquals",
-                    value:"111"
-
-                }
-            ],
-            extraType: "ConnectTimeOut",
-            extraValue:"45",
-            key:0,
-            value:"ConnectTimeOut",
-            children:"连接超时时间"
-        },
-        {
-            stepName:"测试sql链接",
-            operationType:"operation_2",
-            remark:"test",
-            DBContent:"xxx",
-            asserts:[
-                {
-                    param:"$..data..id",
-                    assertType:"NotEquals",
-                    value:"222"
-
-                }
-            ],
-            extraType: "WaitTimeOut",
-            extraValue:"95",
-            key:1,
-            value:"WaitTimeOut",
-            children:"等待超时时间"
-        },
-        {
-            stepName:"清空数据",
-            operationType:"operation_2",
-            remark:"test",
-            DBContent:"select * from cs_trend_class_config where trend_station_id = '1172652247652106241'",
-            asserts:[
-                {
-                    param:"$..data..id",
-                    assertType:"NotEquals",
-                    value:"333"
-
-                }
-            ],
-            extraType: "SqlExeTimeOut",
-            extraValue:"120",
-            key:2,
-            value:"WaitTimeOut",
-            children:"Sql执行超时时间"
-        },
-    ]
-    console.log(tcsData.stepsData.length)
+    // const tcsData = mockData;
+    console.log(tcsData)
+    // tcsData.stepsData = [
+    //     {
+    //         stepName:"登录",
+    //         operationType:"operation_1",
+    //         remark:"test",
+    //         interfaceName:"全局用户登录",
+    //         interfaceUrl:"/use/center/login",
+    //         requestBody:{"id":"1","class":"s.cls"},
+    //         asserts:[
+    //             {
+    //                 param:"$..data..id",
+    //                 assertType:"NotEquals",
+    //                 value:"111"
+    //
+    //             }
+    //         ],
+    //         extraType: "ConnectTimeOut",
+    //         extraValue:"45",
+    //         key:0,
+    //         value:"ConnectTimeOut",
+    //         children:"连接超时时间"
+    //     },
+    //     {
+    //         stepName:"测试sql链接",
+    //         operationType:"operation_2",
+    //         remark:"test",
+    //         DBContent:"xxx",
+    //         asserts:[
+    //             {
+    //                 param:"$..data..id",
+    //                 assertType:"NotEquals",
+    //                 value:"222"
+    //
+    //             }
+    //         ],
+    //         extraType: "WaitTimeOut",
+    //         extraValue:"95",
+    //         key:1,
+    //         value:"WaitTimeOut",
+    //         children:"等待超时时间"
+    //     },
+    //     {
+    //         stepName:"清空数据",
+    //         operationType:"operation_2",
+    //         remark:"test",
+    //         DBContent:"select * from cs_trend_class_config where trend_station_id = '1172652247652106241'",
+    //         asserts:[
+    //             {
+    //                 param:"$..data..id",
+    //                 assertType:"NotEquals",
+    //                 value:"333"
+    //
+    //             }
+    //         ],
+    //         extraType: "SqlExeTimeOut",
+    //         extraValue:"120",
+    //         key:2,
+    //         value:"WaitTimeOut",
+    //         children:"Sql执行超时时间"
+    //     },
+    // ]
+    // console.log(tcsData.stepsData.length)
 
     /**
      * 测试步骤组件渲染标记
@@ -160,15 +161,12 @@ const AddTCSFormV2 = () => {
     ]
 
     // 初始化表单useState
-    const [initForm,setInitForm] = useState(mockForm);
+    const [initForm,setInitForm] = useState(tcsData.stepsData);
 
     // 测试步骤组件渲染标记
     const handleComponent = (value,data) => {
-
         setPageIndex(value)
         setInitForm(data)
-        console.log(data)
-        console.log(initForm)
     }
 
     useEffect(() => {
@@ -186,7 +184,7 @@ const AddTCSFormV2 = () => {
             component = <ProgressPage tcsData={tcsData} initForm={initForm}/>
             break;
         case -1:
-            component = <EmptyPage handlePage={handleComponent}/>
+            component = <EmptyPage handlePage={handleComponent} data={tcsData.stepsData}/>
             break;
         default:
             component = <AddTCSFormV2/>
