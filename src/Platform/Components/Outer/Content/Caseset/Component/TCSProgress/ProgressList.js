@@ -12,12 +12,12 @@ const ProgressList = ({data,handlePage}) => {
 
     const getOperationTypeAvatar = (operationType) => {
         switch (operationType) {
-            case "ot1":
+            case "operation_1":
                 // return <RedisIcon type={"icon-example"} />
                 return <ApiTwoTone/>
-            case "ot2":
+            case "operation_2":
                 return <DatabaseTwoTone/>;
-            case "ot3":
+            case "operation_3":
                 return <ControlTwoTone/>;
             default:
                 return <CheckSquareTwoTone/>;
@@ -28,7 +28,7 @@ const ProgressList = ({data,handlePage}) => {
     return (
         <>
             <Space className={"progress-list-space"}>
-                <Button type={"primary"} onClick={() => handlePage(1)}>编辑</Button>
+                <Button type={"primary"} onClick={() => handlePage(1,data)}>编辑</Button>
             </Space>
             <List
                 itemLayout="horizontal"
@@ -39,7 +39,7 @@ const ProgressList = ({data,handlePage}) => {
                     <List.Item>
                         <List.Item.Meta
                             avatar={getOperationTypeAvatar(item.operationType)}
-                            title={item.title}
+                            title={item.stepName}
                             // description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                         />
                     </List.Item>

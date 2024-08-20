@@ -26,33 +26,67 @@ const AddTCSFormV2 = () => {
     // mock数据
     const {mockData} = location.state || {}
     const tcsData = mockData;
-    // tcsData.stepsData = [
-    //     {
-    //         title: '测试步骤1',
-    //         key: '3252509',
-    //         operationType: 'ot1'
-    //     },
-    //     {
-    //         title: '登陆接口',
-    //         key: '32525092',
-    //         operationType: 'ot1'
-    //     },
-    //     {
-    //         title: 'DB调用',
-    //         key: '3233339',
-    //         operationType: 'ot2'
-    //     },
-    //     {
-    //         title: 'DB调用后数据聚合',
-    //         key: '3580294124',
-    //         operationType: 'ot1'
-    //     },
-    //     {
-    //         title: '清空数据',
-    //         key: '4327891441',
-    //         operationType: 'ot3'
-    //     }
-    // ]
+    tcsData.stepsData = [
+        {
+            stepName:"登录",
+            operationType:"operation_1",
+            remark:"test",
+            interfaceName:"全局用户登录",
+            interfaceUrl:"/use/center/login",
+            requestBody:{"id":"1","class":"s.cls"},
+            asserts:[
+                {
+                    param:"$..data..id",
+                    assertType:"NotEquals",
+                    value:"111"
+
+                }
+            ],
+            extraType: "ConnectTimeOut",
+            extraValue:"45",
+            key:0,
+            value:"ConnectTimeOut",
+            children:"连接超时时间"
+        },
+        {
+            stepName:"测试sql链接",
+            operationType:"operation_2",
+            remark:"test",
+            DBContent:"xxx",
+            asserts:[
+                {
+                    param:"$..data..id",
+                    assertType:"NotEquals",
+                    value:"222"
+
+                }
+            ],
+            extraType: "WaitTimeOut",
+            extraValue:"95",
+            key:1,
+            value:"WaitTimeOut",
+            children:"等待超时时间"
+        },
+        {
+            stepName:"清空数据",
+            operationType:"operation_2",
+            remark:"test",
+            DBContent:"select * from cs_trend_class_config where trend_station_id = '1172652247652106241'",
+            asserts:[
+                {
+                    param:"$..data..id",
+                    assertType:"NotEquals",
+                    value:"333"
+
+                }
+            ],
+            extraType: "SqlExeTimeOut",
+            extraValue:"120",
+            key:2,
+            value:"WaitTimeOut",
+            children:"Sql执行超时时间"
+        },
+    ]
     console.log(tcsData.stepsData.length)
 
     /**
@@ -62,13 +96,6 @@ const AddTCSFormV2 = () => {
      * -1：空白页
      */
     const [pageIndex, setPageIndex] = useState(0)
-
-    // 测试步骤组件渲染标记
-    const handleComponent = (value) => {
-        console.log(value)
-        setPageIndex(value)
-    }
-
     // mock初始表单数据
     const mockForm = [
         {
@@ -132,8 +159,17 @@ const AddTCSFormV2 = () => {
         },
     ]
 
-    const mockForm2 = []
+    // 初始化表单useState
+    const [initForm,setInitForm] = useState(mockForm);
 
+    // 测试步骤组件渲染标记
+    const handleComponent = (value,data) => {
+
+        setPageIndex(value)
+        setInitForm(data)
+        console.log(data)
+        console.log(initForm)
+    }
 
     useEffect(() => {
         if (tcsData.stepsData.length === 0) {
@@ -147,7 +183,7 @@ const AddTCSFormV2 = () => {
             component = <ProgressList data={tcsData.stepsData} handlePage={handleComponent}/>
             break;
         case 1:
-            component = <ProgressPage tcsData={tcsData} initForm={mockForm}/>
+            component = <ProgressPage tcsData={tcsData} initForm={initForm}/>
             break;
         case -1:
             component = <EmptyPage handlePage={handleComponent}/>
