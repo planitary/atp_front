@@ -1,4 +1,4 @@
-import {Button, Space, Table, Tag, Tooltip} from "antd";
+import {Badge, Button, Modal, Progress, Space, Table, Tag, Tooltip} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {GetCaseSetList, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
@@ -10,6 +10,7 @@ import "./CaseSetList.scss"
 import axios from "axios";
 import AddTCSForm from "./Component/TCSList/AddTCSForm";
 import ExeCuteDropButton from "./Component/TCSExcute/ExecuteDropButton";
+import TCSExecuteModal from "./Component/TCSExcute/TCSExecuteModal";
 // import {useHistory} from 'react-router-dom'
 
 const CaseSetExecute = () => {
@@ -29,32 +30,6 @@ const CaseSetExecute = () => {
             dataIndex: 'steps',
             width: '12%'
         },
-
-        // {
-        //     title: '创建人',
-        //     dataIndex: 'createUser',
-        // },
-        // {
-        //     title: (
-        //         <div>
-        //             参数提取列表
-        //             <Tooltip title="鼠标悬浮在单元格内可查看详情">
-        //                 <InfoCircleOutlined className="interface-title-icon"/>
-        //
-        //             </Tooltip>
-        //         </div>),
-        //
-        //     dataIndex: 'parameterList',
-        //     width: '12%',
-        //     ellipsis: {
-        //         showTitle: false
-        //     },
-        //     render: (parameterList) => (
-        //         <Tooltip placement="topLeft" title={parameterList}>
-        //             {parameterList}
-        //         </Tooltip>
-        //     )
-        // },
         {
             title: '负责人',
             dataIndex: 'owner',
@@ -64,13 +39,50 @@ const CaseSetExecute = () => {
             title: '创建时间',
             dataIndex: 'createTime',
             width: '15%'
+        }, {
+            title: '上一次执行进度',
+            key: 'progress',
+            width: '20%',
+            render: (_, record) => {
+                const { status, progress } = record; // 假设每个 record 中有 status 和 progress 字段
+
+                if (status === -1) {
+                    return <span>-</span>; // 未执行状态
+                } else if (status === 1) {
+                    return (
+                        <Space>
+                            <Progress
+                                percent={progress}
+                                size="small"
+                                status="active"
+                                style={{ width: 120 }}
+                            />
+                            <Badge status="processing" color="blue" /> {/* 动态蓝色圆点 */}
+                        </Space>
+                    );
+                } else if (status === 2) {
+                    return (
+                        <Space>
+                            <Progress
+                                percent={100}
+                                size="small"
+                                status="success"
+                                style={{ width: 120 }}
+                            />
+                            <Button type="link" onClick={() => handleViewClick(record)}>
+                                查看结果
+                            </Button>
+                        </Space>
+                    );
+                }
+            }
         },
         {
             title: '操作',
             key: 'operation',
             render: (_, record) => (
                 <Space size="middle">
-                    <a>执行</a>
+                    <a onClick={() => handleExecuteClick()}>执行</a>
                     <a style={{"color": "red"}}>删除</a>
                     <ExeCuteDropButton/>
                 </Space>
@@ -78,57 +90,11 @@ const CaseSetExecute = () => {
         }
     ];
 
-    // 标签动态映射(颜色)
-    const getTagColor = (level) => {
-        switch (level) {
-            case 1:
-            case 2:
-                return 'lime';
-            case 3:
-                return 'blue';
-            case 4:
-                return 'orange';
-            case 5:
-                return 'red';
-            default:
-                return "blue"
-        }
-    }
-
-    // 标签动态映射(文本)
-    const getTagText = (level) => {
-        switch (level) {
-            case 1:
-                return '1';
-            case 2:
-                return '2';
-            case 3:
-                return '3';
-            case 4:
-                return '4';
-            case 5:
-                return '5';
-            default :
-                return '3'
-        }
-    }
-
-    // // 集合详情
-    // const [casetSetInfo, setCaseSetInfo] = useState({
-    //     setName: "",
-    //     projectId: "",
-    //     setWeight: "",
-    //     owner: "",
-    //     remark: "",
-    //     interfaceInfoSIPDTOS: [],
-    //     parameterList: [],
-    // })
 
 
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
-
-    const [drawerVisible, setDrawerVisible] = useState(false)
+    const [executeModal,setExecuteModal] = useState(false);
 
     const dispatch = useDispatch()
 
@@ -136,68 +102,18 @@ const CaseSetExecute = () => {
         dispatch((GetCaseSetList(1, 10)))
     }, [dispatch])
 
-
-    // const tcsInfo = {
-    //     setName: "",
-    //     projectName: "",
-    //     remark: "",
-    //     setWeight: "",
-    //     owner: "",
-    //     interfaceInfoSIPDTOS: []
-    // }
-    const handleEditClick = async (record) => {
-        await getCaseSetDetail(record.setId).then(res => {
-            if (res.data.code === '0') {
-                const data = res.data.data
-                // setTCSInfo({
-                //     setName: data.setName,
-                //     projectName: data.projectName,
-                //     remark: data.remark,
-                //     setWeight: data.setWeight,
-                //     owner: data.owner,
-                //     interfaceInfoSIPDTOS: data.interfaceInfoSIPDTOS,
-                // })
-                // tcsInfo.setName = data.setName;
-                // tcsInfo.projectName = data.projectName;
-                // tcsInfo.remark = data.remark;
-                // tcsInfo.setWeight = data.setWeight;
-                // tcsInfo.owner = data.owner;
-                // tcsInfo.interfaceInfoSIPDTOS = data.interfaceInfoSIPDTOS
-                setTCSInfo(data)
-            }
-            console.log("tcsInfo", tcsInfo)
-        })
-        setDrawerVisible(true)
+    // 查看执行结果回调
+    const handleViewClick = (record) => {
+        console.log(record)
     }
 
-    // const handleEditClick = async (record) => {
-    //     const params = {
-    //         setId: record.setId
-    //     };
-    //     const url = "http://localhost:8080/caseSet/getCaseSetDetail";
-    //     try {
-    //         let res = await axios.get(url,{params});
-    //         setTCSInfo(res.data.data)
-    //     }catch (error){
-    //         console.error("Error:",error)
-    //     }
-    //     setDrawerVisible(true)
-    // }
-    // 抽屉关闭事件回调
-    const handleCloseClick = () => {
-        setDrawerVisible(false);
-        // 关闭后重新请求列表
-        dispatch(GetCaseSetList(currentPage, 10));
+    // 点击执行回调，打开对话框
+    const handleExecuteClick = () =>{
+        setExecuteModal(true)
     }
 
-    // 外部点击×或者取消的关闭回调
-    const handleCloseOut = () => {
-        setDrawerVisible(false);
-    }
 
-    const handleDeleteClick = () => {
 
-    }
 
     const [tcsInfo, setTCSInfo] = useState({
         setName: "",
@@ -206,28 +122,46 @@ const CaseSetExecute = () => {
         setWeight: "",
         owner: "",
         interfaceInfoSIPDTOS: []
+
     })
 
     //mock数据，后续从接口取值
+    // status字段：-1-未执行、1-执行中、2-执行完
     const mockData = [{
         setName: "开票通用",
         projectName: "BMS",
         remark: "12",
-        setWeight: "1",
+        setWeight: "3",
         owner: "Stack",
-        steps:22,
-        interfaceInfoSIPDTOS: [12,23,23],
-        createTime: '-'
-    },{
+        steps: 22,
+        interfaceInfoSIPDTOS: [12, 23, 23],
+        createTime: '-',
+        status: -1,
+        progress: 0
+    }, {
         setName: "OMS外部下单",
         projectName: "OMS",
         remark: "备注",
-        setWeight: "1",
+        setWeight: "2",
         owner: "Lynn",
         steps: 17,
-        interfaceInfoSIPDTOS: [12,23,23],
-        createTime: '-'
-    }]
+        interfaceInfoSIPDTOS: [12, 23, 23],
+        createTime: '-',
+        status: 2,
+        progress: 100
+    },
+        {
+            setName: "通用网关配置",
+            projectName: "BGY",
+            remark: "备注",
+            setWeight: "1",
+            owner: "Zane",
+            steps: 9,
+            interfaceInfoSIPDTOS: [12, 23, 23],
+            createTime: '2024-02-18 14:22:01',
+            status: 1,
+            progress: 69
+        }]
 
 
     // // 从回调中拿到数据渲染列表
@@ -257,7 +191,7 @@ const CaseSetExecute = () => {
     // 批量新增表单控制
     const [batchAddFormOpen, setBatchAddFormOpen] = useState(false);
     // 新增表单控制
-    const [addFormOpen,setAddFormOpen] = useState(false);
+    const [addFormOpen, setAddFormOpen] = useState(false);
     // 批量新增创建表单
     const onBatchCreate = (values) => {
         console.log("表单赋值:", values);
@@ -292,32 +226,6 @@ const CaseSetExecute = () => {
     // }
     return (
         <>
-            <div className={"caseset-container"}>
-                <Button className={"caseset-batch-add-button-wrapper"}
-                        icon={<PlusOutlined/>}
-                        type={"primary"}
-                        onClick={() => handleBatchAdd()}>
-                    新增测试用例（excel批量)
-                </Button>
-                <Button
-                    className={"caseset-add-button-wrapper"}
-                    icon={<PlusOutlined/>}
-                    type={"primary"}
-                    onClick={() => handleAdd()}>
-                    新增测试用例
-                </Button>
-            </div>
-            <AddTCSForm
-                open={addFormOpen}
-                onCreate={onCreate}
-                onCancel={onCancel}>
-            </AddTCSForm>
-            <BatchUploadFormModal
-                open={batchAddFormOpen}
-                onCreate={onBatchCreate}
-                onCancel={onBatchCancel}>
-            </BatchUploadFormModal>
-
             <Table
                 columns={columns}
                 rowKey={currentId}
@@ -332,12 +240,7 @@ const CaseSetExecute = () => {
                 loading={loading}
                 // onChange={handleTableChange}
             />
-            <UpdateCaseSetDrawer
-                editData={tcsInfo}
-                drawerVisible={drawerVisible}
-                handleCloseIn={handleCloseClick}
-                handleCloseOut={handleCloseOut}
-            />
+            <TCSExecuteModal open={executeModal} setOpen={setExecuteModal}/>
 
 
         </>

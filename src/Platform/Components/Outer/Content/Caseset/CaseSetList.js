@@ -98,7 +98,7 @@ const CaseSetList = () => {
                     <a onClick={() => handleEditClick(record)}>编辑</a>
                     <a style={{"color": "red"}}>删除</a>
                     <a onClick={() => handleTCSEditClick(record)}>维护步骤</a>
-                    <TCSSelectorButton/>
+                    {/*<TCSSelectorButton/>*/}
                 </Space>
             )
         }
