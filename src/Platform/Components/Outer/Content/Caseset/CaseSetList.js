@@ -10,6 +10,7 @@ import "./CaseSetList.scss"
 import axios from "axios";
 import AddTCSForm from "./Component/TCSList/AddTCSForm";
 import {useNavigate} from "react-router-dom";
+import TCSSelectorButton from "./Component/TCSExcute/TCSSelectorButton";
 
 const CaseSetList = () => {
 
@@ -97,6 +98,7 @@ const CaseSetList = () => {
                     <a onClick={() => handleEditClick(record)}>编辑</a>
                     <a style={{"color": "red"}}>删除</a>
                     <a onClick={() => handleTCSEditClick(record)}>维护步骤</a>
+                    <TCSSelectorButton/>
                 </Space>
             )
         }
@@ -275,10 +277,10 @@ const CaseSetList = () => {
         })
         // console.log(mockData)
         // 真实数据
-        navigate("/platform/caseset/editProgress", { state: { tcsData } });
+        // navigate("/platform/caseset/editProgress", { state: { tcsData } });
         console.log(tcsData)
         // mock数据
-        // navigate("/platform/caseset/editProgress", { state: { mockData } });
+        navigate("/platform/caseset/editProgress", { state: { mockData } });
     }
 
 
@@ -368,9 +370,9 @@ const CaseSetList = () => {
                 columns={columns}
                 rowKey={currentId}
                 // 在公司时用mock的数据
-                // dataSource={mockList}
+                dataSource={mockList}
                 // 家里的正式数据
-                dataSource={rowData}
+                // dataSource={rowData}
                 pagination={{
                     pageSize: resData.pageSize,
                     current: currentPage,
