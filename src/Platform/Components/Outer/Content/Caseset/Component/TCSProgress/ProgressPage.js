@@ -7,6 +7,7 @@ import InterfaceSelector from "./InterfaceSelector";
 import './CodeEditor.scss'
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {Option} from "antd/es/mentions";
+import TextArea from "antd/es/input/TextArea";
 
 const {Step} = Steps;
 
@@ -16,7 +17,7 @@ const ProgressPage = ({tcsData,initForm}) => {
     const [form] = Form.useForm()
     const [current, setCurrent] = useState(0);
     const [code, setCode] = useState('');
-    let currentOType;
+    const [currentOType,setCurrentOType] = useState('');
     // 测试步骤列表
     const [progressList, setProgressList] = useState(initForm)
 
@@ -30,13 +31,13 @@ const ProgressPage = ({tcsData,initForm}) => {
                     message: "请选定一个接口"
                 }
             ]}>
-                <InterfaceSelector projectId={tcsData.projectId} />
+                <InterfaceSelector projectId={tcsData.projectId} handleData={handleChange} initValue={values}/>
             </Form.Item>
             <Form.Item label={"接口url"} name={"interfaceUrl"} labelAlign={"left"}>
                 <Input disabled={true}/>
             </Form.Item>
             <Form.Item label={"传参"} name={"requestBody"} labelAlign={"left"}>
-                <Input disabled={true}/>
+                <TextArea disabled={true}/>
             </Form.Item>
         </Form>
     ), [form, tcsData.projectId]);
@@ -264,10 +265,6 @@ const ProgressPage = ({tcsData,initForm}) => {
             interfaceUrl: '',
             requestBody: '',
             projectId: '',
-            fieldH: '',
-            fieldE: '',
-            fieldF: '',
-            fieldG: '',
         });
         setCode('');
     }, []);
@@ -278,15 +275,36 @@ const ProgressPage = ({tcsData,initForm}) => {
     // }, []);
 
 
+    // 表单内组件的change监听事件
     const handleChange = useCallback((changedValues, allValues) => {
+        if (current === 0){
+            setCurrentOType(changedValues.operationType);
+        }
+        // 二次进入后如果变更了操作方式，则清空之前的值
         if (currentOType !== changedValues.operationType && current === 0) {
             clearPrevValue();
         }
+        // 如果操作方式为接口，自动填充url和请求体
+        if (current === 1 && currentOType === "operation_1" ) {
+            console.log(changedValues)
+            const interfaceInfo = {
+                interfaceName: changedValues[0].value,
+                interfaceUrl: changedValues[0].url,
+                requestBody: changedValues[0].requestBody
+            }
+            console.log(interfaceInfo)
+            setFormValues(prevValues => ({
+                ...prevValues,
+                ...interfaceInfo
+            }))
+        }
+        else {
+            console.log(allValues)
         setFormValues(prevValues => ({
             ...prevValues,
             ...allValues
-        }));
-    }, [currentOType, current, clearPrevValue]);
+        }))}
+    }, [current, currentOType, clearPrevValue]);
 
     const handleCode = useCallback((value) => {
         setCode(value);
@@ -346,6 +364,7 @@ const ProgressPage = ({tcsData,initForm}) => {
     const handleListItemClick = (item) => {
         setCurrent(0)
         setFormValues(item)
+        console.log(item)
         if (item.operationType === 'operation_2'){
             setCode(item.DBContent)
         }
@@ -354,7 +373,6 @@ const ProgressPage = ({tcsData,initForm}) => {
     //点击progressList后更新表单值
     useEffect(() => {
         if (formValues){
-            console.log('after:',formValues);
             form.setFieldsValue(formValues)
         }
     },[form, formValues])

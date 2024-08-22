@@ -356,7 +356,7 @@ const InterfaceList = () => {
         setInterfaceFindDTO(findDTO)
         setInterfaceNameValue('');
         setInterfaceUrlValue('');
-        setProjectIds("")
+        setProjectIds([])
     }
 
     // 批量新增按钮的状态控制（供子组件调用）

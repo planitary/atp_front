@@ -5,7 +5,8 @@ import { getInterfaceByName } from "../../../../../API/Api";
 
 const { Option } = Select;
 
-const SearchSelect = ({ fetchOptions ,handleData}) => {
+const SearchSelect = ({ fetchOptions ,handleData,initValue}) => {
+    console.log(initValue)
     const [options, setOptions] = useState([]);
     const [fetching, setFetching] = useState(false);
 
@@ -29,13 +30,13 @@ const SearchSelect = ({ fetchOptions ,handleData}) => {
     return (
         <Select
             showSearch
+            defaultValue={initValue.interfaceName}
             placeholder="输入接口名进行查询"
             notFoundContent={fetching ? <Spin size="small" /> : <Empty />}
             filterOption={false}
             onSearch={fetchOptionsDebounced}
             style={{ width: "100%" }}
             onChange={() => handleData(options)}
-
         >
             {options.map(option => (
                 <Option key={option.id} value={option.value}>
@@ -46,16 +47,15 @@ const SearchSelect = ({ fetchOptions ,handleData}) => {
     );
 };
 
-const InterfaceSelector = ({ projectId ,handleData}) => {
-
+const InterfaceSelector = ({ projectId ,handleData,initValue}) => {
 
     const fetchOptions = async (search) => {
         const response = await getInterfaceByName(search, projectId);
         if (response.data.code === '0') {
             return response.data.data.map(item => ({
-                value: item.interfaceName,  // 使用接口返回的唯一标识作为 value
+                value: item.interfaceName,
                 label: item.interfaceName,
-                id: item.interfaceId,// 使用接口返回的名称作为 label
+                id: item.interfaceId,
                 url: item.interfaceUrl,
                 requestBody: item.requestBody
             }));
@@ -66,7 +66,7 @@ const InterfaceSelector = ({ projectId ,handleData}) => {
 
     return (
         <div style={{ width: "100%" }}>
-            <SearchSelect fetchOptions={fetchOptions} handleData={handleData} />
+            <SearchSelect fetchOptions={fetchOptions} handleData={handleData} initValue={initValue}/>
         </div>
     );
 };
