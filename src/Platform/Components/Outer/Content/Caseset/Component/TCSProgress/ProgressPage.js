@@ -290,7 +290,8 @@ const ProgressPage = ({tcsData,initForm}) => {
             const interfaceInfo = {
                 interfaceName: changedValues[0].value,
                 interfaceUrl: changedValues[0].url,
-                requestBody: changedValues[0].requestBody
+                requestBody: changedValues[0].requestBody,
+                interfaceId: changedValues[0].id
             }
             console.log(interfaceInfo)
             setFormValues(prevValues => ({
@@ -338,6 +339,11 @@ const ProgressPage = ({tcsData,initForm}) => {
         Modal.destroyAll();
     },[clearPrevValue, form, formValues])
 
+    // 不再添加
+    const handleSubmit = useCallback(() => {
+        console.log(progressList);
+        },[progressList])
+
     // 步骤结束后的确认
     const handleFinish = useCallback(() => {
 
@@ -345,7 +351,7 @@ const ProgressPage = ({tcsData,initForm}) => {
             title: '添加成功',
             footer: (_) => (
                 <>
-                    <Button key={"back"}>不再添加</Button>
+                    <Button key={"back"} onClick={handleSubmit}>不再添加</Button>
                     <Button key={"continue"} type={"primary"}  onClick={handleContinue}>继续添加</Button>
                 </>
             ),
