@@ -2,15 +2,13 @@ import {Badge, Button, Modal, Progress, Space, Table, Tag, Tooltip} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {GetCaseSetList, GetInterfaceList, GetProjectList} from "../../Store/Modules/ProjectStore";
-import {InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
-import {getCaseSetDetail} from "../../../API/Api";
-import UpdateCaseSetDrawer from "./Component/TCSList/UpdateCaseSetDrawer";
+
 import BatchUploadFormModal from "./Component/TCSList/BatchUploadForm";
 import "./CaseSetList.scss"
-import axios from "axios";
-import AddTCSForm from "./Component/TCSList/AddTCSForm";
+
 import ExeCuteDropButton from "./Component/TCSExcute/ExecuteDropButton";
 import TCSExecuteModal from "./Component/TCSExcute/TCSExecuteModal";
+import {useNavigate} from "react-router-dom";
 // import {useHistory} from 'react-router-dom'
 
 const CaseSetExecute = () => {
@@ -40,7 +38,7 @@ const CaseSetExecute = () => {
             dataIndex: 'createTime',
             width: '15%'
         }, {
-            title: '上一次执行进度',
+            title: '用例执行进度',
             key: 'progress',
             width: '20%',
             render: (_, record) => {
@@ -90,6 +88,20 @@ const CaseSetExecute = () => {
         }
     ];
 
+    const mockExecuteInfo = {
+        stepNumber: 20,
+        durationTime: 18,
+        successCount: 13,
+        failedCount: 5,
+        ignoredCount: 2,
+        executeTime: '2024-07-11 03:44:36',
+        setName: '通用网关配置',
+        executeEnv: "FAT",
+        executeUser: "Joshua",
+        extractDesc: "",
+        passingRate: "0.65",
+    }
+
 
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -97,6 +109,7 @@ const CaseSetExecute = () => {
     const [executeModal,setExecuteModal] = useState(false);
 
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch((GetCaseSetList(1, 10)))
@@ -104,7 +117,8 @@ const CaseSetExecute = () => {
 
     // 查看执行结果回调
     const handleViewClick = (record) => {
-        console.log(record)
+        console.log(mockExecuteInfo)
+        navigate("/platform/caseset/casesetExecute/exeResult",{ state : {mockExecuteInfo}})
     }
 
     // 点击执行回调，打开对话框

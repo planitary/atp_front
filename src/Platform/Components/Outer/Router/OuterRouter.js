@@ -8,6 +8,7 @@ import CaseSetExecute from "../Content/Caseset/CaseSetExecute";
 import AddTCSFormV2 from "../Content/Caseset/Component/TCSProgress/AddTCSFormV2";
 import ProgressPage from "../Content/Caseset/Component/TCSProgress/ProgressPage";
 import EmptyPage from "../Content/Caseset/Component/TCSProgress/EmptyPage";
+import TCSExecuteResultPage from "../Content/Caseset/Component/TCSExcute/TCSExecuteReultPage";
 
 const OuterRouter = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ const OuterRouter = createBrowserRouter([
                 path: '/platform/caseset/progressList',
                 element:<ProjectList/>
             },
+            {
+                path: '/platform/caseset/casesetExecute/exeResult',
+                element:<TCSExecuteResultPage />
+            }
         ]
     },
 ])
