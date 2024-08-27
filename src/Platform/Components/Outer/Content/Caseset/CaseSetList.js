@@ -252,6 +252,7 @@ const CaseSetList = () => {
         setWeight: "",
         owner: "",
         createTime: "",
+        setId: "",
         stepsData:[]
     }
 
@@ -263,24 +264,25 @@ const CaseSetList = () => {
         owner: mockList[0].owner,
         createTime: mockList[0].createTime,
         projectId:"2423423432",
+        setId: "T23482423",
         stepsData:[]
     }
 
 
     //维护步骤
     const handleTCSEditClick = async (record) => {
-        await getCaseSetDetail(record.setId).then(res => {
-            if (res.data.code === '0'){
-                const setData = res.data.data
-                tcsData = {...setData}
-            }
-        })
-        // console.log(mockData)
+        // await getCaseSetDetail(record.setId).then(res => {
+        //     if (res.data.code === '0'){
+        //         const setData = res.data.data
+        //         tcsData = {...setData}
+        //     }
+        // })
+        console.log(mockData)
         // 真实数据
-        navigate("/platform/caseset/editProgress", { state: { tcsData } });
-        console.log(tcsData)
+        // navigate("/platform/caseset/editProgress", { state: { tcsData } });
+        // console.log(tcsData)
         // mock数据
-        // navigate("/platform/caseset/editProgress", { state: { mockData } });
+        navigate("/platform/caseset/editProgress", { state: { mockData } });
     }
 
 
@@ -370,9 +372,9 @@ const CaseSetList = () => {
                 columns={columns}
                 rowKey={currentId}
                 // 在公司时用mock的数据
-                // dataSource={mockList}
+                dataSource={mockList}
                 // 家里的正式数据
-                dataSource={rowData}
+                // dataSource={rowData}
                 pagination={{
                     pageSize: resData.pageSize,
                     current: currentPage,

@@ -19,13 +19,13 @@ const AddTCSFormV2 = () => {
 
     // 拿到父组件跳转的值
     const location = useLocation();
-    const { tcsData } = location.state || {};
+    // const { tcsData } = location.state || {};
 
     // 临时创建一条数据
     // tcsData.stepsData = []
     // mock数据
     const {mockData} = location.state || {}
-    // const tcsData = mockData;
+    const tcsData = mockData;
     console.log(tcsData)
     // tcsData.stepsData = [
     //     {

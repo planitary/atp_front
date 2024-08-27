@@ -8,23 +8,25 @@ import './CodeEditor.scss'
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {Option} from "antd/es/mentions";
 import TextArea from "antd/es/input/TextArea";
+import {addTCSProgress} from "../../../../../API/TCSProgress/TCSProgressAPI";
 
 const {Step} = Steps;
 
-const ProgressPage = ({tcsData,initForm}) => {
+const ProgressPage = ({tcsData, initForm}) => {
+    console.log(tcsData)
 
     let listSeq = 0;
     const [form] = Form.useForm()
     const [current, setCurrent] = useState(0);
     const [code, setCode] = useState('');
-    const [currentOType,setCurrentOType] = useState('');
+    const [currentOType, setCurrentOType] = useState('');
     // 测试步骤列表
     const [progressList, setProgressList] = useState(initForm)
 
     // 接口新增
     const OperationForm1 = useCallback(({values, handleChange}) => (
         <Form layout={"horizontal"} initialValues={values} onValuesChange={handleChange}
-              form={form} preserve={false}  className={"interface-add-label"} >
+              form={form} preserve={false} className={"interface-add-label"}>
             <Form.Item label={"接口名"} name={"interfaceName"} rules={[
                 {
                     required: true,
@@ -55,7 +57,7 @@ const ProgressPage = ({tcsData,initForm}) => {
     ), []);
 
     // 断言筛选项
-    const AssertSelect = ({value,onChange}) => {
+    const AssertSelect = ({value, onChange}) => {
         return (
             <Select onChange={onChange} value={value}>
                 <Select.Option value={'Equals'}>{'='}</Select.Option>
@@ -70,15 +72,16 @@ const ProgressPage = ({tcsData,initForm}) => {
     }
 
     // 额外配置筛选项
-    const ExtraSelect = ({value,onChange}) => {
+    const ExtraSelect = ({value, onChange}) => {
         return (
-        <Select defaultValue={"接口响应超时时间"} value={value} onChange={onChange} name>
-            <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
-            <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
-            <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
-            <Select.Option value={"WaitTimeOut"}>等待时间</Select.Option>
-        </Select>
-        )}
+            <Select defaultValue={"接口响应超时时间"} value={value} onChange={onChange} name>
+                <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
+                <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
+                <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
+                <Select.Option value={"WaitTimeOut"}>等待时间</Select.Option>
+            </Select>
+        )
+    }
 
     // 断言动态表单
     const DynamicAssertForm = useCallback(({values, handleChange}) => (
@@ -86,29 +89,29 @@ const ProgressPage = ({tcsData,initForm}) => {
               title={"断言设置"} name={"asserts"}>
             <Form.List name={"asserts"}>
                 {(fields, {add, remove}) => (
-                    <div style={{width:'100%'}}>
+                    <div style={{width: '100%'}}>
                         {fields.map(({key, name, ...restField}) => (
                             <Space key={key} style={{display: "flex", marginBottom: 8}} align={"baseline"}>
-                                <Row gutter={16} >
+                                <Row gutter={16}>
                                     <Col span={9}>
                                         <Form.Item label="参数A" name={[name, 'param']} {...restField}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:'参数缺失'
-                                            }
-                                        ]}>
-                                            <Input placeholder={"断言参数"} />
+                                                   rules={[
+                                                       {
+                                                           required: true,
+                                                           message: '参数缺失'
+                                                       }
+                                                   ]}>
+                                            <Input placeholder={"断言参数"}/>
                                         </Form.Item>
                                     </Col>
                                     <Col span={6}>
                                         <Form.Item label={"表达式"} name={[name, 'assertType']} {...restField}
-                                        rules={[
-                                            {
-                                                required:true,
-                                                message:"请选择一个表达式"
-                                            }
-                                        ]}>
+                                                   rules={[
+                                                       {
+                                                           required: true,
+                                                           message: "请选择一个表达式"
+                                                       }
+                                                   ]}>
                                             <AssertSelect/>
                                         </Form.Item>
                                     </Col>
@@ -117,7 +120,7 @@ const ProgressPage = ({tcsData,initForm}) => {
                                                    rules={[
                                                        {
                                                            required: true,
-                                                           message:'参数缺失'
+                                                           message: '参数缺失'
                                                        }
                                                    ]}>
                                             <Input placeholder={'断言值'}/>
@@ -129,7 +132,7 @@ const ProgressPage = ({tcsData,initForm}) => {
                             </Space>
                         ))}
                         <Form.Item>
-                            <Button type={"dashed"} onClick={() => add()} block icon={<PlusOutlined />} >
+                            <Button type={"dashed"} onClick={() => add()} block icon={<PlusOutlined/>}>
                                 新增一行
                             </Button>
                         </Form.Item>
@@ -164,13 +167,12 @@ const ProgressPage = ({tcsData,initForm}) => {
     // ),[]);
 
 
-
     const operateList = useMemo(() => [
         {label: '接口调用', value: 'operation_1'},
         {label: 'DB操作', value: 'operation_2'},
         {label: 'Redis操作', value: 'operation_3'},
         {label: 'RPC调用', value: 'operation_4'}
-    ],[])
+    ], [])
 
     const steps = useMemo(() => [
         {
@@ -178,19 +180,19 @@ const ProgressPage = ({tcsData,initForm}) => {
             fields: ['stepName', 'operationType'],
             content: (values, handleChange) => (
                 <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false}
-                      form={form} >
+                      form={form}>
                     <Form.Item label="步骤名称" name="stepName" rules={[
                         {
-                            required:true,
-                            message:"请输入步骤说明"
+                            required: true,
+                            message: "请输入步骤说明"
                         },
                     ]} hasFeedback>
-                        <Input />
+                        <Input/>
                     </Form.Item>
                     <Form.Item label="执行方式" name="operationType" rules={[
                         {
                             required: true,
-                            message:"请选择一个执行步骤"
+                            message: "请选择一个执行步骤"
                         }
                     ]}>
                         <Select options={operateList}/>
@@ -225,12 +227,13 @@ const ProgressPage = ({tcsData,initForm}) => {
             fields: ['interfaceTimeOut', 'sqlTimeOut'],
             content: (values, handleChange) => (
                 // <DynamicExtraForm values={values} handleChange={handleChange}/>
-                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false} form={form}>
+                <Form layout="horizontal" initialValues={values} onValuesChange={handleChange} preserve={false}
+                      form={form}>
 
                     <Form.Item label="额外配置" name="extraValue">
                         <Input addonBefore={
                             <Form.Item name={"extraType"} noStyle initialValue={"接口响应超时时间"}>
-                                <Select  value={values} onChange={handleChange}>
+                                <Select value={values} onChange={handleChange}>
                                     <Select.Option value={"InterfaceResTimeOut"}>接口响应超时时间</Select.Option>
                                     <Select.Option value={"SqlExeTimeOut"}>Sql执行超时时间</Select.Option>
                                     <Select.Option value={"ConnectTimeOut"}>连接超时时间</Select.Option>
@@ -242,7 +245,7 @@ const ProgressPage = ({tcsData,initForm}) => {
                 </Form>
             ),
         },
-    ],[form, operateList, code]);
+    ], [form, operateList, code]);
 
     let interfaceInfo = {
         interfaceName: "",
@@ -277,7 +280,7 @@ const ProgressPage = ({tcsData,initForm}) => {
 
     // 表单内组件的change监听事件
     const handleChange = useCallback((changedValues, allValues) => {
-        if (current === 0){
+        if (current === 0) {
             setCurrentOType(changedValues.operationType);
         }
         // 二次进入后如果变更了操作方式，则清空之前的值
@@ -285,7 +288,7 @@ const ProgressPage = ({tcsData,initForm}) => {
             clearPrevValue();
         }
         // 如果操作方式为接口，自动填充url和请求体
-        if (current === 1 && currentOType === "operation_1" ) {
+        if (current === 1 && currentOType === "operation_1") {
             console.log(changedValues)
             const interfaceInfo = {
                 interfaceName: changedValues[0].value,
@@ -298,13 +301,13 @@ const ProgressPage = ({tcsData,initForm}) => {
                 ...prevValues,
                 ...interfaceInfo
             }))
-        }
-        else {
+        } else {
             console.log(allValues)
-        setFormValues(prevValues => ({
-            ...prevValues,
-            ...allValues
-        }))}
+            setFormValues(prevValues => ({
+                ...prevValues,
+                ...allValues
+            }))
+        }
     }, [current, currentOType, clearPrevValue]);
 
     const handleCode = useCallback((value) => {
@@ -328,36 +331,41 @@ const ProgressPage = ({tcsData,initForm}) => {
     //继续添加
     const handleContinue = useCallback(() => {
         console.log(formValues)
-        setProgressList(prevList => [...prevList, formValues])
         clearPrevValue();
         // setFormValues({})
         // form.setFieldsValue("");
         // form.resetFields()
-        form.setFieldValue("stepName","")
-        form.setFieldValue("operationType","")
+        form.setFieldValue("stepName", "")
+        form.setFieldValue("operationType", "")
         setCurrent(0)
         Modal.destroyAll();
-    },[clearPrevValue, form, formValues])
+    }, [clearPrevValue, form, formValues])
 
     // 不再添加
     const handleSubmit = useCallback(() => {
-        console.log(progressList);
-        },[progressList])
+
+
+        console.log(tcsData.setId)
+        addTCSProgress(progressList,tcsData.setId,"").then(res => {
+            console.log(res)
+        })
+    }, [progressList])
 
     // 步骤结束后的确认
     const handleFinish = useCallback(() => {
-
-        Modal.success({
-            title: '添加成功',
-            footer: (_) => (
-                <>
-                    <Button key={"back"} onClick={handleSubmit}>不再添加</Button>
-                    <Button key={"continue"} type={"primary"}  onClick={handleContinue}>继续添加</Button>
-                </>
-            ),
-            content: "当前步骤已添加完成，需要继续添加么?"
-        });
-    }, [handleContinue]
+            // setProgressList(prevList => [...prevList, formValues])
+            progressList.push(formValues)
+            Modal.success({
+                title: '添加成功',
+                footer: (_) => (
+                    <>
+                        <Button key={"back"} onClick={handleSubmit}>不再添加</Button>
+                        <Button key={"continue"} type={"primary"} onClick={handleContinue}>继续添加</Button>
+                    </>
+                ),
+                content: "当前步骤已添加完成，需要继续添加么?"
+            });
+        }, [formValues, handleContinue, handleSubmit]
     );
 
     //防抖
@@ -371,27 +379,27 @@ const ProgressPage = ({tcsData,initForm}) => {
         setCurrent(0)
         setFormValues(item)
         console.log(item)
-        if (item.operationType === 'operation_2'){
+        if (item.operationType === 'operation_2') {
             setCode(item.DBContent)
         }
     }
 
     //点击progressList后更新表单值
     useEffect(() => {
-        if (formValues){
+        if (formValues) {
             form.setFieldsValue(formValues)
         }
-    },[form, formValues])
+    }, [form, formValues])
 
     const next = useCallback(async () => {
         try {
-            console.log("x:",steps[current].fields)
+            console.log("x:", steps[current].fields)
             await form.validateFields(steps[current].fields)
             setCurrent(current + 1);
         } catch (error) {
             console.log("表单校验失败", error);
         }
-    },[form, steps, current]);
+    }, [form, steps, current]);
 
     const prev = useCallback(() => {
         setCurrent(current - 1);
