@@ -4,7 +4,7 @@ import {List} from "antd";
 import article from "../../../../Test/page/Article";
 
 async function addTCSProgress(progressList,setId,projectInfo) {
-    const url = "http://locahost:8080/caseset/progress/addProgress";
+    const url = "http://localhost:8080/caseset/progress/addProgress";
     let res = "";
     const progressInfoList = {
         progressList: progressList,
@@ -12,7 +12,7 @@ async function addTCSProgress(progressList,setId,projectInfo) {
         projectInfo: projectInfo
     };
     try {
-        res = await axios.put(url, progressInfoList);
+        res = await axios.post(url, progressInfoList);
     }catch (error){
         if (error.response){
             res = error.response;

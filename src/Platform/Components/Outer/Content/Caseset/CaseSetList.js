@@ -49,7 +49,6 @@ const CaseSetList = () => {
         },
 
 
-
         // {
         //     title: '创建人',
         //     dataIndex: 'createUser',
@@ -245,15 +244,22 @@ const CaseSetList = () => {
         interfaceInfoSIPDTOS: []
     })
 
+    // 用例所属项目数据
+    let projectData = {
+        projectId: "",
+        projectName: "",
+        projectUrl: ""
+    }
+    // 用例基本数据
     let tcsData = {
         setName: "",
-        projectName: "",
+        projectData: projectData,
         remark: "",
         setWeight: "",
         owner: "",
         createTime: "",
         setId: "",
-        stepsData:[]
+        stepsData: []
     }
 
     const mockData = {
@@ -263,26 +269,38 @@ const CaseSetList = () => {
         setWeight: mockList[0].setWeight,
         owner: mockList[0].owner,
         createTime: mockList[0].createTime,
-        projectId:"2423423432",
+        projectId: "2423423432",
         setId: "T23482423",
-        stepsData:[]
+        stepsData: []
     }
 
 
     //维护步骤
     const handleTCSEditClick = async (record) => {
-        // await getCaseSetDetail(record.setId).then(res => {
-        //     if (res.data.code === '0'){
-        //         const setData = res.data.data
-        //         tcsData = {...setData}
-        //     }
-        // })
-        console.log(mockData)
+        await getCaseSetDetail(record.setId).then(res => {
+            if (res.data.code === '0') {
+                const setData = res.data.data
+                tcsData.setName = setData.setName
+                tcsData.projectData.projectId = setData.projectId
+                tcsData.projectData.projectUrl = setData.projectUrl
+                tcsData.projectData.projectName = setData.projectName
+                tcsData.remark = setData.remark
+                tcsData.setWeight = setData.setWeight
+                tcsData.owner = setData.owner
+                tcsData.createTime = setData.createTime
+                tcsData.setId = setData.setId
+                tcsData.stepsData = setData.stepsData // 如果有步骤数据的话，这里直接赋值
+
+                console.log(tcsData)
+
+            }
+        })
+        // console.log(mockData)
         // 真实数据
-        // navigate("/platform/caseset/editProgress", { state: { tcsData } });
-        // console.log(tcsData)
+        navigate("/platform/caseset/editProgress", {state: {tcsData}});
+        console.log(tcsData)
         // mock数据
-        navigate("/platform/caseset/editProgress", { state: { mockData } });
+        // navigate("/platform/caseset/editProgress", { state: { mockData } });
     }
 
 
@@ -311,7 +329,7 @@ const CaseSetList = () => {
     // 批量新增表单控制
     const [batchAddFormOpen, setBatchAddFormOpen] = useState(false);
     // 新增表单控制
-    const [addFormOpen,setAddFormOpen] = useState(false);
+    const [addFormOpen, setAddFormOpen] = useState(false);
     // 批量新增创建表单
     const onBatchCreate = (values) => {
         console.log("表单赋值:", values);
@@ -372,9 +390,9 @@ const CaseSetList = () => {
                 columns={columns}
                 rowKey={currentId}
                 // 在公司时用mock的数据
-                dataSource={mockList}
+                // dataSource={mockList}
                 // 家里的正式数据
-                // dataSource={rowData}
+                dataSource={rowData}
                 pagination={{
                     pageSize: resData.pageSize,
                     current: currentPage,

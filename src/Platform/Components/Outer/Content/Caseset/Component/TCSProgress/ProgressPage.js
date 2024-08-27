@@ -33,7 +33,7 @@ const ProgressPage = ({tcsData, initForm}) => {
                     message: "请选定一个接口"
                 }
             ]}>
-                <InterfaceSelector projectId={tcsData.projectId} handleData={handleChange} initValue={values}/>
+                <InterfaceSelector projectId={tcsData.projectData.projectId} handleData={handleChange} initValue={values}/>
             </Form.Item>
             <Form.Item label={"接口url"} name={"interfaceUrl"} labelAlign={"left"}>
                 <Input disabled={true}/>
@@ -344,12 +344,10 @@ const ProgressPage = ({tcsData, initForm}) => {
     // 不再添加
     const handleSubmit = useCallback(() => {
 
-
-        console.log(tcsData.setId)
-        addTCSProgress(progressList,tcsData.setId,"").then(res => {
-            console.log(res)
+        console.log(tcsData.projectData)
+        addTCSProgress(progressList,tcsData.setId,tcsData.projectData).then(res => {
         })
-    }, [progressList])
+    }, [progressList, tcsData.projectData, tcsData.setId])
 
     // 步骤结束后的确认
     const handleFinish = useCallback(() => {
