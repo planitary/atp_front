@@ -9,6 +9,7 @@ const RedisIcon = createFromIconfontCN({
 })
 
 const ProgressList = ({data,handlePage}) => {
+    console.log(data)
 
     const getOperationTypeAvatar = (operationType) => {
         switch (operationType) {
